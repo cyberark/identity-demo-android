@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme" parent="android:Theme.Holo"/>
+
+    <style name="Theme.NoTitleBar">
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.NewUi" />
+
+    <style name="Theme.NewUi.ToolBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?android:attr/actionBarSize</item>
+        <item name="android:minHeight">?android:attr/actionBarSize</item>
+        <item name="titleTextAppearance">@style/Theme.NewUi.Title</item>
+        <item name="android:background">@color/main_dark_grey</item>
+    </style>
+
+    <style name="Theme.NewUi.ToolBar.white">
+        <item name="titleTextAppearance">@style/Theme.NewUi.Title.white</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+
+    <style name="Theme.NewUi.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/actionbar2_text_color</item>
+    </style>
+
+    <style name="Theme.NewUi.Title.white">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+</resources>

@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">IdentitySDK</string>
+    <string name="scan_qr_code">Scan QR Code</string>
+    <string name="permission_dialog_deny">DENY</string>
+    <string name="permission_settings">SETTINGS</string>
+    <string name="qr_code_login">QR Code Login</string>
+    <string name="permission_dialog_message_camera">Please enable camera permission in settings to scan the QR code.</string>
+    <string name="not_a_valid_qr_code">Not a valid QR code</string>
+    <string name="loading">Loading...</string>
+    <string name="login_enroll_with_qr_error_title">Invalid URL</string>
+    <string name="host_pattern" translatable="false">centrify\\.com|samsungknox\\.com|ctfy\\.me|ctfy\\.co|kprm\\.me|kprm\\.co|idaptive\\.app|idap\\.co|idap\\.me|idaptive\\.qa</string>
+    <string name="login_enroll_with_qr_error_message">Try scanning again or use your User Name and Password to enroll. If you need help, contact your system administrator for assistance.</string>
+    <string name="scan_qr_code_login_from_portal">Scan QR Code Login from Portal</string>
+    <string name="scan_qr_code_login_to_portal">Scan QR Code Login To Portal</string>
+    <string name="title_activity_main">MainActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="qr_code_authenticator">QR Code Authenticator</string>
+
+    <!-- MainActivity -->
+    <string name="returned_from_app_settings_to_activity">Returned from app settings to MainActivity with the following permissions</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <!-- Permissions -->
+    <string name="permission_camera_text">Camera</string>
+    <string name="permission_camera_rationale_message">This app needs access to your camera so you can scan QR Code.</string>
+
+    <string name="authenticate">Authenticate</string>
+    <string name="asset_statements" translatable="false">[{ \"include\": \"https://mobile-qa.my.idaptive.qa/.well-known/assetlinks.json\" }]</string>
+
+
+    <string name="cyberark_account_client_id">Axis</string>
+    <string name="cyberark_account_host">aaj7617.my.dev.idaptive.app</string>
+    <string name="cyberark_account_app_id">testoauth</string>
+    <string name="cyberark_account_response_type">code</string>
+    <string name="cyberark_account_scope">All</string>
+    <string name="cyberark_account_redirect_uri">demo://aaj7617.my.dev.idaptive.app/android/com.cyberark.mfa/callback</string>
+    <string name="cyberark_account_scheme">demo</string>
+
+</resources>

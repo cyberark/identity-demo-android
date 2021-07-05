@@ -1,0 +1,3 @@
+include ':identitylibrary'
+include ':app'
+rootProject.name = "IdentitySDK"
