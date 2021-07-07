@@ -15,6 +15,10 @@
 
     <application>
         <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="portrait"
+            tools:replace="screenOrientation" />
+        <activity
             android:name="com.cyberark.identity.CyberarkAuthActivity"
             android:autoRemoveFromRecents="true"
             android:exported="false"
@@ -37,6 +41,7 @@
                     android:scheme="${cyberarkIdentityScheme}" />
             </intent-filter>
         </activity>
+        <activity android:name="com.cyberark.identity.ScanQRCodeLoginActivity"/>
     </application>
 
 </manifest>

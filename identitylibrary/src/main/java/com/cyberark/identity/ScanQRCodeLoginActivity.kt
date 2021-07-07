@@ -1,4 +1,4 @@
-package com.cyberark.mfa.ui.qr
+package com.cyberark.identity
 
 import android.Manifest
 import android.content.Intent
@@ -10,8 +10,10 @@ import androidx.lifecycle.ViewModelProviders
 import com.cyberark.identity.data.network.CyberarkAuthBuilder
 import com.cyberark.identity.data.network.CyberarkAuthHelper
 import com.cyberark.identity.util.ResponseStatus
-import com.cyberark.mfa.R
-import com.cyberark.mfa.ui.base.ViewModelFactory
+import com.cyberark.identity.util.biometric.BiometricAuthenticationCallback
+import com.cyberark.identity.util.biometric.BiometricPromptUtility
+import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
+import com.cyberark.identity.viewmodel.base.CyberarkViewModelFactory
 import com.google.zxing.integration.android.IntentIntegrator
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -23,15 +25,74 @@ private const val REQUEST_CODE_CAMERA_PERMISSION = 123
 class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private lateinit var viewModel: ScanQRCodeViewModel
+    private var isBioAuthenticated:Boolean = false
+    private lateinit var bioMetric: BiometricPromptUtility
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recycler_view)
-        requestCameraPermission()
+        registerForBiometricCallback()
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (isBioAuthenticated) {
+            requestCameraPermission()
+        }else {
+            //do biometric authentication
+            bioMetric.showBioAuthentication(this,null,"Use App Pin",false)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        bioMetric?.dismissFingerPrintEnroll()
+    }
+
 
     private fun hasCameraPermission():Boolean {
         return EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)
+    }
+
+    private fun registerForBiometricCallback() {
+        bioMetric = BiometricPromptUtility(object : BiometricAuthenticationCallback {
+            override fun isAuthenticationSuccess(success: Boolean) {
+                Toast.makeText(this@ScanQRCodeLoginActivity,"Authentication success",Toast.LENGTH_LONG).show()
+                this@ScanQRCodeLoginActivity.isBioAuthenticated = true
+                requestCameraPermission()
+            }
+
+            override fun passwordAuthenticationSelected() {
+                Toast.makeText(this@ScanQRCodeLoginActivity,"Password authentication selected",Toast.LENGTH_LONG).show()
+            }
+
+            override fun showErrorMessage(message: String) {
+                Toast.makeText(this@ScanQRCodeLoginActivity,message,Toast.LENGTH_LONG).show()
+            }
+
+            override fun isHardwareSupported(boolean: Boolean) {
+                if (boolean == false) {
+                    Toast.makeText(this@ScanQRCodeLoginActivity, "Hardware not supported", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+
+            override fun isSdkVersionSupported(boolean: Boolean) {
+                Toast.makeText(this@ScanQRCodeLoginActivity,"SDK version not supported",Toast.LENGTH_LONG).show()
+            }
+
+            override fun isBiometricEnrolled(boolean: Boolean) {
+                if (boolean == false) {
+                    Toast.makeText(this@ScanQRCodeLoginActivity, "Biometric not enabled", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+
+            override fun biometricErrorSecurityUpdateRequired() {
+                Toast.makeText(this@ScanQRCodeLoginActivity, "Biometric security updates required", Toast.LENGTH_LONG)
+                    .show()
+            }
+        })
     }
 
     @AfterPermissionGranted(REQUEST_CODE_CAMERA_PERMISSION)
@@ -80,7 +141,7 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
     private fun setupViewModel() {
         viewModel = ViewModelProviders.of(
             this,
-            ViewModelFactory(CyberarkAuthHelper(CyberarkAuthBuilder.cyberarkAuthService))
+            CyberarkViewModelFactory(CyberarkAuthHelper(CyberarkAuthBuilder.cyberarkAuthService))
         ).get(ScanQRCodeViewModel::class.java)
     }
 

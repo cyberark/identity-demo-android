@@ -1,4 +1,4 @@
-package com.cyberark.mfa.ui.qr
+package com.cyberark.identity.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

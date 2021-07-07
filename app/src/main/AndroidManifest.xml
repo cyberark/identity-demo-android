@@ -21,12 +21,12 @@
             android:name="asset_statements"
             android:resource="@string/asset_statements" />
 
+
         <activity
-            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:name="com.cyberark.identity.ScanQRCodeLoginActivity"
             android:screenOrientation="portrait"
             tools:replace="screenOrientation" />
 
-        <activity android:name=".ui.qr.ScanQRCodeLoginActivity" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

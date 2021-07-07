@@ -8,7 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.cyberark.identity.builder.CyberarkAccountBuilder
 import com.cyberark.identity.provider.CyberarkAuthProvider
 import com.cyberark.identity.util.ResponseStatus
-import com.cyberark.mfa.ui.qr.ScanQRCodeLoginActivity
+import com.cyberark.identity.ScanQRCodeLoginActivity
+//import com.cyberark.mfa.ui.qr.ScanQRCodeLoginActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val scanQRCodeButton: Button = findViewById(R.id.scan_qr_code)
+
         scanQRCodeButton.setOnClickListener {
             val intent = Intent(this, ScanQRCodeLoginActivity::class.java)
             startActivity(intent)
