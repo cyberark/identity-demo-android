@@ -20,11 +20,14 @@ final class AlertButton(title:String,buttonType:AlertButtonType) {
 class AlertDialogHandler(callback: AlertDialogButtonCallback):DialogInterface.OnClickListener {
     private lateinit var alertDialog:AlertDialog
     private val callback = callback
+    private var cancellable:Boolean = true
 
-    fun displayAlert(activity:Activity,title:String,message:String,pButtons:List<AlertButton> ): AlertDialog {
+    fun displayAlert(activity:Activity,title:String,message:String,cancellable:Boolean,pButtons:List<AlertButton> ): AlertDialog {
         var alerBuilder = AlertDialog.Builder(activity)
         alerBuilder.setTitle(title)
         alerBuilder.setMessage(message)
+        this.cancellable = cancellable
+        alerBuilder.setCancelable(this.cancellable)
         for (pButton in pButtons) {
             when(pButton.buttonType) {
                 AlertButtonType.POSITIVE -> alerBuilder.setPositiveButton(pButton.buttonTitle,this)
@@ -44,6 +47,18 @@ class AlertDialogHandler(callback: AlertDialogButtonCallback):DialogInterface.On
     }
 
     fun dismissAlert() {
+        if (this.cancellable) {
+            alertDialog?.dismiss()
+        }
+    }
+
+    fun dismiss() {
+        if (this.cancellable) {
+            alertDialog?.dismiss()
+        }
+    }
+
+    fun dismissForcefully() {
         alertDialog?.dismiss()
     }
 
