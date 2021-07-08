@@ -24,6 +24,11 @@ object CyberarkAuthProvider {
         return Builder(context, account)
     }
 
+    fun endSession(context: Context, account: CyberarkAccountBuilder): EndSessionBuilder {
+        this.account = account
+        return EndSessionBuilder(context)
+    }
+
     @JvmStatic
     public fun getAuthorizeToken(intent: Intent?): Boolean {
         val code = intent?.data?.getQueryParameter(CyberarkAccountBuilder.KEY_CODE)
@@ -53,8 +58,8 @@ object CyberarkAuthProvider {
     public fun getAuthViewModel() = viewModel
 
     class Builder internal constructor(
-            context: Context,
-            private val account: CyberarkAccountBuilder
+        context: Context,
+        private val account: CyberarkAccountBuilder
     ) {
 
         private val context: Context = context
@@ -62,8 +67,8 @@ object CyberarkAuthProvider {
 
         fun setupViewModel(): Builder {
             viewModel = ViewModelProviders.of(
-                    appContext,
-                    CyberarkViewModelFactory(CyberarkAuthHelper(CyberarkAuthBuilder.cyberarkAuthService))
+                appContext,
+                CyberarkViewModelFactory(CyberarkAuthHelper(CyberarkAuthBuilder.cyberarkAuthService))
             ).get(AuthenticationViewModel::class.java)
             return this
         }
@@ -71,8 +76,22 @@ object CyberarkAuthProvider {
         fun start() {
             Log.i(TAG, "Start browser based authentication flow")
             CyberarkAuthActivity.authenticateUsingCustomTab(
-                    context,
-                    Uri.parse(account.OAuthBaseURL)
+                context,
+                Uri.parse(account.OAuthBaseURL)
+            )
+        }
+    }
+
+    class EndSessionBuilder internal constructor(
+        context: Context
+    ) {
+        private val context: Context = context
+
+        fun start() {
+            Log.i(TAG, "Invoke end session")
+            CyberarkAuthActivity.authenticateUsingCustomTab(
+                context,
+                Uri.parse(account.OAuthEndSessionURL)
             )
         }
     }
