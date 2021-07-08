@@ -2,9 +2,7 @@ package com.cyberark.identity.data.network
 
 import com.cyberark.identity.data.model.AuthCodeFlowModel
 import com.cyberark.identity.data.model.QRCodeLoginModel
-import com.cyberark.identity.util.EndpointUrls.URL_AUTH_CODE_FLOW
-import okhttp3.ResponseBody
-import retrofit2.Response
+import com.cyberark.identity.util.endpoint.EndpointUrls.URL_AUTH_CODE_FLOW
 import retrofit2.http.*
 
 interface CyberarkAuthService {

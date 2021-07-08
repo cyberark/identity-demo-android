@@ -1,7 +1,7 @@
 package com.cyberark.identity.builder
 
 import android.util.Log
-import com.cyberark.identity.util.PKCEHelper
+import com.cyberark.identity.util.pkce.PKCEHelper
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.util.*
@@ -54,6 +54,7 @@ class CyberarkAccountBuilder(
         const val KEY_GRANT_TYPE = "grant_type"
         const val KEY_CODE = "code"
         const val KEY_REDIRECT_URI = "redirect_uri"
+        const val KEY_POST_LOGOUT_REDIRECT_URI = "post_logout_redirect_uri"
         const val KEY_CLIENT_ID = "client_id"
         const val KEY_SCOPE = "scope"
         const val KEY_CODE_VERIFIER = "code_verifier"
@@ -73,6 +74,14 @@ class CyberarkAccountBuilder(
             .addQueryParameter(KEY_CODE_CHALLENGE, getCodeChallenge)
             .addQueryParameter(KEY_CODE_CHALLENGE_METHOD, CODE_CHALLENGE_METHOD_VALUE)
             .addEncodedQueryParameter(KEY_REDIRECT_URI, redirectUri.toString())
+            .build()
+            .toString()
+
+    val OAuthEndSessionURL: String
+        get() = baseURL!!.newBuilder()
+            .addPathSegment("oauth2")
+            .addPathSegment("endsession")
+            .addEncodedQueryParameter(KEY_POST_LOGOUT_REDIRECT_URI, redirectUri.toString())
             .build()
             .toString()
 

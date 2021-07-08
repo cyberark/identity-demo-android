@@ -1,4 +1,4 @@
-package com.cyberark.identity.util
+package com.cyberark.identity.util.pkce
 
 import android.util.Base64
 import android.util.Log

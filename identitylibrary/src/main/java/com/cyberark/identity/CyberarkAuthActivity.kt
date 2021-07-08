@@ -9,7 +9,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import com.cyberark.identity.provider.CyberarkAuthProvider.getAuthorizeToken
-import com.cyberark.identity.util.CustomTabHelper
+import com.cyberark.identity.util.browser.CustomTabHelper
 
 class CyberarkAuthActivity : AppCompatActivity() {
 

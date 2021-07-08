@@ -1,4 +1,4 @@
-package com.cyberark.identity.util;
+package com.cyberark.identity.util.preference;
 
 import android.content.Context;
 import android.content.SharedPreferences;

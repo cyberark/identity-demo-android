@@ -40,5 +40,6 @@
     <string name="cyberark_account_scope">All</string>
     <string name="cyberark_account_redirect_uri">demo://aaj7617.my.dev.idaptive.app/android/com.cyberark.mfa/callback</string>
     <string name="cyberark_account_scheme">demo</string>
+    <string name="end_session">End Session</string>
 
 </resources>
