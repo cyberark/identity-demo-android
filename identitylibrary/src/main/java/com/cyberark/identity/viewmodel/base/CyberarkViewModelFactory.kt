@@ -2,13 +2,12 @@ package com.cyberark.identity.viewmodel.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
 import com.cyberark.identity.data.network.CyberarkAuthHelper
 import com.cyberark.identity.viewmodel.AuthenticationViewModel
-//import com.cyberark.mfa.ui.qr.ScanQRCodeViewModel
+import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
 
 class CyberarkViewModelFactory(private val cyberarkAuthHelper: CyberarkAuthHelper) :
-    ViewModelProvider.Factory {
+        ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AuthenticationViewModel::class.java)) {

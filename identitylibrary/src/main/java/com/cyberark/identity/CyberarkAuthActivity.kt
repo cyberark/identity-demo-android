@@ -61,8 +61,8 @@ class CyberarkAuthActivity : AppCompatActivity() {
 
         @JvmStatic
         internal fun authenticateUsingCustomTab(
-            context: Context,
-            authorizeUri: Uri
+                context: Context,
+                authorizeUri: Uri
         ) {
             val intent = Intent(context, CyberarkAuthActivity::class.java)
             intent.putExtra(AUTHORIZE_URI, authorizeUri)

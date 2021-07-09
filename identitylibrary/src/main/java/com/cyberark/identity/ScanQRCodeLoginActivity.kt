@@ -25,7 +25,7 @@ private const val REQUEST_CODE_CAMERA_PERMISSION = 123
 class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private lateinit var viewModel: ScanQRCodeViewModel
-    private var isBioAuthenticated:Boolean = false
+    private var isBioAuthenticated: Boolean = false
     private lateinit var bioMetric: BiometricPromptUtility
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,9 +38,9 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
         super.onResume()
         if (isBioAuthenticated) {
             requestCameraPermission()
-        }else {
+        } else {
             //do biometric authentication
-            bioMetric.showBioAuthentication(this,null,"Use App Pin",false)
+            bioMetric.showBioAuthentication(this, null, "Use App Pin", false)
         }
     }
 
@@ -50,47 +50,47 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
     }
 
 
-    private fun hasCameraPermission():Boolean {
+    private fun hasCameraPermission(): Boolean {
         return EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)
     }
 
     private fun registerForBiometricCallback() {
         bioMetric = BiometricPromptUtility(object : BiometricAuthenticationCallback {
             override fun isAuthenticationSuccess(success: Boolean) {
-                Toast.makeText(this@ScanQRCodeLoginActivity,"Authentication success",Toast.LENGTH_LONG).show()
+                Toast.makeText(this@ScanQRCodeLoginActivity, "Authentication success", Toast.LENGTH_LONG).show()
                 this@ScanQRCodeLoginActivity.isBioAuthenticated = true
                 requestCameraPermission()
             }
 
             override fun passwordAuthenticationSelected() {
-                Toast.makeText(this@ScanQRCodeLoginActivity,"Password authentication selected",Toast.LENGTH_LONG).show()
+                Toast.makeText(this@ScanQRCodeLoginActivity, "Password authentication selected", Toast.LENGTH_LONG).show()
             }
 
             override fun showErrorMessage(message: String) {
-                Toast.makeText(this@ScanQRCodeLoginActivity,message,Toast.LENGTH_LONG).show()
+                Toast.makeText(this@ScanQRCodeLoginActivity, message, Toast.LENGTH_LONG).show()
             }
 
             override fun isHardwareSupported(boolean: Boolean) {
                 if (boolean == false) {
                     Toast.makeText(this@ScanQRCodeLoginActivity, "Hardware not supported", Toast.LENGTH_LONG)
-                        .show()
+                            .show()
                 }
             }
 
             override fun isSdkVersionSupported(boolean: Boolean) {
-                Toast.makeText(this@ScanQRCodeLoginActivity,"SDK version not supported",Toast.LENGTH_LONG).show()
+                Toast.makeText(this@ScanQRCodeLoginActivity, "SDK version not supported", Toast.LENGTH_LONG).show()
             }
 
             override fun isBiometricEnrolled(boolean: Boolean) {
                 if (boolean == false) {
                     Toast.makeText(this@ScanQRCodeLoginActivity, "Biometric not enabled", Toast.LENGTH_LONG)
-                        .show()
+                            .show()
                 }
             }
 
             override fun biometricErrorSecurityUpdateRequired() {
                 Toast.makeText(this@ScanQRCodeLoginActivity, "Biometric security updates required", Toast.LENGTH_LONG)
-                    .show()
+                        .show()
             }
         })
     }
@@ -99,15 +99,15 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
     private fun requestCameraPermission() {
         if (hasCameraPermission()) {
             // Have permission, do things!
-                startQRCodeScan()
+            startQRCodeScan()
             Toast.makeText(this, "TODO: Camera things", Toast.LENGTH_LONG).show()
         } else {
             // Ask for one permission
             EasyPermissions.requestPermissions(
-                this,
-                getString(R.string.permission_camera_rationale_message),
-                REQUEST_CODE_CAMERA_PERMISSION,
-                Manifest.permission.CAMERA
+                    this,
+                    getString(R.string.permission_camera_rationale_message),
+                    REQUEST_CODE_CAMERA_PERMISSION,
+                    Manifest.permission.CAMERA
             )
         }
     }
@@ -140,8 +140,8 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
 
     private fun setupViewModel() {
         viewModel = ViewModelProviders.of(
-            this,
-            CyberarkViewModelFactory(CyberarkAuthHelper(CyberarkAuthBuilder.cyberarkAuthService))
+                this,
+                CyberarkViewModelFactory(CyberarkAuthHelper(CyberarkAuthBuilder.cyberarkAuthService))
         ).get(ScanQRCodeViewModel::class.java)
     }
 

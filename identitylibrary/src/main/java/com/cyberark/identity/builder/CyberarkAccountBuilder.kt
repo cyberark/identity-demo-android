@@ -7,13 +7,13 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.util.*
 
 class CyberarkAccountBuilder(
-    val domainURL: String?,
-    val clientId: String?,
-    val appId: String?,
-    val responseType: String?,
-    val state: String?,
-    val scope: String?,
-    val redirectUri: String?
+        val domainURL: String?,
+        val clientId: String?,
+        val appId: String?,
+        val responseType: String?,
+        val state: String?,
+        val scope: String?,
+        val redirectUri: String?
 ) {
 
     private val baseURL: HttpUrl?
@@ -22,13 +22,13 @@ class CyberarkAccountBuilder(
     private val TAG: String? = CyberarkAccountBuilder::class.simpleName
 
     data class Builder(
-        var domainURL: String? = null,
-        var clientId: String? = null,
-        var appId: String? = null,
-        var responseType: String? = null,
-        var state: String? = null,
-        var scope: String? = null,
-        var redirectUri: String? = null
+            var domainURL: String? = null,
+            var clientId: String? = null,
+            var appId: String? = null,
+            var responseType: String? = null,
+            var state: String? = null,
+            var scope: String? = null,
+            var redirectUri: String? = null
     ) {
 
         fun domainURL(domainURL: String) = apply { this.domainURL = domainURL }
@@ -39,13 +39,13 @@ class CyberarkAccountBuilder(
         fun scope(scope: String) = apply { this.scope = scope }
         fun redirectUri(redirectUri: String) = apply { this.redirectUri = redirectUri }
         fun build() = CyberarkAccountBuilder(
-            domainURL,
-            clientId,
-            appId,
-            responseType,
-            state,
-            scope,
-            redirectUri
+                domainURL,
+                clientId,
+                appId,
+                responseType,
+                state,
+                scope,
+                redirectUri
         )
     }
 
@@ -57,33 +57,35 @@ class CyberarkAccountBuilder(
         const val KEY_POST_LOGOUT_REDIRECT_URI = "post_logout_redirect_uri"
         const val KEY_CLIENT_ID = "client_id"
         const val KEY_SCOPE = "scope"
+        const val KEY_REFRESH_TOKEN = "refresh_token"
         const val KEY_CODE_VERIFIER = "code_verifier"
         const val KEY_CODE_CHALLENGE = "code_challenge"
         const val KEY_CODE_CHALLENGE_METHOD = "code_challenge_method"
         const val CODE_CHALLENGE_METHOD_VALUE = "S256"
+        const val AUTHORIZATION_CODE_VALUE = "authorization_code"
     }
 
     val OAuthBaseURL: String
         get() = baseURL!!.newBuilder()
-            .addPathSegment("oauth2")
-            .addPathSegment("authorize")
-            .addPathSegment(appId.toString())
-            .addQueryParameter(KEY_RESPONSE_TYPE, responseType.toString())
-            .addQueryParameter(KEY_CLIENT_ID, clientId.toString())
-            .addQueryParameter(KEY_SCOPE, scope.toString())
-            .addQueryParameter(KEY_CODE_CHALLENGE, getCodeChallenge)
-            .addQueryParameter(KEY_CODE_CHALLENGE_METHOD, CODE_CHALLENGE_METHOD_VALUE)
-            .addEncodedQueryParameter(KEY_REDIRECT_URI, redirectUri.toString())
-            .build()
-            .toString()
+                .addPathSegment("oauth2")
+                .addPathSegment("authorize")
+                .addPathSegment(appId.toString())
+                .addQueryParameter(KEY_RESPONSE_TYPE, responseType.toString())
+                .addQueryParameter(KEY_CLIENT_ID, clientId.toString())
+                .addQueryParameter(KEY_SCOPE, scope.toString())
+                .addQueryParameter(KEY_CODE_CHALLENGE, getCodeChallenge)
+                .addQueryParameter(KEY_CODE_CHALLENGE_METHOD, CODE_CHALLENGE_METHOD_VALUE)
+                .addEncodedQueryParameter(KEY_REDIRECT_URI, redirectUri.toString())
+                .build()
+                .toString()
 
     val OAuthEndSessionURL: String
         get() = baseURL!!.newBuilder()
-            .addPathSegment("oauth2")
-            .addPathSegment("endsession")
-            .addEncodedQueryParameter(KEY_POST_LOGOUT_REDIRECT_URI, redirectUri.toString())
-            .build()
-            .toString()
+                .addPathSegment("oauth2")
+                .addPathSegment("endsession")
+                .addEncodedQueryParameter(KEY_POST_LOGOUT_REDIRECT_URI, redirectUri.toString())
+                .build()
+                .toString()
 
     val getRedirectURL: String
         get() = redirectUri.toString()
@@ -98,7 +100,7 @@ class CyberarkAccountBuilder(
         val normalizedUrl = url.toLowerCase(Locale.ROOT)
         require(!normalizedUrl.startsWith("http://")) { "Invalid domain url: '$url'." }
         val safeUrl =
-            if (normalizedUrl.startsWith("https://")) normalizedUrl else "https://$normalizedUrl"
+                if (normalizedUrl.startsWith("https://")) normalizedUrl else "https://$normalizedUrl"
         return safeUrl.toHttpUrlOrNull()
     }
 
