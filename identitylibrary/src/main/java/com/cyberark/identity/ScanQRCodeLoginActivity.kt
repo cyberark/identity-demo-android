@@ -5,6 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultRegistry
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.cyberark.identity.data.network.CyberarkAuthBuilder
@@ -15,38 +20,48 @@ import com.cyberark.identity.util.biometric.BiometricPromptUtility
 import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
 import com.cyberark.identity.viewmodel.base.CyberarkViewModelFactory
 import com.google.zxing.integration.android.IntentIntegrator
+import kotlinx.coroutines.Dispatchers
+import okhttp3.Dispatcher
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
 private const val TAG = "ScanQRCodeLoginActivity"
 private const val REQUEST_CODE_CAMERA_PERMISSION = 123
+private const val APP_PIN_REQUEST = 124
 
 class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private lateinit var viewModel: ScanQRCodeViewModel
-    private var isBioAuthenticated: Boolean = false
+    private var isAuthenticated: Boolean = false
     private lateinit var bioMetric: BiometricPromptUtility
+
+    init {
+        registerForBiometricCallback()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recycler_view)
-        registerForBiometricCallback()
+//        registerForBiometricCallback()
     }
 
     override fun onResume() {
         super.onResume()
-        if (isBioAuthenticated) {
+        if (isAuthenticated) {
             requestCameraPermission()
         } else {
             //do biometric authentication
             bioMetric.showBioAuthentication(this, null, "Use App Pin", false)
         }
+        Dispatchers.Main
     }
 
     override fun onPause() {
         super.onPause()
-        bioMetric?.dismissFingerPrintEnroll()
+        if (::bioMetric.isInitialized) {
+            bioMetric?.dismissFingerPrintEnroll()
+        }
     }
 
 
@@ -58,12 +73,18 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
         bioMetric = BiometricPromptUtility(object : BiometricAuthenticationCallback {
             override fun isAuthenticationSuccess(success: Boolean) {
                 Toast.makeText(this@ScanQRCodeLoginActivity, "Authentication success", Toast.LENGTH_LONG).show()
-                this@ScanQRCodeLoginActivity.isBioAuthenticated = true
+                this@ScanQRCodeLoginActivity.isAuthenticated = true
                 requestCameraPermission()
             }
 
             override fun passwordAuthenticationSelected() {
                 Toast.makeText(this@ScanQRCodeLoginActivity, "Password authentication selected", Toast.LENGTH_LONG).show()
+                val pinIntent = Intent(this@ScanQRCodeLoginActivity, SecurityPinActivity::class.java).apply{
+                    putExtra("securitypin","1234")
+                }
+                startActivityForResult(pinIntent, APP_PIN_REQUEST)
+
+//                activityResult.launch(pinIntent)
             }
 
             override fun showErrorMessage(message: String) {
@@ -163,7 +184,10 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
             // Do something after user returned from app settings screen, like showing a Toast.
             Toast.makeText(this, R.string.returned_from_app_settings_to_activity, Toast.LENGTH_SHORT).show();
             finish()
-        } else {
+        } else if (requestCode == APP_PIN_REQUEST && resultCode == RESULT_OK) {
+            isAuthenticated = true
+        }
+        else {
             val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
             if (result != null) {
                 if (result.contents == null) {

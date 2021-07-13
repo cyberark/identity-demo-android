@@ -40,56 +40,59 @@ open class BiometricPromptUtility(authenticationCallback: BiometricAuthenticatio
 //    private var useDevicePin:Boolean = false
 
     private fun createBioAuthetication(
-        activity: AppCompatActivity,
-        succss: (BiometricPrompt.AuthenticationResult) -> Unit
+        activity: AppCompatActivity
     ): BiometricPrompt {
         val executor = ContextCompat.getMainExecutor(activity)
-
-        val callback = object : BiometricPrompt.AuthenticationCallback() {
-
-            override fun onAuthenticationError(errCode: Int, errString: CharSequence) {
-                super.onAuthenticationError(errCode, errString)
-                if (errCode == 13) {
-//                    this@BiometricPromptUtility.authenticationCallback.passwordAuthenticationSelected()
-//                    val pinIntent = Intent(activity.applicationContext,SecurityPinActivity::class.java).apply{
-//                        putExtra("securitypin",securityPin)
-//                    }
-//                    activity.startActivity(pinIntent)
-                } else {
-                    this@BiometricPromptUtility.authenticationCallback.showErrorMessage(errString.toString())
-                }
-                mPrompt = null
-                Log.d(TAG, "errCode is $errCode and errString is: $errString")
-            }
-
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-                if (isAutoCancelElabled) {
-                    if (mFailedTries < mMaxRetries) {
-                        mFailedTries++
-                    } else {
-                        //If same object used multiple times by client
-                        mFailedTries = 0
-                        mPrompt?.cancelAuthentication()
-                        this@BiometricPromptUtility.authenticationCallback.isAuthenticationSuccess(
-                            false
-                        )
-                    }
-                }
-                mPrompt = null
-                Log.d(TAG, "User biometric rejected.")
-            }
-
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                super.onAuthenticationSucceeded(result)
-                Log.d(TAG, "Authentication was successful")
-                succss(result)
-                mPrompt = null
-            }
-        }
-        mPrompt = BiometricPrompt(activity, executor, callback)
+        mPrompt = getBioMetricPrompt(activity, executor, getBioMetricCallback())
+//        mPrompt = BiometricPrompt(activity, executor, getBioMetricCallback())
         return mPrompt!!
     }
+
+    private fun getBioMetricCallback() = object : BiometricPrompt.AuthenticationCallback() {
+
+        override fun onAuthenticationError(errCode: Int, errString: CharSequence) {
+            super.onAuthenticationError(errCode, errString)
+            if (errCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
+                this@BiometricPromptUtility.authenticationCallback.passwordAuthenticationSelected()
+                mPrompt!!.cancelAuthentication()
+            } else {
+                this@BiometricPromptUtility.authenticationCallback.showErrorMessage(errString.toString())
+            }
+            mPrompt = null
+            Log.d(TAG, "errCode is $errCode and errString is: $errString")
+        }
+
+        override fun onAuthenticationFailed() {
+            super.onAuthenticationFailed()
+            if (isAutoCancelElabled) {
+                if (mFailedTries < mMaxRetries) {
+                    mFailedTries++
+                } else {
+                    //If same object used multiple times by client
+                    mFailedTries = 0
+                    mPrompt?.cancelAuthentication()
+                    this@BiometricPromptUtility.authenticationCallback.isAuthenticationSuccess(
+                        false
+                    )
+                }
+            }
+            mPrompt = null
+            Log.d(TAG, "User biometric rejected.")
+        }
+
+        override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+            super.onAuthenticationSucceeded(result)
+            Log.d(TAG, "Authentication was successful")
+            decryptServerTokenFromStorage(result)
+            mPrompt = null
+        }
+    }
+
+    private fun getBioMetricPrompt(
+        activity: AppCompatActivity,
+        executor: java.util.concurrent.Executor,
+        callback: BiometricPrompt.AuthenticationCallback
+    ) = BiometricPrompt(activity, executor, callback)
 
     fun showBioAuthentication(
         activity: AppCompatActivity,
@@ -115,7 +118,7 @@ open class BiometricPromptUtility(authenticationCallback: BiometricAuthenticatio
             return
         }
         val promptInfo = this.createPromptInfo(activity)
-        this.createBioAuthetication(activity, ::decryptServerTokenFromStorage)
+        this.createBioAuthetication(activity)
             .authenticate(promptInfo)
     }
 
@@ -125,10 +128,10 @@ open class BiometricPromptUtility(authenticationCallback: BiometricAuthenticatio
     }
 
     private fun checkAndAuthenticate(activity: AppCompatActivity) {
-        val biometricManager = BiometricManager.from(activity)
+        val biometricManager = getBioMetric(activity)
         println("Biometric manager $biometricManager")
         if (biometricManager != null) {
-            println("Biometri can authenticate ${biometricManager.canAuthenticate(getSecurityType())}")
+//            println("Biometric can authenticate ${biometricManager.canAuthenticate(getSecurityType())}")
             when (biometricManager.canAuthenticate(getSecurityType())) {
                 BiometricManager.BIOMETRIC_SUCCESS -> {
                     showBiometricPrompt(activity)
@@ -158,6 +161,9 @@ open class BiometricPromptUtility(authenticationCallback: BiometricAuthenticatio
         }
     }
 
+    private fun getBioMetric(activity: AppCompatActivity): BiometricManager =
+        BiometricManager.from(activity)
+
     private fun showFingerEnrollmentAlert(activity: Activity) {
         enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
             override fun tappedButtonwithType(buttonType: AlertButtonType) {
@@ -167,14 +173,15 @@ open class BiometricPromptUtility(authenticationCallback: BiometricAuthenticatio
         enrollFingerPrintDlg.displayAlert(
             activity,
             activity.getString(R.string.cyberArkTitle),
-            activity.getString(R.string.biometricDescription),false,
+            activity.getString(R.string.biometricDescription), false,
             mutableListOf<AlertButton>(AlertButton("OK", AlertButtonType.POSITIVE))
         )
     }
 
-
     fun dismissFingerPrintEnroll() {
-        enrollFingerPrintDlg?.dismissForcefully()
+        if (::enrollFingerPrintDlg.isInitialized) {
+            enrollFingerPrintDlg?.dismissForcefully()
+        }
     }
 
     private fun launchBiometricSetup(activity: Activity?) {

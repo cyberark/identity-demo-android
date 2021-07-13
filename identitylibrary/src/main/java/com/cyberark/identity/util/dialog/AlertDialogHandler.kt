@@ -40,7 +40,6 @@ class AlertDialogHandler(callback: AlertDialogButtonCallback):DialogInterface.On
 //            if ()
 //            alerBuilder.setPositiveButton(nButton, this)
 //        }
-
         alertDialog = alerBuilder.create()
         alertDialog.show()
         return alertDialog
