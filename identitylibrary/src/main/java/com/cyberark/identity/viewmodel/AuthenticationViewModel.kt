@@ -11,7 +11,7 @@ import com.cyberark.identity.data.network.CyberarkAuthHelper
 import com.cyberark.identity.util.ResponseHandler
 import kotlinx.coroutines.launch
 
-class AuthenticationViewModel(private val cyberarkAuthHelper: CyberarkAuthHelper) : ViewModel() {
+internal class AuthenticationViewModel(private val cyberarkAuthHelper: CyberarkAuthHelper) : ViewModel() {
 
     private val TAG: String? = AuthenticationViewModel::class.simpleName
     private val authResponse = MutableLiveData<ResponseHandler<AuthCodeFlowModel>>()
@@ -21,7 +21,7 @@ class AuthenticationViewModel(private val cyberarkAuthHelper: CyberarkAuthHelper
         Log.i(TAG, "initialize AuthenticationViewModel")
     }
 
-    fun handleAuthorizationCode(params: HashMap<String?, String?>) {
+    internal fun handleAuthorizationCode(params: HashMap<String?, String?>) {
         viewModelScope.launch {
             authResponse.postValue(ResponseHandler.loading(null))
             try {
@@ -37,7 +37,7 @@ class AuthenticationViewModel(private val cyberarkAuthHelper: CyberarkAuthHelper
         }
     }
 
-    fun handleRefreshToken(params: HashMap<String?, String?>) {
+    internal fun handleRefreshToken(params: HashMap<String?, String?>) {
         viewModelScope.launch {
             refreshTokenResponse.postValue(ResponseHandler.loading(null))
             try {
@@ -53,11 +53,11 @@ class AuthenticationViewModel(private val cyberarkAuthHelper: CyberarkAuthHelper
         }
     }
 
-    fun getAccessToken(): LiveData<ResponseHandler<AuthCodeFlowModel>> {
+    internal fun getAccessToken(): LiveData<ResponseHandler<AuthCodeFlowModel>> {
         return authResponse
     }
 
-    fun getRefreshToken(): LiveData<ResponseHandler<RefreshTokenModel>> {
+    internal fun getRefreshToken(): LiveData<ResponseHandler<RefreshTokenModel>> {
         return refreshTokenResponse
     }
 }

@@ -6,13 +6,13 @@ import com.cyberark.identity.data.network.CyberarkAuthHelper
 import com.cyberark.identity.viewmodel.AuthenticationViewModel
 import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
 
-class CyberarkViewModelFactory(private val cyberarkAuthHelper: CyberarkAuthHelper) :
+internal class CyberarkViewModelFactory(private val cyberarkAuthHelper: CyberarkAuthHelper) :
         ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AuthenticationViewModel::class.java)) {
             return AuthenticationViewModel(cyberarkAuthHelper) as T
-        } else if (modelClass.isAssignableFrom(AuthenticationViewModel::class.java)) {
+        } else if (modelClass.isAssignableFrom(ScanQRCodeViewModel::class.java)) {
             return ScanQRCodeViewModel(cyberarkAuthHelper) as T
         }
         throw IllegalArgumentException("Unknown class name")

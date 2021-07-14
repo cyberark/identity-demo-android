@@ -14,13 +14,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:enabled="false"/>
 
     <Button
         android:id="@+id/button_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/authenticate"
+        android:text="@string/sign_in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,13 +32,14 @@
         android:id="@+id/button_end_session"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/end_session"
+        android:text="@string/log_out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_login"
-        app:layout_constraintVertical_bias="0.128" />
+        app:layout_constraintVertical_bias="0.128"
+        android:enabled="false"/>
 
     <Button
         android:id="@+id/button_refresh_token"
@@ -48,6 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_end_session"
-        app:layout_constraintVertical_bias="0.296" />
+        app:layout_constraintVertical_bias="0.296"
+        android:enabled="false"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
