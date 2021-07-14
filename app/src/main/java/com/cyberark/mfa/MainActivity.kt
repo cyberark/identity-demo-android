@@ -34,10 +34,10 @@ class MainActivity : AppCompatActivity() {
     // Access token data variable
     private lateinit var accessTokenData: String
 
-    private var scanQRCodeButton: Button? = null
-    private var signInButton: Button? = null
-    private var logOut: Button? = null
-    private var refreshToken: Button? = null
+    private lateinit var scanQRCodeButton: Button
+    private lateinit var signInButton: Button
+    private lateinit var logOut: Button
+    private lateinit var refreshToken: Button
 
     val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -63,21 +63,17 @@ class MainActivity : AppCompatActivity() {
 
         // OAuth Authorization Code Flow + PKCE
         val account = setupAccount()
-        val buttonLogin: Button = findViewById(R.id.button_login)
-        buttonLogin.setOnClickListener {
+        signInButton.setOnClickListener {
             startAuthentication(account)
         }
-        val buttonEndSession: Button = findViewById(R.id.button_end_session)
-        buttonEndSession.setOnClickListener {
+        logOut.setOnClickListener {
             endSession(account)
         }
-        val buttonRefreshToken: Button = findViewById(R.id.button_refresh_token)
-        buttonRefreshToken.setOnClickListener {
+        refreshToken.setOnClickListener {
             getAccessTokenUsingRefreshToken(account)
         }
 
         // QR Code Authenticator Flow
-        val scanQRCodeButton: Button = findViewById(R.id.scan_qr_code)
         scanQRCodeButton.setOnClickListener {
             val intent = Intent(this, ScanQRCodeLoginActivity::class.java)
             if (::accessTokenData.isInitialized) {
