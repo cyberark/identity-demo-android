@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.cyberark.identity.builder.CyberarkAccountBuilder
 import com.cyberark.identity.data.model.AuthCodeFlowModel
+import com.cyberark.identity.data.model.EnrollmentModel
 import com.cyberark.identity.data.model.RefreshTokenModel
 import com.cyberark.identity.util.ResponseHandler
 
@@ -24,6 +25,10 @@ object CyberarkAuthProvider {
 
     fun refreshToken(account: CyberarkAccountBuilder): RefreshTokenBuilder {
         return RefreshTokenBuilder(account)
+    }
+
+    fun enroll(): EnrollmentBuilder {
+        return EnrollmentBuilder()
     }
 
     @JvmStatic
@@ -77,6 +82,17 @@ object CyberarkAuthProvider {
             cyberarkAuthManager.refreshToken(refreshTokenData)
 
             return cyberarkAuthManager.getViewModelInstance.getRefreshToken()
+        }
+    }
+
+    class EnrollmentBuilder internal constructor(
+    ) {
+        fun start(context: Context, accessToken: String): LiveData<ResponseHandler<EnrollmentModel>> {
+            Log.i(TAG, "Start enroll")
+            val cyberarkEnrollmentManager = CyberarkEnrollmentManager(context, accessToken)
+            cyberarkEnrollmentManager.enroll()
+
+            return cyberarkEnrollmentManager.getViewModelInstance.getEnrolledData()
         }
     }
 }

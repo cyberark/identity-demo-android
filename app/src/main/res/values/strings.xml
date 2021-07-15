@@ -44,5 +44,6 @@
     <string name="refresh_token">Refresh Token</string>
     <string name="log_out">Log out</string>
     <string name="sign_in">Sign In</string>
+    <string name="enroll">Enroll</string>
 
 </resources>

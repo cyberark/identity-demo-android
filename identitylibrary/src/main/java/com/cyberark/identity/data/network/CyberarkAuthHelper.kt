@@ -1,8 +1,10 @@
 package com.cyberark.identity.data.network
 
 import com.cyberark.identity.data.model.AuthCodeFlowModel
+import com.cyberark.identity.data.model.EnrollmentModel
 import com.cyberark.identity.data.model.QRCodeLoginModel
 import com.cyberark.identity.data.model.RefreshTokenModel
+import okhttp3.RequestBody
 
 class CyberarkAuthHelper(private val cyberarkAuthService: CyberarkAuthService) {
 
@@ -15,5 +17,11 @@ class CyberarkAuthHelper(private val cyberarkAuthService: CyberarkAuthService) {
 
     suspend fun refreshToken(params: HashMap<String?,
             String?>): RefreshTokenModel = cyberarkAuthService.refreshToken(params)
+
+    suspend fun fastEnrollV3(centrifyNativeClient: Boolean,
+                             idapNativeClient: Boolean,
+                             acceptLang: String,
+                             bearerToken: String,
+                             body: RequestBody): EnrollmentModel = cyberarkAuthService.fastEnrollV3(centrifyNativeClient, idapNativeClient, acceptLang, bearerToken, body)
 
 }

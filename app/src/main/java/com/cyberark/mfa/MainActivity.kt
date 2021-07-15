@@ -13,6 +13,7 @@ import androidx.lifecycle.LiveData
 import com.cyberark.identity.ScanQRCodeLoginActivity
 import com.cyberark.identity.builder.CyberarkAccountBuilder
 import com.cyberark.identity.data.model.AuthCodeFlowModel
+import com.cyberark.identity.data.model.EnrollmentModel
 import com.cyberark.identity.data.model.RefreshTokenModel
 import com.cyberark.identity.provider.CyberarkAuthProvider
 import com.cyberark.identity.util.ResponseHandler
@@ -21,12 +22,6 @@ import com.cyberark.identity.util.ResponseStatus
 class MainActivity : AppCompatActivity() {
 
     private val TAG: String? = MainActivity::class.simpleName
-
-    // OAuth access token handler
-    private lateinit var authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>>
-
-    // OAuth refresh token handler
-    private lateinit var refreshTokenResponseHandler: LiveData<ResponseHandler<RefreshTokenModel>>
 
     // Refresh token data variable
     private lateinit var refreshTokenData: String
@@ -38,8 +33,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var signInButton: Button
     private lateinit var logOut: Button
     private lateinit var refreshToken: Button
+    private lateinit var enrollButton: Button
 
-    val startForResult =
+    private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 var data = result.data?.getStringExtra("QR_CODE_AUTH_RESULT")
@@ -60,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         signInButton = findViewById(R.id.button_login)
         logOut = findViewById(R.id.button_end_session)
         refreshToken = findViewById(R.id.button_refresh_token)
+        enrollButton = findViewById(R.id.button_enroll)
 
         // OAuth Authorization Code Flow + PKCE
         val account = setupAccount()
@@ -79,6 +76,15 @@ class MainActivity : AppCompatActivity() {
             if (::accessTokenData.isInitialized) {
                 intent.putExtra("access_token", accessTokenData)
                 startForResult.launch(intent)
+            } else {
+                //TODO.. handle error scenario
+            }
+        }
+
+        //Enroll device
+        enrollButton.setOnClickListener {
+            if (::accessTokenData.isInitialized) {
+                enroll()
             } else {
                 //TODO.. handle error scenario
             }
@@ -105,7 +111,8 @@ class MainActivity : AppCompatActivity() {
      * Launch URL in browser, set-up view model and start authentication flow
      */
     private fun startAuthentication(cyberarkAccountBuilder: CyberarkAccountBuilder) {
-        authResponseHandler = CyberarkAuthProvider.login(cyberarkAccountBuilder).start(this)
+        var authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>> =
+            CyberarkAuthProvider.login(cyberarkAccountBuilder).start(this)
         if (!authResponseHandler.hasActiveObservers()) {
             authResponseHandler.observe(this, {
                 when (it.status) {
@@ -126,10 +133,11 @@ class MainActivity : AppCompatActivity() {
                         ).show()
 
                         //Update button enable/disable status
-                        signInButton?.isEnabled = false
-                        logOut?.isEnabled = true
-                        refreshToken?.isEnabled = true
-                        scanQRCodeButton?.isEnabled = true
+                        signInButton.isEnabled = false
+                        logOut.isEnabled = true
+                        refreshToken.isEnabled = true
+                        scanQRCodeButton.isEnabled = false
+                        enrollButton.isEnabled = true
                     }
                     ResponseStatus.ERROR -> {
                         Log.i(TAG, ResponseStatus.ERROR.toString())
@@ -145,17 +153,18 @@ class MainActivity : AppCompatActivity() {
     private fun endSession(cyberarkAccountBuilder: CyberarkAccountBuilder) {
         CyberarkAuthProvider.endSession(cyberarkAccountBuilder).start(this)
         //Update button enable/disable status
-        signInButton?.isEnabled = true
-        logOut?.isEnabled = false
-        refreshToken?.isEnabled = false
-        scanQRCodeButton?.isEnabled = false
+        signInButton.isEnabled = true
+        logOut.isEnabled = false
+        refreshToken.isEnabled = false
+        scanQRCodeButton.isEnabled = false
+        enrollButton.isEnabled = false
     }
 
     /**
      * Get the access token using refresh token
      */
     private fun getAccessTokenUsingRefreshToken(cyberarkAccountBuilder: CyberarkAccountBuilder) {
-        refreshTokenResponseHandler =
+        var refreshTokenResponseHandler: LiveData<ResponseHandler<RefreshTokenModel>> =
             CyberarkAuthProvider.refreshToken(cyberarkAccountBuilder).start(this, refreshTokenData)
         if (!refreshTokenResponseHandler.hasActiveObservers()) {
             refreshTokenResponseHandler.observe(this, {
@@ -173,6 +182,39 @@ class MainActivity : AppCompatActivity() {
                             "Received New Access Token",
                             Toast.LENGTH_SHORT
                         ).show()
+                    }
+                    ResponseStatus.ERROR -> {
+                        Log.i(TAG, ResponseStatus.ERROR.toString())
+                    }
+                }
+            })
+        }
+    }
+
+    /**
+     * Enroll device
+     */
+    private fun enroll() {
+        var authResponseHandler: LiveData<ResponseHandler<EnrollmentModel>> =
+            CyberarkAuthProvider.enroll().start(this, accessTokenData)
+        if (!authResponseHandler.hasActiveObservers()) {
+            authResponseHandler.observe(this, {
+                when (it.status) {
+                    ResponseStatus.SUCCESS -> {
+
+                        //TODO.. need to verify and remove all logs
+                        Log.i(TAG, ResponseStatus.SUCCESS.toString())
+                        Log.i(TAG, it.data.toString())
+                        Log.i(TAG, it.data!!.success.toString())
+                        scanQRCodeButton.isEnabled = true
+                        enrollButton.isEnabled = false
+
+                        Toast.makeText(
+                            this,
+                            "Enrolled successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
                     }
                     ResponseStatus.ERROR -> {
                         Log.i(TAG, ResponseStatus.ERROR.toString())

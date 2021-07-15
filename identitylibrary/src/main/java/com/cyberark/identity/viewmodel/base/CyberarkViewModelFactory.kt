@@ -4,9 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cyberark.identity.data.network.CyberarkAuthHelper
 import com.cyberark.identity.viewmodel.AuthenticationViewModel
+import com.cyberark.identity.viewmodel.EnrollmentViewModel
 import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
 
-internal class CyberarkViewModelFactory(private val cyberarkAuthHelper: CyberarkAuthHelper) :
+class CyberarkViewModelFactory(private val cyberarkAuthHelper: CyberarkAuthHelper) :
         ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -14,6 +15,8 @@ internal class CyberarkViewModelFactory(private val cyberarkAuthHelper: Cyberark
             return AuthenticationViewModel(cyberarkAuthHelper) as T
         } else if (modelClass.isAssignableFrom(ScanQRCodeViewModel::class.java)) {
             return ScanQRCodeViewModel(cyberarkAuthHelper) as T
+        } else if (modelClass.isAssignableFrom(EnrollmentViewModel::class.java)) {
+            return EnrollmentViewModel(cyberarkAuthHelper) as T
         }
         throw IllegalArgumentException("Unknown class name")
     }
