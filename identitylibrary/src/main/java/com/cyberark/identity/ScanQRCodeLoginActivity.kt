@@ -226,6 +226,7 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
                         "QR Code Authentication is failed"
                     )
                     setResult(RESULT_OK, intent)
+                    finish()
                 }
             }
         })
