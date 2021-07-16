@@ -13,12 +13,13 @@ import javax.crypto.NoSuchPaddingException
 
 
 private class KeyStoreManagerImpl: KeyStoreManager {
+
     override fun saveAuthToken(authToken: String): Boolean {
-        val returnValues = encryptText(Constants.AUTHALIAS,authToken)
+        val returnValues = encryptText(Constants.AUTH_ALIAS,authToken)
         if (returnValues != null) {
-            CyberarkPreferenceUtils.putString(Constants.AUTHTOKENIV, Base64.encodeToString(returnValues.first,Base64.DEFAULT))
-            CyberarkPreferenceUtils.putString(Constants.AUTHTOKEN, Base64.encodeToString(returnValues.second,Base64.DEFAULT))
-            DeCryptor().decryptData(Constants.AUTHALIAS,Base64.decode(CyberarkPreferenceUtils.getString(Constants.AUTHTOKEN,""),Base64.DEFAULT),Base64.decode(CyberarkPreferenceUtils.getString(Constants.AUTHTOKENIV,""),Base64.DEFAULT))
+            CyberarkPreferenceUtils.putString(Constants.AUTH_TOKEN_IV, Base64.encodeToString(returnValues.first,Base64.DEFAULT))
+            CyberarkPreferenceUtils.putString(Constants.AUTH_TOKEN, Base64.encodeToString(returnValues.second,Base64.DEFAULT))
+            DeCryptor().decryptData(Constants.AUTH_ALIAS,Base64.decode(CyberarkPreferenceUtils.getString(Constants.AUTH_TOKEN,""),Base64.DEFAULT),Base64.decode(CyberarkPreferenceUtils.getString(Constants.AUTH_TOKEN_IV,""),Base64.DEFAULT))
             return true
         }
         return false
@@ -33,10 +34,10 @@ private class KeyStoreManagerImpl: KeyStoreManager {
     }
 
     override fun saveRefreshToken(refreshToken: String): Boolean {
-        val returnValues = encryptText(Constants.REFRESHALIASKEY,refreshToken)
+        val returnValues = encryptText(Constants.REFRESH_ALIAS,refreshToken)
         if (returnValues != null) {
-            CyberarkPreferenceUtils.putString(Constants.REFRESHTOKENIV, Base64.encodeToString(returnValues.first,Base64.DEFAULT))
-            CyberarkPreferenceUtils.putString(Constants.REFRESHTOKEN, Base64.encodeToString(returnValues.second,Base64.DEFAULT))
+            CyberarkPreferenceUtils.putString(Constants.REFRESH_TOKEN_IV, Base64.encodeToString(returnValues.first,Base64.DEFAULT))
+            CyberarkPreferenceUtils.putString(Constants.REFRESH_TOKEN, Base64.encodeToString(returnValues.second,Base64.DEFAULT))
             return true
         }
         return false
@@ -44,21 +45,20 @@ private class KeyStoreManagerImpl: KeyStoreManager {
 
     private fun getAuthTokenKeyStore():String? {
         var  decryptedToken:String? = null
-        val accessTokenIV = CyberarkPreferenceUtils.getString(Constants.AUTHTOKENIV,null)
-        val accessToken = CyberarkPreferenceUtils.getString(Constants.AUTHTOKEN,null)
+        val accessTokenIV = CyberarkPreferenceUtils.getString(Constants.AUTH_TOKEN_IV,null)
+        val accessToken = CyberarkPreferenceUtils.getString(Constants.AUTH_TOKEN,null)
         if (accessTokenIV != null || accessToken != null) {
-            decryptedToken = decryptText(Constants.AUTHALIAS,Base64.decode(accessToken!!,Base64.DEFAULT),Base64.decode(accessTokenIV!!,Base64.DEFAULT))
+            decryptedToken = decryptText(Constants.AUTH_ALIAS,Base64.decode(accessToken!!,Base64.DEFAULT),Base64.decode(accessTokenIV!!,Base64.DEFAULT))
         }
         return decryptedToken
     }
 
     private fun getRefreshTokenKeyStore():String? {
         var  decryptedToken:String? = null
-        val refreshTokenIV = CyberarkPreferenceUtils.getString(Constants.REFRESHTOKENIV,null)
-        val refreshToken = CyberarkPreferenceUtils.getString(Constants.REFRESHTOKEN,null)
+        val refreshTokenIV = CyberarkPreferenceUtils.getString(Constants.REFRESH_TOKEN_IV,null)
+        val refreshToken = CyberarkPreferenceUtils.getString(Constants.REFRESH_TOKEN,null)
         if (refreshTokenIV != null || refreshToken != null) {
-//            DeCryptor().decryptData(Constants.REFRESHALIASKEY,Base64.decode(CyberarkPreferenceUtils.getString(Constants.REFRESHTOKEN,""),Base64.DEFAULT),Base64.decode(CyberarkPreferenceUtils.getString(Constants.REFRESHTOKENIV,""),Base64.DEFAULT))
-            decryptedToken = decryptText(Constants.REFRESHALIASKEY,Base64.decode(refreshToken!!,Base64.DEFAULT),Base64.decode(refreshTokenIV!!,Base64.DEFAULT))
+            decryptedToken = decryptText(Constants.REFRESH_ALIAS,Base64.decode(refreshToken!!,Base64.DEFAULT),Base64.decode(refreshTokenIV!!,Base64.DEFAULT))
         }
         return decryptedToken
     }
@@ -122,12 +122,14 @@ private class KeyStoreManagerImpl: KeyStoreManager {
 
 }
 
-
-object GetKeyStore {
+/**
+ *
+ * **/
+object KeyStoreProvider {
     private var keyStoreManager:KeyStoreManager? = null
 
     internal fun get(): KeyStoreManager {
-        synchronized(GetKeyStore::class.java) {
+        synchronized(KeyStoreProvider::class.java) {
             if (keyStoreManager == null) {
                 keyStoreManager = KeyStoreManagerImpl()
             }

@@ -16,17 +16,7 @@ import com.cyberark.identity.util.AlertDialogButtonCallback
 import com.cyberark.identity.util.AlertDialogHandler
 
 
-interface BiometricAuthenticationCallback {
-    public fun isAuthenticationSuccess(success: Boolean)
-    public fun passwordAuthenticationSelected()
-    public fun showErrorMessage(message: String)
-    public fun isHardwareSupported(boolean: Boolean)
-    public fun isSdkVersionSupported(boolean: Boolean)
-    public fun isBiometricEnrolled(boolean: Boolean)
-    public fun biometricErrorSecurityUpdateRequired()
-}
-
-open class BiometricPromptUtility(authenticationCallback: BiometricAuthenticationCallback) {
+internal class BiometricPromptUtility(authenticationCallback: BiometricAuthenticationCallback) {
     private val TAG = "BiometricPromptUtility"
     private var mMaxRetries = 3
     private var mFailedTries = 0

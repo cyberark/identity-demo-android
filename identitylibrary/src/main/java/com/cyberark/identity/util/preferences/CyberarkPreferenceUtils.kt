@@ -3,18 +3,19 @@ package com.cyberark.identity.util.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
+import java.lang.ref.WeakReference
 
 object CyberarkPreferenceUtils {
-    private var mContext: Context? = null
+    private var mContext: WeakReference<Context>? = null
     fun init(context: Context) {
-        mContext = context.applicationContext
+        mContext = WeakReference(context.applicationContext)
     }
 
     private val pref: SharedPreferences
         private get() {
             checkNotNull(mContext) { "Please init the Utils with an application context." }
-            return PreferenceManager.getDefaultSharedPreferences(mContext)
+            return PreferenceManager.getDefaultSharedPreferences(mContext!!.get())
         }
     val all: Map<String, *>
         get() = pref.all

@@ -13,7 +13,7 @@ import com.cyberark.identity.util.ResponseStatus
 import com.cyberark.identity.util.biometric.BiometricAuthenticationCallback
 import com.cyberark.identity.util.biometric.BiometricPromptUtility
 import com.cyberark.identity.util.endpoint.EndpointUrls
-import com.cyberark.identity.util.keystore.GetKeyStore
+import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
 import com.cyberark.identity.viewmodel.base.CyberarkViewModelFactory
 import com.google.zxing.integration.android.IntentIntegrator
@@ -84,8 +84,8 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
                     Toast.LENGTH_LONG
                 ).show()
                 this@ScanQRCodeLoginActivity.isAuthenticated = true
-                val authToken = GetKeyStore.get().getAuthToken()
-                val refreshToken = GetKeyStore.get().getRefreshToken()
+                val authToken = KeyStoreProvider.get().getAuthToken()
+                val refreshToken = KeyStoreProvider.get().getRefreshToken()
                 requestCameraPermission()
             }
 
