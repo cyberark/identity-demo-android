@@ -13,6 +13,7 @@ import com.cyberark.identity.util.ResponseStatus
 import com.cyberark.identity.util.biometric.BiometricAuthenticationCallback
 import com.cyberark.identity.util.biometric.BiometricPromptUtility
 import com.cyberark.identity.util.endpoint.EndpointUrls
+import com.cyberark.identity.util.keystore.GetKeyStore
 import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
 import com.cyberark.identity.viewmodel.base.CyberarkViewModelFactory
 import com.google.zxing.integration.android.IntentIntegrator
@@ -27,6 +28,7 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
     private var isAuthenticated: Boolean = false
     private lateinit var bioMetric: BiometricPromptUtility
     private lateinit var accessTokenData: String
+    private var gotQRResult: Boolean = false
 
     companion object {
         private const val TAG = "ScanQRCodeLoginActivity"
@@ -44,29 +46,19 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
         if (intent.extras != null) {
             accessTokenData = intent.getStringExtra("access_token").toString()
         }
-        //TODO.. Pavan will verify and update
-        //*****************************************************//
-        if (isAuthenticated) {
-            requestCameraPermission()
-        } else {
-            //do biometric authentication
-            //TODO.. remove hardcoded string value
-            bioMetric.showBioAuthentication(this, null, "Use App Pin", false)
-        }
-        //*****************************************************//
         setupViewModel()
     }
 
     override fun onResume() {
         super.onResume()
         //TODO.. As this block of code is creating an issue for closing current activity, hence Pavan will verify and update
-//        if (isAuthenticated) {
-//            requestCameraPermission()
-//        } else {
-//            //do biometric authentication
-//            //TODO.. remove hardcoded string value
-//            bioMetric.showBioAuthentication(this, null, "Use App Pin", false)
-//        }
+        if (gotQRResult == false && isAuthenticated) {
+            requestCameraPermission()
+        } else if (gotQRResult == false){
+            //do biometric authentication
+            //TODO.. remove hardcoded string value
+            bioMetric.showBioAuthentication(this, null, "Use App Pin", false)
+        }
 //        Dispatchers.Main
     }
 
@@ -92,6 +84,8 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
                     Toast.LENGTH_LONG
                 ).show()
                 this@ScanQRCodeLoginActivity.isAuthenticated = true
+                val authToken = GetKeyStore.get().getAuthToken()
+                val refreshToken = GetKeyStore.get().getRefreshToken()
                 requestCameraPermission()
             }
 
@@ -253,7 +247,9 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
             if (result != null) {
                 if (result.contents == null) {
                     Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show()
+                    finish()
                 } else {
+                    gotQRResult = true
                     if (::accessTokenData.isInitialized) {
                         viewModel.handleQRCodeResult(getHeaderPayload(), result.contents.toString())
                         setupObserver()

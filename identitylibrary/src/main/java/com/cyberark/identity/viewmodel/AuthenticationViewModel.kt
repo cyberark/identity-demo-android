@@ -9,6 +9,9 @@ import com.cyberark.identity.data.model.AuthCodeFlowModel
 import com.cyberark.identity.data.model.RefreshTokenModel
 import com.cyberark.identity.data.network.CyberarkAuthHelper
 import com.cyberark.identity.util.ResponseHandler
+import com.cyberark.identity.util.ResponseStatus
+import com.cyberark.identity.util.keystore.GetKeyStore
+import com.cyberark.identity.util.keystore.KeyStoreManager
 import kotlinx.coroutines.launch
 
 internal class AuthenticationViewModel(private val cyberarkAuthHelper: CyberarkAuthHelper) : ViewModel() {
@@ -28,6 +31,10 @@ internal class AuthenticationViewModel(private val cyberarkAuthHelper: CyberarkA
                 val accessTokenCreds = cyberarkAuthHelper.getAccessToken(params)
                 //TODO.. for testing only added this log and should be removed later
                 Log.i(TAG, "accessCredentials :: " + accessTokenCreds.toString())
+                //Save Access token we recieved if it is success
+                GetKeyStore.get().saveAuthToken(accessTokenCreds.access_token)
+                GetKeyStore.get().saveRefreshToken(accessTokenCreds.refresh_token)
+
                 authResponse.postValue(ResponseHandler.success(accessTokenCreds))
             } catch (e: Exception) {
                 //TODO.. for testing only added this log and should be removed later

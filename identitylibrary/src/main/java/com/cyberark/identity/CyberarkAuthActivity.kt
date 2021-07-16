@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import com.cyberark.identity.provider.CyberarkAuthProvider.getAuthorizeToken
 import com.cyberark.identity.util.browser.CustomTabHelper
+import com.cyberark.identity.util.preferences.CyberarkPreferenceUtils
 
 class CyberarkAuthActivity : AppCompatActivity() {
 
@@ -25,6 +26,7 @@ class CyberarkAuthActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        CyberarkPreferenceUtils.init(this)
         if (savedInstanceState != null) {
             activityLaunched = savedInstanceState.getBoolean(ACTIVITY_LAUNCHED, false)
         }
