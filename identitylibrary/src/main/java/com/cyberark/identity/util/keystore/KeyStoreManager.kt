@@ -1,6 +1,6 @@
 package com.cyberark.identity.util.keystore
 
-internal interface KeyStoreManager {
+interface KeyStoreManager {
     /**
      * Save the authentication token by encrypting using android Keystore
      * and saving the encrypted value of authKey and generated crypto IV into Shared preferences

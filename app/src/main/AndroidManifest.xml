@@ -17,18 +17,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IdentitySDK">
 
-        <meta-data
-            android:name="asset_statements"
-            android:resource="@string/asset_statements" />
-
+        <activity android:name=".MFAActivity"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.cyberark.identity.ScanQRCodeLoginActivity"
             android:screenOrientation="portrait"
             tools:replace="screenOrientation" />
-
-
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".HomeActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

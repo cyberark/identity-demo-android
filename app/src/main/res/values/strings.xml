@@ -18,7 +18,7 @@
     values-round/strings.xml for round devices.
     -->
     <string name="hello_world">Hello Square World!</string>
-    <string name="qr_code_authenticator">QR Code Authenticator</string>
+    <string name="qr_authenticator">QR Authenticator</string>
 
     <!-- MainActivity -->
     <string name="returned_from_app_settings_to_activity">Returned from app settings to MainActivity with the following permissions</string>
@@ -30,8 +30,6 @@
     <string name="permission_camera_rationale_message">This app needs access to your camera so you can scan QR Code.</string>
 
     <string name="authenticate">Authenticate</string>
-    <string name="asset_statements" translatable="false">[{ \"include\": \"https://mobile-qa.my.idaptive.qa/.well-known/assetlinks.json\" }]</string>
-
 
     <string name="cyberark_account_client_id">Axis</string>
     <string name="cyberark_account_host">aaj7617.my.dev.idaptive.app</string>
@@ -45,5 +43,7 @@
     <string name="log_out">Log out</string>
     <string name="sign_in">Sign In</string>
     <string name="enroll">Enroll</string>
+    <string name="log_in">Log-in</string>
+    <string name="cyberark">CyberArk</string>
 
 </resources>

@@ -32,8 +32,8 @@ internal class AuthenticationViewModel(private val cyberarkAuthHelper: CyberarkA
                 //TODO.. for testing only added this log and should be removed later
                 Log.i(TAG, "accessCredentials :: " + accessTokenCreds.toString())
                 //Save Access token we recieved if it is success
-                KeyStoreProvider.get().saveAuthToken(accessTokenCreds.access_token)
-                KeyStoreProvider.get().saveRefreshToken(accessTokenCreds.refresh_token)
+//                KeyStoreProvider.get().saveAuthToken(accessTokenCreds.access_token)
+//                KeyStoreProvider.get().saveRefreshToken(accessTokenCreds.refresh_token)
 
                 authResponse.postValue(ResponseHandler.success(accessTokenCreds))
             } catch (e: Exception) {

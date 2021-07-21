@@ -84,8 +84,8 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
                     Toast.LENGTH_LONG
                 ).show()
                 this@ScanQRCodeLoginActivity.isAuthenticated = true
-                val authToken = KeyStoreProvider.get().getAuthToken()
-                val refreshToken = KeyStoreProvider.get().getRefreshToken()
+//                val authToken = KeyStoreProvider.get().getAuthToken()
+//                val refreshToken = KeyStoreProvider.get().getRefreshToken()
                 requestCameraPermission()
             }
 

@@ -128,7 +128,7 @@ private class KeyStoreManagerImpl: KeyStoreManager {
 object KeyStoreProvider {
     private var keyStoreManager:KeyStoreManager? = null
 
-    internal fun get(): KeyStoreManager {
+    fun get(): KeyStoreManager {
         synchronized(KeyStoreProvider::class.java) {
             if (keyStoreManager == null) {
                 keyStoreManager = KeyStoreManagerImpl()
