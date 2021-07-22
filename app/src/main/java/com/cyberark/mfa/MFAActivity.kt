@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -79,12 +78,6 @@ class MFAActivity : AppCompatActivity() {
         accessTokenData = KeyStoreProvider.get().getAuthToken().toString()
         refreshTokenData = KeyStoreProvider.get().getRefreshToken().toString()
 
-        //TODO.. need to be removed later
-//        if (intent.extras != null) {
-//            accessTokenData = intent.getStringExtra("access_token").toString()
-//            refreshTokenData = intent.getStringExtra("refresh_token").toString()
-//        }
-
         //Enroll device
         enrollButton.setOnClickListener {
             if (::accessTokenData.isInitialized) {
@@ -113,95 +106,39 @@ class MFAActivity : AppCompatActivity() {
         refreshToken.setOnClickListener {
             getAccessTokenUsingRefreshToken(account)
         }
-        bioMetric = BiometricManager().getBiometricUtility(biometricCallback)
+
+        // Register biometrics
+        bioMetric = BiometricManager().getBiometricUtility(biometricsCallback)
 
     }
 
     override fun onResume() {
         super.onResume()
-        if (isAuthenticated == false) {
+        // Handle biometrics scenario and logout clean-up
+        if (logoutStatus) {
+            isAuthenticated = true
+            // Clear storage on logout
+            CyberarkPreferenceUtils.remove(Constants.AUTH_TOKEN)
+            CyberarkPreferenceUtils.remove(Constants.AUTH_TOKEN_IV)
+            CyberarkPreferenceUtils.remove(Constants.REFRESH_TOKEN)
+            CyberarkPreferenceUtils.remove(Constants.REFRESH_TOKEN_IV)
+
+            CyberarkPreferenceUtils.remove("ENROLLMENT_STATUS")
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+
+            progressBar.visibility = View.GONE
+            finish()
+        }
+
+        if (!isAuthenticated) {
             bioMetric.showBioAuthentication(this, null, "Use App Pin", false)
-        }else {
-            if (logoutStatus) {
-                // Clear storage on logout
-                CyberarkPreferenceUtils.remove(Constants.AUTH_TOKEN)
-                CyberarkPreferenceUtils.remove(Constants.AUTH_TOKEN_IV)
-                CyberarkPreferenceUtils.remove(Constants.REFRESH_TOKEN)
-                CyberarkPreferenceUtils.remove(Constants.REFRESH_TOKEN_IV)
-
-                CyberarkPreferenceUtils.remove("ENROLLMENT_STATUS")
-                val intent = Intent(this@MFAActivity, HomeActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
         }
     }
 
-    val biometricCallback = object : BiometricAuthenticationCallback {
-        override fun isAuthenticationSuccess(success: Boolean) {
-            Toast.makeText(
-                this@MFAActivity,
-                "Authentication success",
-                Toast.LENGTH_LONG
-            ).show()
-            this@MFAActivity.isAuthenticated = true
-//            val authToken = KeyStoreProvider.get().getAuthToken()
-//            val refreshToken = KeyStoreProvider.get().getRefreshToken()
-        }
-
-        override fun passwordAuthenticationSelected() {
-            Toast.makeText(
-                this@MFAActivity,
-                "Password authentication selected",
-                Toast.LENGTH_LONG
-            ).show()
-//            val pinIntent = Intent(
-//                this@MFAActivity,
-//                SecurityPinActivity::class.java
-//            ).apply {
-//                putExtra("securitypin", "1234")
-//            }
-//            //TODO.. need to verify deprecation warning and refactor code as needed
-//            startActivityForResult(pinIntent, APP_PIN_REQUEST)
-        }
-
-        override fun showErrorMessage(message: String) {
-            Toast.makeText(this@MFAActivity, message, Toast.LENGTH_LONG).show()
-        }
-
-        override fun isHardwareSupported(boolean: Boolean) {
-            if (boolean == false) {
-                Toast.makeText(
-                    this@MFAActivity,
-                    "Hardware not supported",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-
-        override fun isSdkVersionSupported(boolean: Boolean) {
-            Toast.makeText(
-                this@MFAActivity,
-                "SDK version not supported",
-                Toast.LENGTH_LONG
-            ).show()
-        }
-
-        override fun isBiometricEnrolled(boolean: Boolean) {
-            if (boolean == false) {
-                showFingerEnrollmentAlert()
-            }
-        }
-
-        override fun biometricErrorSecurityUpdateRequired() {
-            Toast.makeText(
-                this@MFAActivity,
-                "Biometric security updates required",
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
-
+    /**
+     * Update UI based on enrollment status
+     */
     private fun updateUI() {
         var accessToken = KeyStoreProvider.get().getAuthToken()
         if(accessToken != null) {
@@ -217,27 +154,8 @@ class MFAActivity : AppCompatActivity() {
         }
     }
 
-    private fun showFingerEnrollmentAlert() {
-
-        val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
-            override fun tappedButtonwithType(buttonType: AlertButtonType) {
-                launchBiometricSetup()
-            }
-        })
-        enrollFingerPrintDlg.displayAlert(
-            this,
-            this.getString(R.string.cyberark),
-            this.getString(R.string.biometricDescription), false,
-            mutableListOf<AlertButton>(AlertButton("OK", AlertButtonType.POSITIVE))
-        )
-    }
-
-    private fun launchBiometricSetup() {
-        this.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
-    }
-
     /**
-     * Enroll device
+     * Enroll device and observe server response
      */
     private fun enroll() {
         var authResponseHandler: LiveData<ResponseHandler<EnrollmentModel>> =
@@ -303,6 +221,7 @@ class MFAActivity : AppCompatActivity() {
      */
     private fun endSession(cyberarkAccountBuilder: CyberarkAccountBuilder) {
         logoutStatus = true
+        progressBar.visibility = View.VISIBLE
         CyberarkAuthProvider.endSession(cyberarkAccountBuilder).start(this)
     }
 
@@ -350,4 +269,96 @@ class MFAActivity : AppCompatActivity() {
             })
         }
     }
+
+    // ***************************** Biometrics Setup Start ************************************** //
+    private val biometricsCallback = object : BiometricAuthenticationCallback {
+        override fun isAuthenticationSuccess(success: Boolean) {
+            Toast.makeText(
+                    this@MFAActivity,
+                    "Authentication success",
+                    Toast.LENGTH_LONG
+            ).show()
+            isAuthenticated = true
+        }
+
+        override fun passwordAuthenticationSelected() {
+            Toast.makeText(
+                    this@MFAActivity,
+                    "Password authentication selected",
+                    Toast.LENGTH_LONG
+            ).show()
+            finish()
+            //TODO.. need to verify and remove
+//            val pinIntent = Intent(
+//                this@MFAActivity,
+//                SecurityPinActivity::class.java
+//            ).apply {
+//                putExtra("securitypin", "1234")
+//            }
+//            //TODO.. need to verify deprecation warning and refactor code as needed
+//            startActivityForResult(pinIntent, APP_PIN_REQUEST)
+        }
+
+        override fun showErrorMessage(message: String) {
+            Toast.makeText(this@MFAActivity, message, Toast.LENGTH_LONG).show()
+            finish()
+        }
+
+        override fun isHardwareSupported(boolean: Boolean) {
+            if (!boolean) {
+                Toast.makeText(
+                        this@MFAActivity,
+                        "Hardware not supported",
+                        Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
+        override fun isSdkVersionSupported(boolean: Boolean) {
+            Toast.makeText(
+                    this@MFAActivity,
+                    "SDK version not supported",
+                    Toast.LENGTH_LONG
+            ).show()
+        }
+
+        override fun isBiometricEnrolled(boolean: Boolean) {
+            if (!boolean) {
+                showBiometricEnrollmentAlert()
+            }
+        }
+
+        override fun biometricErrorSecurityUpdateRequired() {
+            Toast.makeText(
+                    this@MFAActivity,
+                    "Biometric security updates required",
+                    Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private fun showBiometricEnrollmentAlert() {
+
+        val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
+            override fun tappedButtonwithType(buttonType: AlertButtonType) {
+                if(buttonType == AlertButtonType.NEGATIVE) {
+                    finish()
+                } else if(buttonType == AlertButtonType.POSITIVE) {
+                    launchBiometricSetup()
+                }
+            }
+        })
+        enrollFingerPrintDlg.displayAlert(
+                this,
+                this.getString(R.string.cyberark),
+                this.getString(R.string.biometricDescription), false,
+                mutableListOf<AlertButton>(AlertButton("Cancel", AlertButtonType.NEGATIVE), AlertButton("OK", AlertButtonType.POSITIVE))
+        )
+    }
+
+    private fun launchBiometricSetup() {
+        this.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
+    }
+
+    // ***************************** Biometrics Setup End ************************************** //
 }
