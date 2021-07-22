@@ -9,8 +9,8 @@
 
     <!--string resource-->
     <string name="cyberArkTitle">Cyberark</string>
-    <string name="biometricTitle">Biometric prompt title</string>
-    <string name="biometricDescription">Biometric prompt description</string>
+    <string name="biometricpromptTitle">Biometric prompt title</string>
+    <string name="biometricpromptDescription">Biometric prompt description</string>
     <string name="enrolldeviceBiometric">Enroll your finger in device</string>
     <string name="okTitle">Enroll your finger in device</string>
 </resources>

@@ -27,7 +27,7 @@ internal class BiometricPromptUtilityImpl(authenticationCallback: BiometricAuthe
     private var negitiveButtonText: String? = null
     private val securityPin = "1234"
     private lateinit var enrollFingerPrintDlg: AlertDialogHandler
-//    private var useDevicePin:Boolean = false
+    private var useDevicePin:Boolean = false
 
     private fun createBioAuthetication(
         activity: AppCompatActivity
@@ -96,7 +96,7 @@ internal class BiometricPromptUtilityImpl(authenticationCallback: BiometricAuthe
         if (retries == null || retries == 0) {
             isAutoCancelElabled = false
         }
-//        this.useDevicePin = useDevicePin
+        this.useDevicePin = useDevicePin
         this.negitiveButtonText = negitiveButtonText
         checkAndAuthenticate(activity)
 
@@ -134,7 +134,9 @@ internal class BiometricPromptUtilityImpl(authenticationCallback: BiometricAuthe
                 }
                 BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
                     this.authenticationCallback.isBiometricEnrolled(false)
-
+//                    if (activity != null) {
+//                        showFingerEnrollmentAlert(activity!!)
+//                    }
                 }
                 BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> {
                     this.authenticationCallback.isHardwareSupported(false)
@@ -152,19 +154,20 @@ internal class BiometricPromptUtilityImpl(authenticationCallback: BiometricAuthe
     private fun getBioMetric(activity: AppCompatActivity): BiometricManager =
         BiometricManager.from(activity)
 
-    private fun showFingerEnrollmentAlert(activity: Activity) {
-        enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
-            override fun tappedButtonwithType(buttonType: AlertButtonType) {
-                launchBiometricSetup(activity)
-            }
-        })
-        enrollFingerPrintDlg.displayAlert(
-            activity,
-            activity.getString(R.string.cyberArkTitle),
-            activity.getString(R.string.biometricDescription), false,
-            mutableListOf<AlertButton>(AlertButton("OK", AlertButtonType.POSITIVE))
-        )
-    }
+//    override fun showFingerEnrollmentAlert(activity: Activity,callback: AlertDialogButtonCallback) {
+//        enrollFingerPrintDlg = AlertDialogHandler(callback)
+////        enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
+////            override fun tappedButtonwithType(buttonType: AlertButtonType) {
+////                launchBiometricSetup(activity)
+////            }
+////        })
+//        enrollFingerPrintDlg.displayAlert(
+//            activity,
+//            activity.getString(R.string.cyberArkTitle),
+//            activity.getString(R.string.biometricDescription), false,
+//            mutableListOf<AlertButton>(AlertButton("OK", AlertButtonType.POSITIVE))
+//        )
+//    }
 
     fun dismissFingerPrintEnroll() {
         if (::enrollFingerPrintDlg.isInitialized) {
@@ -178,26 +181,27 @@ internal class BiometricPromptUtilityImpl(authenticationCallback: BiometricAuthe
         }
     }
 
-    private fun getSecurityType(): Int =
-         BiometricManager.Authenticators.BIOMETRIC_STRONG
+    private fun getSecurityType(): Int {
+        if (useDevicePin) {
+            return BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        }
+        return BiometricManager.Authenticators.BIOMETRIC_STRONG
+    }
+
 
 
     private fun createPromptInfo(activity: AppCompatActivity): BiometricPrompt.PromptInfo =
         BiometricPrompt.PromptInfo.Builder().apply {
             setTitle(activity.getString(R.string.cyberArkTitle))
-            setSubtitle(activity.getString(R.string.biometricTitle))
-            setDescription(activity.getString(R.string.biometricDescription))
+            setSubtitle(activity.getString(R.string.biometricpromptTitle))
+            setDescription(activity.getString(R.string.biometricpromptDescription))
             setConfirmationRequired(false)
             setAllowedAuthenticators(getSecurityType())
-            if (negitiveButtonText != null) {
+            if (useDevicePin == false) {
+                setAllowedAuthenticators(getSecurityType())
                 setNegativeButtonText(negitiveButtonText!!)
                 negitiveButtonText = null
             }
-//            if (useDevicePin == false) {
-//
-//            }else {
-//                setDeviceCredentialAllowed(true)
-//            }
         }.build()
 
 

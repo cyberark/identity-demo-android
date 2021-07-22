@@ -1,15 +1,17 @@
 package com.cyberark.identity
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.cyberark.identity.data.network.CyberarkAuthBuilder
 import com.cyberark.identity.data.network.CyberarkAuthHelper
-import com.cyberark.identity.util.ResponseStatus
+import com.cyberark.identity.util.*
 import com.cyberark.identity.util.endpoint.EndpointUrls
 import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
 import com.cyberark.identity.viewmodel.base.CyberarkViewModelFactory

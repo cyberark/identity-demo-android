@@ -1,6 +1,8 @@
 package com.cyberark.identity.util.biometric
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
+import com.cyberark.identity.util.AlertDialogButtonCallback
 
 interface BiometricPromptUtility {
     fun showBioAuthentication(

@@ -45,5 +45,6 @@
     <string name="enroll">Enroll</string>
     <string name="log_in">Log-in</string>
     <string name="cyberark">CyberArk</string>
+    <string name="biometricDescription">Required to enroll biometric in the device</string>
 
 </resources>

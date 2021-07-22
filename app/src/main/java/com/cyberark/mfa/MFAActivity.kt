@@ -3,6 +3,7 @@ package com.cyberark.mfa
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Base64
 import android.util.Log
 import android.view.View
@@ -18,8 +19,7 @@ import com.cyberark.identity.builder.CyberarkAccountBuilder
 import com.cyberark.identity.data.model.EnrollmentModel
 import com.cyberark.identity.data.model.RefreshTokenModel
 import com.cyberark.identity.provider.CyberarkAuthProvider
-import com.cyberark.identity.util.ResponseHandler
-import com.cyberark.identity.util.ResponseStatus
+import com.cyberark.identity.util.*
 import com.cyberark.identity.util.biometric.BiometricAuthenticationCallback
 import com.cyberark.identity.util.biometric.BiometricManager
 import com.cyberark.identity.util.biometric.BiometricPromptUtility
@@ -114,23 +114,26 @@ class MFAActivity : AppCompatActivity() {
             getAccessTokenUsingRefreshToken(account)
         }
         bioMetric = BiometricManager().getBiometricUtility(biometricCallback)
-        bioMetric.showBioAuthentication(this, null, "Use App Pin", true)
+
     }
 
     override fun onResume() {
         super.onResume()
+        if (isAuthenticated == false) {
+            bioMetric.showBioAuthentication(this, null, "Use App Pin", false)
+        }else {
+            if (logoutStatus) {
+                // Clear storage on logout
+                CyberarkPreferenceUtils.remove(Constants.AUTH_TOKEN)
+                CyberarkPreferenceUtils.remove(Constants.AUTH_TOKEN_IV)
+                CyberarkPreferenceUtils.remove(Constants.REFRESH_TOKEN)
+                CyberarkPreferenceUtils.remove(Constants.REFRESH_TOKEN_IV)
 
-        if(logoutStatus) {
-            // Clear storage on logout
-            CyberarkPreferenceUtils.remove(Constants.AUTH_TOKEN)
-            CyberarkPreferenceUtils.remove(Constants.AUTH_TOKEN_IV)
-            CyberarkPreferenceUtils.remove(Constants.REFRESH_TOKEN)
-            CyberarkPreferenceUtils.remove(Constants.REFRESH_TOKEN_IV)
-
-            CyberarkPreferenceUtils.remove("ENROLLMENT_STATUS")
-            val intent = Intent(this@MFAActivity,HomeActivity::class.java)
-            startActivity(intent)
-            finish()
+                CyberarkPreferenceUtils.remove("ENROLLMENT_STATUS")
+                val intent = Intent(this@MFAActivity, HomeActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
     }
 
@@ -186,11 +189,7 @@ class MFAActivity : AppCompatActivity() {
 
         override fun isBiometricEnrolled(boolean: Boolean) {
             if (boolean == false) {
-                Toast.makeText(
-                    this@MFAActivity,
-                    "Biometric not enabled",
-                    Toast.LENGTH_LONG
-                ).show()
+                showFingerEnrollmentAlert()
             }
         }
 
@@ -216,6 +215,25 @@ class MFAActivity : AppCompatActivity() {
                 enrollButton.isEnabled = true
             }
         }
+    }
+
+    private fun showFingerEnrollmentAlert() {
+
+        val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
+            override fun tappedButtonwithType(buttonType: AlertButtonType) {
+                launchBiometricSetup()
+            }
+        })
+        enrollFingerPrintDlg.displayAlert(
+            this,
+            this.getString(R.string.cyberark),
+            this.getString(R.string.biometricDescription), false,
+            mutableListOf<AlertButton>(AlertButton("OK", AlertButtonType.POSITIVE))
+        )
+    }
+
+    private fun launchBiometricSetup() {
+        this.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
     }
 
     /**
