@@ -10,10 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.cyberark.identity.data.network.CyberarkAuthBuilder
 import com.cyberark.identity.data.network.CyberarkAuthHelper
 import com.cyberark.identity.util.ResponseStatus
-import com.cyberark.identity.util.biometric.BiometricAuthenticationCallback
-import com.cyberark.identity.util.biometric.BiometricPromptUtility
 import com.cyberark.identity.util.endpoint.EndpointUrls
-import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
 import com.cyberark.identity.viewmodel.base.CyberarkViewModelFactory
 import com.google.zxing.integration.android.IntentIntegrator
@@ -25,19 +22,12 @@ import pub.devrel.easypermissions.EasyPermissions
 class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private lateinit var viewModel: ScanQRCodeViewModel
-    private var isAuthenticated: Boolean = false
-    private lateinit var bioMetric: BiometricPromptUtility
     private lateinit var accessTokenData: String
     private var gotQRResult: Boolean = false
 
     companion object {
         private const val TAG = "ScanQRCodeLoginActivity"
         private const val REQUEST_CODE_CAMERA_PERMISSION = 123
-        private const val APP_PIN_REQUEST = 124
-    }
-
-    init {
-        registerForBiometricCallback()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,100 +41,14 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
 
     override fun onResume() {
         super.onResume()
-        //TODO.. As this block of code is creating an issue for closing current activity, hence Pavan will verify and update
-        if (gotQRResult == false && isAuthenticated) {
-            requestCameraPermission()
-        } else if (gotQRResult == false){
-            //do biometric authentication
-            //TODO.. remove hardcoded string value
-            bioMetric.showBioAuthentication(this, null, "Use App Pin", false)
-        }
-//        Dispatchers.Main
     }
 
     override fun onPause() {
         super.onPause()
-        if (::bioMetric.isInitialized) {
-            bioMetric?.dismissFingerPrintEnroll()
-        }
     }
 
     private fun hasCameraPermission(): Boolean {
         return EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)
-    }
-
-    // TODO.. remove all hardcoded strings
-    private fun registerForBiometricCallback() {
-        bioMetric = BiometricPromptUtility(object : BiometricAuthenticationCallback {
-
-            override fun isAuthenticationSuccess(success: Boolean) {
-                Toast.makeText(
-                    this@ScanQRCodeLoginActivity,
-                    "Authentication success",
-                    Toast.LENGTH_LONG
-                ).show()
-                this@ScanQRCodeLoginActivity.isAuthenticated = true
-//                val authToken = KeyStoreProvider.get().getAuthToken()
-//                val refreshToken = KeyStoreProvider.get().getRefreshToken()
-                requestCameraPermission()
-            }
-
-            override fun passwordAuthenticationSelected() {
-                Toast.makeText(
-                    this@ScanQRCodeLoginActivity,
-                    "Password authentication selected",
-                    Toast.LENGTH_LONG
-                ).show()
-                val pinIntent = Intent(
-                    this@ScanQRCodeLoginActivity,
-                    SecurityPinActivity::class.java
-                ).apply {
-                    putExtra("securitypin", "1234")
-                }
-                //TODO.. need to verify deprecation warning and refactor code as needed
-                startActivityForResult(pinIntent, APP_PIN_REQUEST)
-            }
-
-            override fun showErrorMessage(message: String) {
-                Toast.makeText(this@ScanQRCodeLoginActivity, message, Toast.LENGTH_LONG).show()
-            }
-
-            override fun isHardwareSupported(boolean: Boolean) {
-                if (boolean == false) {
-                    Toast.makeText(
-                        this@ScanQRCodeLoginActivity,
-                        "Hardware not supported",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-
-            override fun isSdkVersionSupported(boolean: Boolean) {
-                Toast.makeText(
-                    this@ScanQRCodeLoginActivity,
-                    "SDK version not supported",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-
-            override fun isBiometricEnrolled(boolean: Boolean) {
-                if (boolean == false) {
-                    Toast.makeText(
-                        this@ScanQRCodeLoginActivity,
-                        "Biometric not enabled",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-
-            override fun biometricErrorSecurityUpdateRequired() {
-                Toast.makeText(
-                    this@ScanQRCodeLoginActivity,
-                    "Biometric security updates required",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        })
     }
 
     @AfterPermissionGranted(REQUEST_CODE_CAMERA_PERMISSION)
@@ -241,8 +145,6 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
                 Toast.LENGTH_SHORT
             ).show()
             finish()
-        } else if (requestCode == APP_PIN_REQUEST && resultCode == RESULT_OK) {
-            isAuthenticated = true
         } else {
             val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
             if (result != null) {

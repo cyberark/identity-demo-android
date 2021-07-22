@@ -4,14 +4,10 @@ package com.cyberark.identity.util.biometric
 import android.content.Context
 import android.content.res.Resources
 import android.text.TextUtils
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
-import androidx.core.content.ContextCompat
 import com.cyberark.identity.R
-import com.cyberark.identity.util.AlertButtonType
-import com.cyberark.identity.util.AlertDialogButtonCallback
 import com.cyberark.identity.util.AlertDialogHandler
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,13 +26,13 @@ import org.junit.Assert.*
 
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(
-    BiometricPromptUtility::class,
+    BiometricPromptUtilityImpl::class,
     TextUtils::class,
     BiometricPrompt::class,
     AlertDialogHandler::class,
     BiometricAuthenticationCallback::class
 )
-class BiometricPromptUtilityTest {
+class BiometricPromptUtilityImplTest {
 
     private val callback = object : BiometricAuthenticationCallback {
         override fun isAuthenticationSuccess(success: Boolean) {
@@ -76,7 +72,7 @@ class BiometricPromptUtilityTest {
         val appContext = PowerMockito.mock(Context::class.java)
         Mockito.`when`(mockActivity.applicationContext).thenReturn(appContext)
         val biometricManager = PowerMockito.spy(BiometricManager.from(mockActivity))
-        val biometricPromptUtility = PowerMockito.spy(BiometricPromptUtility(callback))
+        val biometricPromptUtility = PowerMockito.spy(BiometricPromptUtilityImpl(callback))
 
         biometricPromptUtility.showBioAuthentication(mockActivity, null, "Use App Pin", false)
         biometricPromptUtility.showBioAuthentication(mockActivity, null, "Use App Pin")
@@ -92,7 +88,7 @@ class BiometricPromptUtilityTest {
     @Test
     public fun testCheckBioMetric() {
         val biometricManager = getBioMetric()
-        val biometricPromptUtility = PowerMockito.spy(BiometricPromptUtility(callback))
+        val biometricPromptUtility = PowerMockito.spy(BiometricPromptUtilityImpl(callback))
         val biometricType = BiometricManager.Authenticators.BIOMETRIC_STRONG
         PowerMockito.doReturn(biometricManager)
             .`when`(biometricPromptUtility, "getBioMetric", any())
@@ -166,19 +162,19 @@ class BiometricPromptUtilityTest {
 
     private fun registerBiometricPrompt(
         biometricPrompt: BiometricPrompt,
-        biometricPromptUtility: BiometricPromptUtility
+        biometricPromptUtilityImpl: BiometricPromptUtilityImpl
     ) = PowerMockito.doReturn(biometricPrompt).`when`(
-        biometricPromptUtility, "getBioMetricPrompt", any(), any(),
+        biometricPromptUtilityImpl, "getBioMetricPrompt", any(), any(),
         any()
     )
 
     @Test
     public fun testCheckAuthenticate() {
-        val biometricPromptUtility = PowerMockito.spy(BiometricPromptUtility(callback))
+        val biometricPromptUtility = PowerMockito.spy(BiometricPromptUtilityImpl(callback))
         val mockBiometricPrompt = getBioMetricPrompt()
         registerBiometricPrompt(mockBiometricPrompt, biometricPromptUtility)
 
-        Whitebox.invokeMethod<BiometricPromptUtility>(
+        Whitebox.invokeMethod<BiometricPromptUtilityImpl>(
             biometricPromptUtility,
             "showBiometricPrompt",
             mockActivity
@@ -188,7 +184,7 @@ class BiometricPromptUtilityTest {
 
     @Test
     public fun testSetAuthenticationError() {
-        val biometricPromptUtility = PowerMockito.spy(BiometricPromptUtility(callback))
+        val biometricPromptUtility = PowerMockito.spy(BiometricPromptUtilityImpl(callback))
         val biometricPrompt  = getBioMetricPrompt()
         Whitebox.setInternalState(biometricPromptUtility, "mPrompt", biometricPrompt)
         val callback = Whitebox.invokeMethod<BiometricPrompt.AuthenticationCallback>(
@@ -211,7 +207,7 @@ class BiometricPromptUtilityTest {
 
     @Test
     public fun testSetAuthenticationFailed() {
-        val biometricPromptUtility = PowerMockito.spy(BiometricPromptUtility(callback))
+        val biometricPromptUtility = PowerMockito.spy(BiometricPromptUtilityImpl(callback))
         Whitebox.setInternalState(biometricPromptUtility, "mPrompt", getBioMetricPrompt())
         val callback = Whitebox.invokeMethod<BiometricPrompt.AuthenticationCallback>(
             biometricPromptUtility,
@@ -225,7 +221,7 @@ class BiometricPromptUtilityTest {
 
     @Test
     public fun testSetAuthenticationSuccess() {
-        val biometricPromptUtility = PowerMockito.spy(BiometricPromptUtility(callback))
+        val biometricPromptUtility = PowerMockito.spy(BiometricPromptUtilityImpl(callback))
         Whitebox.setInternalState(biometricPromptUtility, "mPrompt", getBioMetricPrompt())
         val callback = Whitebox.invokeMethod<BiometricPrompt.AuthenticationCallback>(
             biometricPromptUtility,
@@ -239,7 +235,7 @@ class BiometricPromptUtilityTest {
 
     @Test
     public fun testLaunchBiometricSetup() {
-        val biometricPromptUtility = PowerMockito.spy(BiometricPromptUtility(callback))
+        val biometricPromptUtility = PowerMockito.spy(BiometricPromptUtilityImpl(callback))
         Whitebox.invokeMethod<Null>(biometricPromptUtility, "launchBiometricSetup", mockActivity)
         verify(mockActivity, atMostOnce()).startActivity(any())
     }

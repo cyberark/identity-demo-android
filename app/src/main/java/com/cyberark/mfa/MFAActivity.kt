@@ -20,6 +20,9 @@ import com.cyberark.identity.data.model.RefreshTokenModel
 import com.cyberark.identity.provider.CyberarkAuthProvider
 import com.cyberark.identity.util.ResponseHandler
 import com.cyberark.identity.util.ResponseStatus
+import com.cyberark.identity.util.biometric.BiometricAuthenticationCallback
+import com.cyberark.identity.util.biometric.BiometricManager
+import com.cyberark.identity.util.biometric.BiometricPromptUtility
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberarkPreferenceUtils
@@ -41,6 +44,9 @@ class MFAActivity : AppCompatActivity() {
     private lateinit var enrollButton: Button
 
     private var logoutStatus: Boolean = false
+
+    private var isAuthenticated: Boolean = false
+    private lateinit var bioMetric: BiometricPromptUtility
 
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -107,10 +113,13 @@ class MFAActivity : AppCompatActivity() {
         refreshToken.setOnClickListener {
             getAccessTokenUsingRefreshToken(account)
         }
+        bioMetric = BiometricManager().getBiometricUtility(biometricCallback)
+        bioMetric.showBioAuthentication(this, null, "Use App Pin", true)
     }
 
     override fun onResume() {
         super.onResume()
+
         if(logoutStatus) {
             // Clear storage on logout
             CyberarkPreferenceUtils.remove(Constants.AUTH_TOKEN)
@@ -119,7 +128,78 @@ class MFAActivity : AppCompatActivity() {
             CyberarkPreferenceUtils.remove(Constants.REFRESH_TOKEN_IV)
 
             CyberarkPreferenceUtils.remove("ENROLLMENT_STATUS")
+            val intent = Intent(this@MFAActivity,HomeActivity::class.java)
+            startActivity(intent)
             finish()
+        }
+    }
+
+    val biometricCallback = object : BiometricAuthenticationCallback {
+        override fun isAuthenticationSuccess(success: Boolean) {
+            Toast.makeText(
+                this@MFAActivity,
+                "Authentication success",
+                Toast.LENGTH_LONG
+            ).show()
+            this@MFAActivity.isAuthenticated = true
+//            val authToken = KeyStoreProvider.get().getAuthToken()
+//            val refreshToken = KeyStoreProvider.get().getRefreshToken()
+        }
+
+        override fun passwordAuthenticationSelected() {
+            Toast.makeText(
+                this@MFAActivity,
+                "Password authentication selected",
+                Toast.LENGTH_LONG
+            ).show()
+//            val pinIntent = Intent(
+//                this@MFAActivity,
+//                SecurityPinActivity::class.java
+//            ).apply {
+//                putExtra("securitypin", "1234")
+//            }
+//            //TODO.. need to verify deprecation warning and refactor code as needed
+//            startActivityForResult(pinIntent, APP_PIN_REQUEST)
+        }
+
+        override fun showErrorMessage(message: String) {
+            Toast.makeText(this@MFAActivity, message, Toast.LENGTH_LONG).show()
+        }
+
+        override fun isHardwareSupported(boolean: Boolean) {
+            if (boolean == false) {
+                Toast.makeText(
+                    this@MFAActivity,
+                    "Hardware not supported",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
+        override fun isSdkVersionSupported(boolean: Boolean) {
+            Toast.makeText(
+                this@MFAActivity,
+                "SDK version not supported",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        override fun isBiometricEnrolled(boolean: Boolean) {
+            if (boolean == false) {
+                Toast.makeText(
+                    this@MFAActivity,
+                    "Biometric not enabled",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
+        override fun biometricErrorSecurityUpdateRequired() {
+            Toast.makeText(
+                this@MFAActivity,
+                "Biometric security updates required",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

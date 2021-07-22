@@ -1,6 +1,6 @@
 package com.cyberark.identity.util.biometric
 
-internal interface BiometricAuthenticationCallback {
+interface BiometricAuthenticationCallback {
     fun isAuthenticationSuccess(success: Boolean)
     fun passwordAuthenticationSelected()
     fun showErrorMessage(message: String)
