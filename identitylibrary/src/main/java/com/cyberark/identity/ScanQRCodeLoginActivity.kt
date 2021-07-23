@@ -39,6 +39,7 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
             accessTokenData = intent.getStringExtra("access_token").toString()
         }
         setupViewModel()
+        requestCameraPermission()
     }
 
     override fun onResume() {

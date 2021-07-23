@@ -96,14 +96,6 @@ class HomeActivity : AppCompatActivity() {
                         KeyStoreProvider.get().saveAuthToken(accessTokenData)
                         KeyStoreProvider.get().saveRefreshToken(refreshTokenData)
 
-                        //TODO.. need to be removed later
-//                        //Start MFA activity
-//                        val intent = Intent(this, MFAActivity::class.java)
-//                        intent.putExtra("access_token", accessTokenData)
-//                        intent.putExtra("refresh_token", refreshTokenData)
-//                        startActivity(intent)
-//                        finish()
-
                         //Start MFA activity
                         val intent = Intent(this, MFAActivity::class.java)
                         startActivity(intent)
