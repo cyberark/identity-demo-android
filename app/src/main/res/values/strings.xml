@@ -40,11 +40,14 @@
     <string name="cyberark_account_scheme">demo</string>
     <string name="end_session">End Session</string>
     <string name="refresh_token">Refresh Token</string>
-    <string name="log_out">Log out</string>
+    <string name="log_out">Logout</string>
     <string name="sign_in">Sign In</string>
     <string name="enroll">Enroll</string>
-    <string name="log_in">Log-in</string>
+    <string name="log_in">Login</string>
     <string name="cyberark">CyberArk</string>
     <string name="biometricDescription">Required to enroll biometric in the device</string>
-
+    <string name="biometricReq">Invoke biometrics in app launch</string>
+    <string name="biometricReqOnRefresh">Inovoke biometrics when access token expired</string>
+    <string name="isbiometricReq">isbiometricReq</string>
+    <string name="refreshBioReq">refreshBioReq</string>
 </resources>

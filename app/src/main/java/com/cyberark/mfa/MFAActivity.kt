@@ -8,6 +8,7 @@ import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
@@ -40,9 +41,10 @@ class MFAActivity : AppCompatActivity() {
 
     private lateinit var scanQRCodeButton: Button
     private lateinit var logOut: Button
-    private lateinit var refreshToken: Button
     private lateinit var enrollButton: Button
-
+    private lateinit var launchWithBio:CheckBox
+    private lateinit var biometricReqOnRefresh:CheckBox
+    private var isAuthenticationReq = false
     private var logoutStatus: Boolean = false
 
     private var isAuthenticated: Boolean = false
@@ -69,9 +71,9 @@ class MFAActivity : AppCompatActivity() {
 
         scanQRCodeButton = findViewById(R.id.scan_qr_code)
         logOut = findViewById(R.id.button_end_session)
-        refreshToken = findViewById(R.id.button_refresh_token)
         enrollButton = findViewById(R.id.button_enroll)
-
+        launchWithBio = findViewById(R.id.biometricReq)
+        biometricReqOnRefresh = findViewById(R.id.biometricReqOnRefresh)
         // Verify access token and update UI
         updateUI()
 
@@ -87,31 +89,27 @@ class MFAActivity : AppCompatActivity() {
 
         //Enroll device
         enrollButton.setOnClickListener {
-            if (::accessTokenData.isInitialized) {
-                enroll()
-            } else {
-                //TODO.. handle error scenario
-            }
+            handleClick(it)
         }
 
         // QR Code Authenticator Flow
         scanQRCodeButton.setOnClickListener {
-            val intent = Intent(this, ScanQRCodeLoginActivity::class.java)
-            if (::accessTokenData.isInitialized) {
-                intent.putExtra("access_token", accessTokenData)
-                startForResult.launch(intent)
-            } else {
-                //TODO.. handle error scenario
-            }
+            handleClick(it)
         }
+        isAuthenticationReq = CyberarkPreferenceUtils.getBoolean(getString(R.string.isbiometricReq),false)
+        launchWithBio.isChecked = isAuthenticationReq
+        launchWithBio.setOnClickListener({
+            handleClick(it)
+        })
+
+        biometricReqOnRefresh.isChecked = CyberarkPreferenceUtils.getBoolean(getString(R.string.refreshBioReq),false)
+        biometricReqOnRefresh.setOnClickListener({
+            handleClick(it)
+        })
 
         // OAuth Authorization Code Flow + PKCE
-        val account = setupAccount()
         logOut.setOnClickListener {
-            endSession(account)
-        }
-        refreshToken.setOnClickListener {
-            getAccessTokenUsingRefreshToken(account)
+            handleClick(it)
         }
         bioMetric = BiometricManager().getBiometricUtility(biometricCallback)
 
@@ -119,17 +117,19 @@ class MFAActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (isAuthenticated == false) {
-            bioMetric.showBioAuthentication(this, null, "Use App Pin", false)
+        if (isAuthenticationReq == true && isAuthenticated == false) {
+            showBiometric()
         }else {
+            biometricReqOnRefresh.isEnabled = true
+            launchWithBio.isEnabled = true
             if (logoutStatus) {
                 // Clear storage on logout
                 CyberarkPreferenceUtils.remove(Constants.AUTH_TOKEN)
                 CyberarkPreferenceUtils.remove(Constants.AUTH_TOKEN_IV)
                 CyberarkPreferenceUtils.remove(Constants.REFRESH_TOKEN)
                 CyberarkPreferenceUtils.remove(Constants.REFRESH_TOKEN_IV)
-
                 CyberarkPreferenceUtils.remove("ENROLLMENT_STATUS")
+                CyberarkPreferenceUtils.clear()
                 val intent = Intent(this@MFAActivity, HomeActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -137,7 +137,40 @@ class MFAActivity : AppCompatActivity() {
         }
     }
 
-    val biometricCallback = object : BiometricAuthenticationCallback {
+    private fun showBiometric() {
+        bioMetric.showBioAuthentication(this, null, "Use App Pin", false)
+    }
+
+    private fun handleClick(view: View) {
+        if (isAuthenticated == false && isAuthenticationReq == true) {
+            showBiometric()
+            return
+        }
+        if (view.id == R.id.button_enroll) {
+            if (::accessTokenData.isInitialized) {
+                enroll()
+            } else {
+                //TODO.. handle error scenario
+            }
+        } else if (view.id == R.id.scan_qr_code) {
+            val intent = Intent(this, ScanQRCodeLoginActivity::class.java)
+            if (::accessTokenData.isInitialized) {
+                intent.putExtra("access_token", accessTokenData)
+                startForResult.launch(intent)
+            } else {
+                //TODO.. handle error scenario
+            }
+        } else if (view.id == R.id.button_end_session){
+            val account = setupAccount()
+            endSession(account)
+        } else if(view.id == R.id.biometricReqOnRefresh) {
+            CyberarkPreferenceUtils.putBoolean(getString(R.string.refreshBioReq),biometricReqOnRefresh.isChecked)
+        }  else if(view.id == R.id.biometricReq) {
+            CyberarkPreferenceUtils.putBoolean(getString(R.string.isbiometricReq),launchWithBio.isChecked)
+        }
+    }
+
+    private val biometricCallback = object : BiometricAuthenticationCallback {
         override fun isAuthenticationSuccess(success: Boolean) {
             Toast.makeText(
                 this@MFAActivity,
@@ -145,8 +178,8 @@ class MFAActivity : AppCompatActivity() {
                 Toast.LENGTH_LONG
             ).show()
             this@MFAActivity.isAuthenticated = true
-//            val authToken = KeyStoreProvider.get().getAuthToken()
-//            val refreshToken = KeyStoreProvider.get().getRefreshToken()
+            biometricReqOnRefresh.isEnabled = true
+            launchWithBio.isEnabled = true
         }
 
         override fun passwordAuthenticationSelected() {
@@ -206,7 +239,6 @@ class MFAActivity : AppCompatActivity() {
         var accessToken = KeyStoreProvider.get().getAuthToken()
         if(accessToken != null) {
             logOut.isEnabled = true
-            refreshToken.isEnabled = true
             if (CyberarkPreferenceUtils.getBoolean("ENROLLMENT_STATUS", false)) {
                 scanQRCodeButton.isEnabled = true
                 enrollButton.isEnabled = false
@@ -252,7 +284,6 @@ class MFAActivity : AppCompatActivity() {
                         Log.i(TAG, it.data.toString())
                         Log.i(TAG, it.data!!.success.toString())
                         logOut.isEnabled = true
-                        refreshToken.isEnabled = true
                         scanQRCodeButton.isEnabled = true
                         enrollButton.isEnabled = false
 
