@@ -20,46 +20,52 @@ import com.cyberark.identity.util.preferences.CyberarkPreferenceUtils
 class HomeActivity : AppCompatActivity() {
 
     private val tag: String? = HomeActivity::class.simpleName
-    private lateinit var logInButton: Button
+
+    // Progress indicator variable
     private lateinit var progressBar: ProgressBar
+
+    // Login button variable
+    private lateinit var logInButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        // Invoke UI element
         progressBar = findViewById(R.id.progressBar_home_activity)
+
         // OAuth Authorization Code Flow + PKCE
         val account = setupAccount()
 
+        // Perform login
         logInButton = findViewById(R.id.button_log_in)
         logInButton.setOnClickListener {
             startAuthentication(account)
         }
 
-        // Verifying if access token present or not
+        // Verify if access token is present or not
         CyberarkPreferenceUtils.init(this)
-        var accessToken = KeyStoreProvider.get().getAuthToken()
-        if(accessToken != null) {
-            //Start MFA activity
+        val accessToken = KeyStoreProvider.get().getAuthToken()
+        if (accessToken != null) {
+            //Start MFA activity if access token is available
             val intent = Intent(this, MFAActivity::class.java)
             startActivity(intent)
             finish()
         }
     }
 
-
     /**
      * Set-up account for OAuth 2.0 PKCE driven flow
      */
     private fun setupAccount(): CyberarkAccountBuilder {
         val cyberarkAccountBuilder = CyberarkAccountBuilder.Builder()
-            .clientId(getString(R.string.cyberark_account_client_id))
-            .domainURL(getString(R.string.cyberark_account_host))
-            .appId(getString(R.string.cyberark_account_app_id))
-            .responseType(getString(R.string.cyberark_account_response_type))
-            .scope(getString(R.string.cyberark_account_scope))
-            .redirectUri(getString(R.string.cyberark_account_redirect_uri))
-            .build()
+                .clientId(getString(R.string.cyberark_account_client_id))
+                .domainURL(getString(R.string.cyberark_account_host))
+                .appId(getString(R.string.cyberark_account_app_id))
+                .responseType(getString(R.string.cyberark_account_response_type))
+                .scope(getString(R.string.cyberark_account_scope))
+                .redirectUri(getString(R.string.cyberark_account_redirect_uri))
+                .build()
         Log.i(tag, cyberarkAccountBuilder.OAuthBaseURL)
         return cyberarkAccountBuilder
     }
@@ -68,8 +74,8 @@ class HomeActivity : AppCompatActivity() {
      * Launch URL in browser, set-up view model and start authentication flow
      */
     private fun startAuthentication(cyberarkAccountBuilder: CyberarkAccountBuilder) {
-        var authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>> =
-            CyberarkAuthProvider.login(cyberarkAccountBuilder).start(this)
+        val authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>> =
+                CyberarkAuthProvider.login(cyberarkAccountBuilder).start(this)
         if (!authResponseHandler.hasActiveObservers()) {
             authResponseHandler.observe(this, {
                 when (it.status) {
@@ -82,9 +88,9 @@ class HomeActivity : AppCompatActivity() {
                         Log.i(tag, it.data!!.refresh_token)
 
                         Toast.makeText(
-                            this,
-                            "Received Access Token & Refresh Token",
-                            Toast.LENGTH_SHORT
+                                this,
+                                "Received Access Token & Refresh Token",
+                                Toast.LENGTH_SHORT
                         ).show()
 
                         val accessTokenData: String = it.data!!.access_token
@@ -105,9 +111,9 @@ class HomeActivity : AppCompatActivity() {
                         progressBar.visibility = View.GONE
                         Log.i(tag, ResponseStatus.ERROR.toString())
                         Toast.makeText(
-                            this,
-                            "Error: Unable to fetch Access Token & Refresh Token",
-                            Toast.LENGTH_SHORT
+                                this,
+                                "Error: Unable to fetch Access Token & Refresh Token",
+                                Toast.LENGTH_SHORT
                         ).show()
                     }
                     ResponseStatus.LOADING -> {
