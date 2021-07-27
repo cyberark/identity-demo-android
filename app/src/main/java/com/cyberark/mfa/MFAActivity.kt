@@ -173,8 +173,10 @@ class MFAActivity : AppCompatActivity() {
         biometricReqOnRefresh.setOnClickListener {
             handleClick(it)
         }
-        saveBioReqOnAppLaunch(true)
-        saveRefreshBio(true)
+        if (CyberarkPreferenceUtils.contains(getString(R.string.isbiometricReq)) == false) {
+            saveBioReqOnAppLaunch(true)
+            saveRefreshBio(true)
+        }
     }
 
     /**
