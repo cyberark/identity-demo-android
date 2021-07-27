@@ -97,7 +97,7 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
 
     private fun startQRCodeScan() {
         val integrator = IntentIntegrator(this)
-        integrator.setPrompt("Place a QR code inside the viewfinder rectangle to scan it");
+        integrator.setPrompt("Place a QR code inside the viewfinder rectangle to scan it")
         integrator.initiateScan()
     }
 

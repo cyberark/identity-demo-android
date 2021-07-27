@@ -203,17 +203,18 @@ class MFAActivity : AppCompatActivity() {
                         ).show()
 
                         CyberarkPreferenceUtils.putBoolean("ENROLLMENT_STATUS", true)
+                        isEnrolled = true
                         enrollButton.setText(R.string.qr_authenticator)
                         progressBar.visibility = View.GONE
                     }
                     ResponseStatus.ERROR -> {
                         Log.i(tag, ResponseStatus.ERROR.toString())
-                        progressBar.visibility = View.GONE
                         Toast.makeText(
                                 this,
                                 "Error: Unable to Enroll device",
                                 Toast.LENGTH_SHORT
                         ).show()
+                        progressBar.visibility = View.GONE
                     }
                     ResponseStatus.LOADING -> {
                         progressBar.visibility = View.VISIBLE
@@ -301,7 +302,7 @@ class MFAActivity : AppCompatActivity() {
             return
         }
         if (view.id == R.id.button_enroll) {
-            if (isEnrolled == false) {
+            if (!isEnrolled) {
                 if (::accessTokenData.isInitialized) {
                     enroll()
                 } else {
@@ -316,15 +317,18 @@ class MFAActivity : AppCompatActivity() {
                     //TODO.. handle error scenario
                 }
             }
-        } else if (view.id == R.id.scan_qr_code) {
-            val intent = Intent(this, ScanQRCodeLoginActivity::class.java)
-            if (::accessTokenData.isInitialized) {
-                intent.putExtra("access_token", accessTokenData)
-                startForResult.launch(intent)
-            } else {
-                //TODO.. handle error scenario
-            }
-        } else if (view.id == R.id.button_end_session) {
+        }
+//        else if (view.id == R.id.scan_qr_code) {
+//            val intent = Intent(this, ScanQRCodeLoginActivity::class.java)
+//            if (::accessTokenData.isInitialized) {
+//                intent.putExtra("access_token", accessTokenData)
+//                startForResult.launch(intent)
+//            } else {
+//                //TODO.. handle error scenario
+//            }
+//        }
+
+        else if (view.id == R.id.button_end_session) {
             val account = setupAccount()
             endSession(account)
         } else if (view.id == R.id.biometricReqOnRefresh) {

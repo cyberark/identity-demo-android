@@ -192,8 +192,8 @@ internal class BiometricPromptUtilityImpl(authenticationCallback: BiometricAuthe
 
     private fun createPromptInfo(activity: AppCompatActivity): BiometricPrompt.PromptInfo =
         BiometricPrompt.PromptInfo.Builder().apply {
-            setTitle(activity.getString(R.string.cyberArkTitle))
-            setSubtitle(activity.getString(R.string.biometricpromptTitle))
+            setTitle(activity.getString(R.string.biometricpromptTitle))
+//            setSubtitle(activity.getString(R.string.biometricpromptTitle))
             setDescription(activity.getString(R.string.biometricpromptDescription))
             setConfirmationRequired(false)
             setAllowedAuthenticators(getSecurityType())

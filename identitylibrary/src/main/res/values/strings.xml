@@ -8,9 +8,8 @@
     <string name="permission_camera_rationale_message">This app needs access to your camera so you can scan QR Code.</string>
 
     <!--string resource-->
-    <string name="cyberArkTitle">Cyberark</string>
-    <string name="biometricpromptTitle">Biometric prompt title</string>
-    <string name="biometricpromptDescription">Biometric prompt description</string>
+    <string name="biometricpromptTitle">Confirm biometrics to continue</string>
+    <string name="biometricpromptDescription">Touch the fingerprint sensor</string>
     <string name="enrolldeviceBiometric">Enroll your finger in device</string>
     <string name="okTitle">Enroll your finger in device</string>
 </resources>
