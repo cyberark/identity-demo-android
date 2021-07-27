@@ -16,14 +16,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.6"
+        app:layout_constraintVertical_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:visibility="visible"
         android:id="@+id/imageView"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginTop="4dp"
         app:layout_constraintBottom_toTopOf="@+id/button_log_in"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,17 +34,6 @@
         tools:srcCompat="@drawable/ic_launcher_identity_foreground"
         android:contentDescription="@string/cyberark"/>
 
-    <TextView
-        android:visibility="visible"
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/cyberark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        android:textSize="18sp"
-        android:textStyle="bold" />
 
     <ProgressBar
         android:id="@+id/progressBar_home_activity"

@@ -42,7 +42,7 @@ class MFAActivity : AppCompatActivity() {
 
     // Enroll, QR Authenticator and logout button variables
     private lateinit var enrollButton: Button
-    private lateinit var scanQRCodeButton: Button
+//    private lateinit var scanQRCodeButton: Button
     private lateinit var logOut: Button
 
     // Device biometrics checkbox variables
@@ -56,6 +56,7 @@ class MFAActivity : AppCompatActivity() {
     private var isAuthenticationReq = false
     private var logoutStatus: Boolean = false
     private var isAuthenticated: Boolean = false
+    private var isEnrolled:Boolean = false
 
     /**
      * Callback to handle QR Authenticator result
@@ -92,25 +93,15 @@ class MFAActivity : AppCompatActivity() {
         }
 
         // Perform QR Code Authenticator
-        scanQRCodeButton.setOnClickListener {
-            handleClick(it)
-        }
+//        scanQRCodeButton.setOnClickListener {
+//            handleClick(it)
+//        }
 
         // Perform logout
         logOut.setOnClickListener {
             handleClick(it)
         }
 
-        // Handle device biometrics
-        isAuthenticationReq = CyberarkPreferenceUtils.getBoolean(getString(R.string.isbiometricReq), false)
-        launchWithBio.isChecked = isAuthenticationReq
-        launchWithBio.setOnClickListener {
-            handleClick(it)
-        }
-        biometricReqOnRefresh.isChecked = CyberarkPreferenceUtils.getBoolean(getString(R.string.refreshBioReq), false)
-        biometricReqOnRefresh.setOnClickListener {
-            handleClick(it)
-        }
         bioMetric = BiometricManager().getBiometricUtility(biometricCallback)
     }
 
@@ -145,7 +136,7 @@ class MFAActivity : AppCompatActivity() {
      */
     private fun invokeUI() {
         progressBar = findViewById(R.id.progressBar_mfa_activity)
-        scanQRCodeButton = findViewById(R.id.scan_qr_code)
+//        scanQRCodeButton = findViewById(R.id.scan_qr_code)
         logOut = findViewById(R.id.button_end_session)
         enrollButton = findViewById(R.id.button_enroll)
         launchWithBio = findViewById(R.id.biometricReq)
@@ -167,13 +158,23 @@ class MFAActivity : AppCompatActivity() {
         if (::accessTokenData.isInitialized) {
             logOut.isEnabled = true
             if (CyberarkPreferenceUtils.getBoolean("ENROLLMENT_STATUS", false)) {
-                scanQRCodeButton.isEnabled = true
-                enrollButton.isEnabled = false
-            } else {
-                scanQRCodeButton.isEnabled = false
-                enrollButton.isEnabled = true
+                isEnrolled = true
+                enrollButton.setText(R.string.qr_authenticator)
             }
         }
+        // Handle device biometrics
+        isAuthenticationReq = CyberarkPreferenceUtils.getBoolean(getString(R.string.isbiometricReq), false)
+        launchWithBio.isChecked = isAuthenticationReq
+        launchWithBio.setOnClickListener {
+            handleClick(it)
+        }
+
+        biometricReqOnRefresh.isChecked = CyberarkPreferenceUtils.getBoolean(getString(R.string.refreshBioReq), false)
+        biometricReqOnRefresh.setOnClickListener {
+            handleClick(it)
+        }
+        saveBioReqOnAppLaunch(true)
+        saveRefreshBio(true)
     }
 
     /**
@@ -192,8 +193,8 @@ class MFAActivity : AppCompatActivity() {
                         Log.i(tag, it.data.toString())
                         Log.i(tag, it.data!!.success.toString())
                         logOut.isEnabled = true
-                        scanQRCodeButton.isEnabled = true
-                        enrollButton.isEnabled = false
+//                        scanQRCodeButton.isEnabled = true
+//                        enrollButton.isEnabled = false
 
                         Toast.makeText(
                                 this,
@@ -202,6 +203,7 @@ class MFAActivity : AppCompatActivity() {
                         ).show()
 
                         CyberarkPreferenceUtils.putBoolean("ENROLLMENT_STATUS", true)
+                        enrollButton.setText(R.string.qr_authenticator)
                         progressBar.visibility = View.GONE
                     }
                     ResponseStatus.ERROR -> {
@@ -299,10 +301,20 @@ class MFAActivity : AppCompatActivity() {
             return
         }
         if (view.id == R.id.button_enroll) {
-            if (::accessTokenData.isInitialized) {
-                enroll()
-            } else {
-                //TODO.. handle error scenario
+            if (isEnrolled == false) {
+                if (::accessTokenData.isInitialized) {
+                    enroll()
+                } else {
+                    //TODO.. handle error scenario
+                }
+            }else {
+                val intent = Intent(this, ScanQRCodeLoginActivity::class.java)
+                if (::accessTokenData.isInitialized) {
+                    intent.putExtra("access_token", accessTokenData)
+                    startForResult.launch(intent)
+                } else {
+                    //TODO.. handle error scenario
+                }
             }
         } else if (view.id == R.id.scan_qr_code) {
             val intent = Intent(this, ScanQRCodeLoginActivity::class.java)
@@ -316,10 +328,28 @@ class MFAActivity : AppCompatActivity() {
             val account = setupAccount()
             endSession(account)
         } else if (view.id == R.id.biometricReqOnRefresh) {
-            CyberarkPreferenceUtils.putBoolean(getString(R.string.refreshBioReq), biometricReqOnRefresh.isChecked)
+            saveRefreshBio(biometricReqOnRefresh.isChecked)
         } else if (view.id == R.id.biometricReq) {
-            CyberarkPreferenceUtils.putBoolean(getString(R.string.isbiometricReq), launchWithBio.isChecked)
+            saveBioReqOnAppLaunch(launchWithBio.isChecked)
         }
+    }
+
+    private fun saveBioReqOnAppLaunch(checked:Boolean) {
+        var value = checked
+        if (CyberarkPreferenceUtils.contains(getString(R.string.isbiometricReq)) == false) {
+            value = true
+            biometricReqOnRefresh.isChecked = value
+        }
+        CyberarkPreferenceUtils.putBoolean(getString(R.string.isbiometricReq), value)
+    }
+
+    private fun saveRefreshBio(checked:Boolean) {
+        var value = checked
+        if (CyberarkPreferenceUtils.contains(getString(R.string.refreshBioReq)) == false) {
+            value = true
+            launchWithBio.isChecked = value
+        }
+        CyberarkPreferenceUtils.putBoolean(getString(R.string.refreshBioReq), value)
     }
 
     /**

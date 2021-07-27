@@ -20,17 +20,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@drawable/ic_launcher_identity_foreground" />
 
-    <TextView
-        android:visibility="visible"
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/cyberark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        android:textSize="20sp"
-        android:textStyle="bold" />
 
     <Button
         android:id="@+id/button_enroll"
@@ -54,6 +43,7 @@
         android:layout_height="wrap_content"
         android:enabled="false"
         android:text="@string/qr_authenticator"
+        android:visibility="gone"
         android:textAllCaps="false"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"

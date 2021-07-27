@@ -3,7 +3,7 @@ package com.cyberark.identity.util.endpoint
 object EndpointUrls {
 
     const val URL_AUTH_CODE_FLOW = "/OAuth2/Token/testoauth"
-    const val URL_FAST_ENROLL_V3 = "/Device/EnrollAndroid"
+    const val URL_FAST_ENROLL_V3 = "/Device/EnrollAndroidDevice"
 
     const val HEADER_X_CENTRIFY_NATIVE_CLIENT = "X-CENTRIFY-NATIVE-CLIENT"
     const val HEADER_X_IDAP_NATIVE_CLIENT = "X-IDAP-NATIVE-CLIENT"
