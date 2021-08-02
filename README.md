@@ -4,38 +4,28 @@ This sample application demonstrates the integration of [CyberArk Identity SDK] 
 
 ## Use Cases
 
-- Login
-
-* Authenticates user
+- Login (Authenticates user)
 1. Launch authorize URL in the browser Chrome Custom Tabs using OAuth PKCE flow
 2. Open CyberArk Identity login web page
 3. Authenticates user in browser
 4. After the user authenticates, they are redirected back to the application and exchanging the received authorization code for access token and/or refresh token
 5. Save the access token and/or refresh token in device storge using Keystore encryption
 
-- Logout
-
-* Logout user
+- Logout (Logout user)
 1. Launch end session URL in the browser Chrome Custom Tabs
 2. Clear access token from browser cookie
 3. End session
 
-- Enroll
+- Enroll (Enroll devices using access token)
 
-* Enroll devices using access token
-
-- QR Code Authenticator
-
-* Authenticates web app using QR Code Authenticator from mobile app
+- QR Code Authenticator (Authenticates web app using QR Code Authenticator from mobile app)
 1. Reuest for camera permission
 2. Open QR Code scanner
 3. Scan web page QR widget from mobile app
 4. Client SDK will make REST API call using scanned data and access token
 5. CyberArk Server will verify and authenticates the web app
 
-- Biometrics
-
-* Enable/disable the biometric options from the settings
+- Biometrics (Enable/disable the biometric options from the settings)
 1. Invoke strong biometrics on app launch
 2. Invoke strong biometrics when access token expires
 
