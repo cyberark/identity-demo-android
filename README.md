@@ -18,7 +18,6 @@ This sample application demonstrates the integration of [CyberArk Identity SDK] 
 
 - Enroll (Enroll devices using access token)
 
-
 - QR Code Authenticator (Authenticates web app using QR Code Authenticator from mobile app)
 1. Reuest for camera permission
 2. Open QR Code scanner
