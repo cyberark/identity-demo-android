@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.cyberark.identity.data.network.CyberarkAuthBuilder
 import com.cyberark.identity.data.network.CyberarkAuthHelper
+import com.cyberark.identity.util.device.DeviceConstants
 import com.cyberark.identity.util.device.DeviceInfoHelper
 import com.cyberark.identity.util.endpoint.EndpointUrls
 import com.cyberark.identity.viewmodel.EnrollmentViewModel
@@ -36,13 +37,13 @@ internal class CyberarkEnrollmentManager(
     private fun getBodyPayload(): JSONObject {
         val deviceInfoHelper = DeviceInfoHelper()
         val payload = JSONObject()
-        payload.put("name", deviceInfoHelper.getDeviceName())
-        payload.put("simpleName", deviceInfoHelper.getDeviceName())
-        payload.put("version", deviceInfoHelper.getDeviceVersion())
-        payload.put("udid", deviceInfoHelper.getUDID(context))
-        payload.put("Manufacturer", deviceInfoHelper.getManufacture())
-        payload.put("devicetype", "A")
-        payload.put("os", "Android")
+        payload.put(DeviceConstants.KEY_DEVICE_NAME, deviceInfoHelper.getDeviceName())
+        payload.put(DeviceConstants.KEY_DEVICE_SIMPLE_NAME, deviceInfoHelper.getDeviceName())
+        payload.put(DeviceConstants.KEY_DEVICE_VERSION, deviceInfoHelper.getDeviceVersion())
+        payload.put(DeviceConstants.KEY_DEVICE_UDID, deviceInfoHelper.getUDID(context))
+        payload.put(DeviceConstants.KEY_DEVICE_MANUFACTURER, deviceInfoHelper.getManufacture())
+        payload.put(DeviceConstants.KEY_DEVICE_TYPE, "A")
+        payload.put(DeviceConstants.KEY_DEVICE_OS, "Android")
         return payload
     }
 

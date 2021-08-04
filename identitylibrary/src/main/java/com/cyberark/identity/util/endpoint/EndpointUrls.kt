@@ -1,6 +1,6 @@
 package com.cyberark.identity.util.endpoint
 
-object EndpointUrls {
+internal object EndpointUrls {
 
     const val URL_AUTH_CODE_FLOW = "/OAuth2/Token/testoauth"
     const val URL_FAST_ENROLL_V3 = "/Device/EnrollAndroidDevice"
