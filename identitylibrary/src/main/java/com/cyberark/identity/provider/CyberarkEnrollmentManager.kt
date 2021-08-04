@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.cyberark.identity.data.network.CyberarkAuthBuilder
 import com.cyberark.identity.data.network.CyberarkAuthHelper
+import com.cyberark.identity.util.device.DeviceInfoHelper
 import com.cyberark.identity.util.endpoint.EndpointUrls
 import com.cyberark.identity.viewmodel.EnrollmentViewModel
 import com.cyberark.identity.viewmodel.base.CyberarkViewModelFactory
@@ -32,18 +33,16 @@ internal class CyberarkEnrollmentManager(
         ).get(EnrollmentViewModel::class.java)
     }
 
-    //TODO.. need to remove all hardcoded values
     private fun getBodyPayload(): JSONObject {
+        val deviceInfoHelper = DeviceInfoHelper()
         val payload = JSONObject()
+        payload.put("name", deviceInfoHelper.getDeviceName())
+        payload.put("simpleName", deviceInfoHelper.getDeviceName())
+        payload.put("version", deviceInfoHelper.getDeviceVersion())
+        payload.put("udid", deviceInfoHelper.getUDID(context))
+        payload.put("Manufacturer", deviceInfoHelper.getManufacture())
         payload.put("devicetype", "A")
-        payload.put("name", "Pixel 5 (IMEI: 3fcf45ed38044067)")
-        payload.put("simpleName", "Pixel 5")
-        payload.put("version", "11")
-        payload.put("udid", "3fcf45ed38044067-3fcf45ed38044067-1560043795")
-        payload.put("Manufacturer", "Google")
-        payload.put("imei", "3fcf45ed38044067")
         payload.put("os", "Android")
-        payload.put("GoogleServiceEnabled", true)
         return payload
     }
 
