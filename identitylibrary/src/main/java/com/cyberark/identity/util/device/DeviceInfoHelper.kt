@@ -21,7 +21,6 @@ class DeviceInfoHelper {
 
     @SuppressLint("HardwareIds")
     fun getUDID(context: Context): String {
-        val androidId: String = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-        return androidId
+        return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
     }
 }
