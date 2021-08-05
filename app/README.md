@@ -38,7 +38,7 @@ This sample application demonstrates the integration of `CyberArk Identity SDK` 
 2. Clear access token from browser cookie
 3. End session
 
-- Enroll (Enroll devices using access token)\  
+- Enroll (Enroll devices using access token)  
 
 - QR Code Authenticator (Authenticates web app using QR Code Authenticator from the mobile app)
 1. Reuest for camera permission
