@@ -1,6 +1,6 @@
 package com.cyberark.identity.util.preferences
 
-internal object Constants {
+object Constants {
     const val AUTH_TOKEN = "AUTH_TOKEN"
     const val AUTH_TOKEN_IV = "AUTH_TOKEN_IV"
     const val REFRESH_TOKEN = "REFRESH_TOKEN"

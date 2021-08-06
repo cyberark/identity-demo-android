@@ -119,7 +119,6 @@ class BiometricPromptUtilityImplTest {
         Whitebox.invokeMethod<Null>(biometricPromptUtility, "checkAndAuthenticate", mockActivity)
         Mockito.verify(biometricManager, atMost(3)).canAuthenticate(biometricType)
 
-        PowerMockito.`when`(mockActivity.getString(R.string.cyberArkTitle)).thenReturn("Cyberark")
         PowerMockito.`when`(mockActivity.getString(R.string.biometricpromptDescription))
             .thenReturn("biometricDescription")
         PowerMockito.mock(Resources.Theme::class.java)
