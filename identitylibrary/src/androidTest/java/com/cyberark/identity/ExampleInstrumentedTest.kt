@@ -24,13 +24,11 @@ class ExampleInstrumentedTest {
         assertEquals("com.cyberark.identity.test", appContext.packageName)
     }
 
-    @Test
-    fun testEvent() {
-
-
-        val scenario = ActivityScenario.launch(ScanQRCodeLoginActivity::class.java, Bundle().apply {
-            putString("access_token", "accessTokenData")
-        })
-
-    }
+//    @Test
+//    fun testEvent() {
+//        val scenario = ActivityScenario.launch(ScanQRCodeLoginActivity::class.java, Bundle().apply {
+//            putString("access_token", "accessTokenData")
+//        })
+//
+//    }
 }
