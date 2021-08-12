@@ -16,7 +16,7 @@ internal class CyberarkEnrollmentManager(
     private val context: Context,
     private val accessToken: String
 ) {
-    private val TAG: String? = CyberarkEnrollmentManager::class.simpleName
+    private val tag: String? = CyberarkEnrollmentManager::class.simpleName
     private val viewModel: EnrollmentViewModel
 
     internal fun enroll() {

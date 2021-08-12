@@ -15,8 +15,8 @@ object CyberarkAuthProvider {
     private val TAG: String? = CyberarkAuthProvider::class.simpleName
     internal var cyberarkAuthInterface: CyberarkAuthInterface? = null
 
-    fun login(account: CyberarkAccountBuilder): Builder {
-        return Builder(account)
+    fun login(account: CyberarkAccountBuilder): LoginBuilder {
+        return LoginBuilder(account)
     }
 
     fun endSession(account: CyberarkAccountBuilder): EndSessionBuilder {
@@ -32,7 +32,7 @@ object CyberarkAuthProvider {
     }
 
     @JvmStatic
-    public fun getAuthorizeToken(intent: Intent?): Boolean {
+    fun getAuthorizeToken(intent: Intent?): Boolean {
         if (cyberarkAuthInterface == null) {
             Log.i(TAG, "no previous instance present.")
             return false
@@ -47,7 +47,7 @@ object CyberarkAuthProvider {
         cyberarkAuthInterface = null
     }
 
-    class Builder internal constructor(
+    class LoginBuilder internal constructor(
             private val account: CyberarkAccountBuilder
     ) {
         fun start(context: Context): LiveData<ResponseHandler<AuthCodeFlowModel>> {

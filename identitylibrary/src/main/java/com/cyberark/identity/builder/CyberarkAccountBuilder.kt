@@ -19,7 +19,7 @@ class CyberarkAccountBuilder(
     private val baseURL: HttpUrl?
     private var codeVerifier: String? = null
     private var codeChallenge: String? = null
-    private val TAG: String? = CyberarkAccountBuilder::class.simpleName
+    private val tag: String? = CyberarkAccountBuilder::class.simpleName
 
     data class Builder(
             var domainURL: String? = null,
@@ -113,8 +113,8 @@ class CyberarkAccountBuilder(
         val codeChallenge: String = pkceHelper.generateCodeChallenge(codeVerifier)
 
         //TODO.. for testing only added this log and should be removed later
-        Log.i(TAG, "codeVerifier :: " + codeVerifier)
-        Log.i(TAG, "codeChallenge :: " + codeChallenge)
+        Log.i(tag, "codeVerifier :: " + codeVerifier)
+        Log.i(tag, "codeChallenge :: " + codeChallenge)
 
         codeVerifier.also { this.codeVerifier = it }
         codeChallenge.also { this.codeChallenge = it }

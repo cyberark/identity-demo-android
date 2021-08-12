@@ -1,54 +1,28 @@
 <resources>
+    <!-- App Name -->
     <string name="app_name">Cyberark Identity Sample</string>
-    <string name="scan_qr_code">Scan QR Code</string>
-    <string name="permission_dialog_deny">DENY</string>
-    <string name="permission_settings">SETTINGS</string>
-    <string name="qr_code_login">QR Code Login</string>
-    <string name="permission_dialog_message_camera">Please enable camera permission in settings to scan the QR code.</string>
-    <string name="not_a_valid_qr_code">Not a valid QR code</string>
-    <string name="loading">Loading...</string>
-    <string name="login_enroll_with_qr_error_title">Invalid URL</string>
-    <string name="host_pattern" translatable="false">centrify\\.com|samsungknox\\.com|ctfy\\.me|ctfy\\.co|kprm\\.me|kprm\\.co|idaptive\\.app|idap\\.co|idap\\.me|idaptive\\.qa</string>
-    <string name="login_enroll_with_qr_error_message">Try scanning again or use your User Name and Password to enroll. If you need help, contact your system administrator for assistance.</string>
-    <string name="scan_qr_code_login_from_portal">Scan QR Code Login from Portal</string>
-    <string name="scan_qr_code_login_to_portal">Scan QR Code Login To Portal</string>
-    <string name="title_activity_main">MainActivity</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
-    <string name="hello_world">Hello Square World!</string>
-    <string name="qr_authenticator">QR Authenticator</string>
 
-    <!-- MainActivity -->
-    <string name="returned_from_app_settings_to_activity">Returned from app settings to MainActivity with the following permissions</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <!-- HomeActivity Button -->
+    <string name="button_log_in">Login</string>
 
-    <!-- Permissions -->
-    <string name="permission_camera_text">Camera</string>
-    <string name="permission_camera_rationale_message">This app needs access to your camera so you can scan QR Code.</string>
+    <!-- MFAActivity Button -->
+    <string name="button_log_out">Logout</string>
+    <string name="button_enroll">Opt in for QR code Authenticator</string>
 
-    <string name="authenticate">Authenticate</string>
+    <!-- MFAActivity TextView -->
+    <string name="tv_qr_authenticator">QR Authenticator</string>
 
-    <string name="cyberark_account_client_id">Axis</string>
-    <string name="cyberark_account_host">acme2.my.dev.idaptive.app</string>
-    <string name="cyberark_account_app_id">testoauth2</string>
-    <string name="cyberark_account_response_type">code</string>
-    <string name="cyberark_account_scope">All</string>
-    <string name="cyberark_account_redirect_uri">demo://acme2.my.dev.idaptive.app/android/com.cyberark.mfa/callback</string>
-    <string name="cyberark_account_scheme">demo</string>
+    <!-- MFAActivity Checkbox -->
+    <string name="checkbox_biometric_req">Invoke biometrics on app launch</string>
+    <string name="checkbox_biometric_req_on_refresh">Invoke biometrics when access token expires</string>
 
-    <string name="end_session">End Session</string>
-    <string name="refresh_token">Refresh Token</string>
-    <string name="log_out">Logout</string>
-    <string name="sign_in">Sign In</string>
-    <string name="enroll">Opt in for QR code Authenticator</string>
-    <string name="log_in">Login</string>
-    <string name="cyberark">ACME</string>
-    <string name="biometricDescription">Required to enroll biometric in the device</string>
-    <string name="biometricReq">Invoke biometrics on app launch</string>
-    <string name="biometricReqOnRefresh">Invoke biometrics when access token expires</string>
-    <string name="isbiometricReq">isbiometricReq</string>
-    <string name="refreshBioReq">refreshBioReq</string>
+    <!-- MFAActivity PREF Key -->
+    <string name="pref_key_is_biometric_req">isbiometricReq</string>
+    <string name="pref_key_refresh_bio_req">refreshBioReq</string>
+
+    <!-- MFAActivity Dialog -->
+    <string name="dialog_header_text">ACME</string>
+    <string name="dialog_biometric_desc">Required to enroll biometric in the device</string>
+    <string name="dialog_access_token_expire_desc">Access token is expired. Would you like get new Access Token using refresh token?</string>
+    <string name="dialog_refresh_token_expire_desc">Refresh token is expired. You need to login again</string>
 </resources>

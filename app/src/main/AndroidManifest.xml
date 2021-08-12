@@ -3,13 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.cyberark.mfa">
 
-    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
-
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
-        android:allowBackup="true"
+        android:fullBackupContent="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -21,7 +16,7 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.cyberark.identity.ScanQRCodeLoginActivity"
+            android:name="com.cyberark.identity.CyberarkQRCodeLoginActivity"
             android:screenOrientation="portrait"
             tools:replace="screenOrientation" />
         <activity

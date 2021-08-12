@@ -14,7 +14,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
-import com.cyberark.identity.ScanQRCodeLoginActivity
+import com.cyberark.identity.CyberarkQRCodeLoginActivity
 import com.cyberark.identity.builder.CyberarkAccountBuilder
 import com.cyberark.identity.data.model.EnrollmentModel
 import com.cyberark.identity.data.model.RefreshTokenModel
@@ -23,9 +23,11 @@ import com.cyberark.identity.util.*
 import com.cyberark.identity.util.biometric.BiometricAuthenticationCallback
 import com.cyberark.identity.util.biometric.BiometricManager
 import com.cyberark.identity.util.biometric.BiometricPromptUtility
+import com.cyberark.identity.util.jwt.JWTUtils
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberarkPreferenceUtils
+import java.util.*
 
 class MFAActivity : AppCompatActivity() {
 
@@ -42,7 +44,6 @@ class MFAActivity : AppCompatActivity() {
 
     // Enroll, QR Authenticator and logout button variables
     private lateinit var enrollButton: Button
-//    private lateinit var scanQRCodeButton: Button
     private lateinit var logOut: Button
 
     // Device biometrics checkbox variables
@@ -53,7 +54,7 @@ class MFAActivity : AppCompatActivity() {
     private lateinit var bioMetric: BiometricPromptUtility
 
     // Status update flag in order to handle UI and flow
-    private var isAuthenticationReq = false
+    private var isAuthenticationReq: Boolean = false
     private var logoutStatus: Boolean = false
     private var isAuthenticated: Boolean = false
     private var isEnrolled:Boolean = false
@@ -92,16 +93,12 @@ class MFAActivity : AppCompatActivity() {
             handleClick(it)
         }
 
-        // Perform QR Code Authenticator
-//        scanQRCodeButton.setOnClickListener {
-//            handleClick(it)
-//        }
-
         // Perform logout
         logOut.setOnClickListener {
             handleClick(it)
         }
 
+        // Invoke biometric utility instance
         bioMetric = BiometricManager().getBiometricUtility(biometricCallback)
     }
 
@@ -136,7 +133,6 @@ class MFAActivity : AppCompatActivity() {
      */
     private fun invokeUI() {
         progressBar = findViewById(R.id.progressBar_mfa_activity)
-//        scanQRCodeButton = findViewById(R.id.scan_qr_code)
         logOut = findViewById(R.id.button_end_session)
         enrollButton = findViewById(R.id.button_enroll)
         launchWithBio = findViewById(R.id.biometricReq)
@@ -149,6 +145,8 @@ class MFAActivity : AppCompatActivity() {
     private fun initializeData() {
         accessTokenData = KeyStoreProvider.get().getAuthToken().toString()
         refreshTokenData = KeyStoreProvider.get().getRefreshToken().toString()
+        val status = JWTUtils.isAccessTokenExpired(accessTokenData)
+        Log.i(tag, "Access Token Status $status")
     }
 
     /**
@@ -159,21 +157,21 @@ class MFAActivity : AppCompatActivity() {
             logOut.isEnabled = true
             if (CyberarkPreferenceUtils.getBoolean("ENROLLMENT_STATUS", false)) {
                 isEnrolled = true
-                enrollButton.setText(R.string.qr_authenticator)
+                enrollButton.setText(R.string.tv_qr_authenticator)
             }
         }
         // Handle device biometrics
-        isAuthenticationReq = CyberarkPreferenceUtils.getBoolean(getString(R.string.isbiometricReq), false)
+        isAuthenticationReq = CyberarkPreferenceUtils.getBoolean(getString(R.string.pref_key_is_biometric_req), false)
         launchWithBio.isChecked = isAuthenticationReq
         launchWithBio.setOnClickListener {
             handleClick(it)
         }
 
-        biometricReqOnRefresh.isChecked = CyberarkPreferenceUtils.getBoolean(getString(R.string.refreshBioReq), false)
+        biometricReqOnRefresh.isChecked = CyberarkPreferenceUtils.getBoolean(getString(R.string.pref_key_refresh_bio_req), false)
         biometricReqOnRefresh.setOnClickListener {
             handleClick(it)
         }
-        if (CyberarkPreferenceUtils.contains(getString(R.string.isbiometricReq)) == false) {
+        if (!CyberarkPreferenceUtils.contains(getString(R.string.pref_key_is_biometric_req))) {
             saveBioReqOnAppLaunch(true)
             saveRefreshBio(true)
         }
@@ -195,8 +193,6 @@ class MFAActivity : AppCompatActivity() {
                         Log.i(tag, it.data.toString())
                         Log.i(tag, it.data!!.success.toString())
                         logOut.isEnabled = true
-//                        scanQRCodeButton.isEnabled = true
-//                        enrollButton.isEnabled = false
 
                         Toast.makeText(
                                 this,
@@ -206,7 +202,7 @@ class MFAActivity : AppCompatActivity() {
 
                         CyberarkPreferenceUtils.putBoolean("ENROLLMENT_STATUS", true)
                         isEnrolled = true
-                        enrollButton.setText(R.string.qr_authenticator)
+                        enrollButton.setText(R.string.tv_qr_authenticator)
                         progressBar.visibility = View.GONE
                     }
                     ResponseStatus.ERROR -> {
@@ -281,11 +277,14 @@ class MFAActivity : AppCompatActivity() {
                     ResponseStatus.ERROR -> {
                         Log.i(tag, ResponseStatus.ERROR.toString())
                         progressBar.visibility = View.GONE
+
                         Toast.makeText(
                                 this,
                                 "Error: Unable to fetch access token using refresh token",
                                 Toast.LENGTH_SHORT
                         ).show()
+                        // Show refresh token expire dialog
+                        showRefreshTokenExpireAlert()
                     }
                     ResponseStatus.LOADING -> {
                         progressBar.visibility = View.VISIBLE
@@ -306,29 +305,34 @@ class MFAActivity : AppCompatActivity() {
         if (view.id == R.id.button_enroll) {
             if (!isEnrolled) {
                 if (::accessTokenData.isInitialized) {
-                    enroll()
+                    val status = JWTUtils.isAccessTokenExpired(accessTokenData)
+                    Log.i(tag, "Access Token Status $status")
+                    if(!status) {
+                        showAccessTokenExpireAlert()
+                    } else {
+                        enroll()
+                    }
                 } else {
                     //TODO.. handle error scenario
+                    Log.i(tag, "Access Token is not initialized")
                 }
             }else {
-                val intent = Intent(this, ScanQRCodeLoginActivity::class.java)
                 if (::accessTokenData.isInitialized) {
-                    intent.putExtra("access_token", accessTokenData)
-                    startForResult.launch(intent)
+                    val status = JWTUtils.isAccessTokenExpired(accessTokenData)
+                    Log.i(tag, "Access Token Status " + status)
+                    if(!status) {
+                        showAccessTokenExpireAlert()
+                    } else {
+                        val intent = Intent(this, CyberarkQRCodeLoginActivity::class.java)
+                        intent.putExtra("access_token", accessTokenData)
+                        startForResult.launch(intent)
+                    }
                 } else {
                     //TODO.. handle error scenario
+                    Log.i(tag, "Access Token is not initialized")
                 }
             }
         }
-//        else if (view.id == R.id.scan_qr_code) {
-//            val intent = Intent(this, ScanQRCodeLoginActivity::class.java)
-//            if (::accessTokenData.isInitialized) {
-//                intent.putExtra("access_token", accessTokenData)
-//                startForResult.launch(intent)
-//            } else {
-//                //TODO.. handle error scenario
-//            }
-//        }
 
         else if (view.id == R.id.button_end_session) {
             val account = setupAccount()
@@ -340,22 +344,28 @@ class MFAActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveBioReqOnAppLaunch(checked:Boolean) {
+    /**
+     * Save "Invoke biometrics on app launch" status in shared preference
+     */
+    private fun saveBioReqOnAppLaunch(checked: Boolean) {
         var value = checked
-        if (CyberarkPreferenceUtils.contains(getString(R.string.isbiometricReq)) == false) {
+        if (!CyberarkPreferenceUtils.contains(getString(R.string.pref_key_is_biometric_req))) {
             value = true
             biometricReqOnRefresh.isChecked = value
         }
-        CyberarkPreferenceUtils.putBoolean(getString(R.string.isbiometricReq), value)
+        CyberarkPreferenceUtils.putBoolean(getString(R.string.pref_key_is_biometric_req), value)
     }
 
-    private fun saveRefreshBio(checked:Boolean) {
+    /**
+     * Save "Invoke biometrics when access token expires" status in shared preference
+     */
+    private fun saveRefreshBio(checked: Boolean) {
         var value = checked
-        if (CyberarkPreferenceUtils.contains(getString(R.string.refreshBioReq)) == false) {
+        if (!CyberarkPreferenceUtils.contains(getString(R.string.pref_key_refresh_bio_req))) {
             value = true
             launchWithBio.isChecked = value
         }
-        CyberarkPreferenceUtils.putBoolean(getString(R.string.refreshBioReq), value)
+        CyberarkPreferenceUtils.putBoolean(getString(R.string.pref_key_refresh_bio_req), value)
     }
 
     /**
@@ -378,6 +388,13 @@ class MFAActivity : AppCompatActivity() {
             this@MFAActivity.isAuthenticated = true
             biometricReqOnRefresh.isEnabled = true
             launchWithBio.isEnabled = true
+
+            val status = JWTUtils.isAccessTokenExpired(accessTokenData)
+            Log.i(tag, "Access Token Status " + status)
+            if(!status) {
+                val account = setupAccount()
+                getAccessTokenUsingRefreshToken(account)
+            }
         }
 
         override fun passwordAuthenticationSelected() {
@@ -386,14 +403,7 @@ class MFAActivity : AppCompatActivity() {
                     "Password authentication selected",
                     Toast.LENGTH_LONG
             ).show()
-//            val pinIntent = Intent(
-//                this@MFAActivity,
-//                SecurityPinActivity::class.java
-//            ).apply {
-//                putExtra("securitypin", "1234")
-//            }
-//            //TODO.. need to verify deprecation warning and refactor code as needed
-//            startActivityForResult(pinIntent, APP_PIN_REQUEST)
+
         }
 
         override fun showErrorMessage(message: String) {
@@ -434,31 +444,76 @@ class MFAActivity : AppCompatActivity() {
     }
 
     /**
+     * Invoke security settings screen to register biometrics
+     */
+    private fun launchBiometricSetup() {
+        this.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
+    }
+
+    /**
      * Show biometrics enrollment popup if not registered
      */
     private fun showBiometricsEnrollmentAlert() {
 
         val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
             override fun tappedButtonwithType(buttonType: AlertButtonType) {
-                if(buttonType == AlertButtonType.NEGATIVE) {
-//                    finish()
-                } else if(buttonType == AlertButtonType.POSITIVE) {
+                if (buttonType == AlertButtonType.NEGATIVE) {
+                    // User cancels dialog
+                } else if (buttonType == AlertButtonType.POSITIVE) {
                     launchBiometricSetup()
                 }
             }
         })
         enrollFingerPrintDlg.displayAlert(
                 this,
-                this.getString(R.string.cyberark),
-                this.getString(R.string.biometricDescription), false,
+                this.getString(R.string.dialog_header_text),
+                this.getString(R.string.dialog_biometric_desc), false,
                 mutableListOf(AlertButton("Cancel", AlertButtonType.NEGATIVE), AlertButton("OK", AlertButtonType.POSITIVE))
         )
     }
 
     /**
-     * Invoke security settings screen to register biometrics
+     * Show popup when access token expired
      */
-    private fun launchBiometricSetup() {
-        this.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
+    private fun showAccessTokenExpireAlert() {
+
+        val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
+            override fun tappedButtonwithType(buttonType: AlertButtonType) {
+                if (buttonType == AlertButtonType.NEGATIVE) {
+                    // User cancels dialog
+                } else if (buttonType == AlertButtonType.POSITIVE) {
+                    showBiometric()
+                }
+            }
+        })
+        enrollFingerPrintDlg.displayAlert(
+                this,
+                this.getString(R.string.dialog_header_text),
+                this.getString(R.string.dialog_access_token_expire_desc), false,
+                mutableListOf(AlertButton("Cancel", AlertButtonType.NEGATIVE), AlertButton("OK", AlertButtonType.POSITIVE))
+        )
+    }
+
+    /**
+     * Show popup when refresh token expired
+     */
+    private fun showRefreshTokenExpireAlert() {
+
+        val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
+            override fun tappedButtonwithType(buttonType: AlertButtonType) {
+                if (buttonType == AlertButtonType.NEGATIVE) {
+                    // User cancels dialog
+                } else if (buttonType == AlertButtonType.POSITIVE) {
+                    val account = setupAccount()
+                    endSession(account)
+                }
+            }
+        })
+        enrollFingerPrintDlg.displayAlert(
+            this,
+            this.getString(R.string.dialog_header_text),
+            this.getString(R.string.dialog_refresh_token_expire_desc), false,
+            mutableListOf(AlertButton("Cancel", AlertButtonType.NEGATIVE), AlertButton("OK", AlertButtonType.POSITIVE))
+        )
     }
 }

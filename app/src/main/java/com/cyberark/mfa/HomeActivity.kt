@@ -76,6 +76,8 @@ class HomeActivity : AppCompatActivity() {
     private fun startAuthentication(cyberarkAccountBuilder: CyberarkAccountBuilder) {
         val authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>> =
                 CyberarkAuthProvider.login(cyberarkAccountBuilder).start(this)
+
+        // Verify if there is any active observer, if not then add observe to get API response
         if (!authResponseHandler.hasActiveObservers()) {
             authResponseHandler.observe(this, {
                 when (it.status) {

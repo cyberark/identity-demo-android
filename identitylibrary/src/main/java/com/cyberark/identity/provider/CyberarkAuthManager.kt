@@ -54,7 +54,7 @@ internal class CyberarkAuthManager(
         Log.i(TAG, "params" + params.toString())
 
         if (refreshTokenData != null) {
-            Log.i(TAG, "Code exchange for access token")
+            Log.i(TAG, "Get new access token using refresh token")
             viewModel.handleRefreshToken(params)
         } else {
             Log.i(TAG, "Unable to fetch access token using refresh token")

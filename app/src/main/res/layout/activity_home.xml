@@ -10,7 +10,7 @@
         android:id="@+id/button_log_in"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/log_in"
+        android:text="@string/button_log_in"
         android:textSize="18sp"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -32,7 +32,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:background="@drawable/ic_launcher_identity_foreground"
         tools:srcCompat="@drawable/ic_launcher_identity_foreground"
-        android:contentDescription="@string/cyberark"/>
+        android:contentDescription="@string/dialog_header_text"/>
 
 
     <ProgressBar

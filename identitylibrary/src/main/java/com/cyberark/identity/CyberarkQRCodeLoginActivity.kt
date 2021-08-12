@@ -1,11 +1,11 @@
 package com.cyberark.identity
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
@@ -21,7 +21,10 @@ import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
-class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
+class CyberarkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
+
+    // Progress indicator variable
+    private lateinit var progressBar: ProgressBar
 
     private lateinit var viewModel: ScanQRCodeViewModel
     private lateinit var accessTokenData: String
@@ -35,6 +38,9 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recycler_view)
+
+        progressBar = findViewById(R.id.progressBar)
+
         if (intent.extras != null) {
             accessTokenData = intent.getStringExtra("access_token").toString()
         }
@@ -118,7 +124,9 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
                     Log.i(TAG, ResponseStatus.SUCCESS.toString())
                     Log.i(TAG, it.data.toString())
                     Log.i(TAG, it.data!!.success.toString())
-                    Log.i(TAG, it.data!!.result?.displayName.toString())
+                    Log.i(TAG, it.data.result?.displayName.toString())
+
+                    progressBar.visibility = View.GONE
 
                     intent.putExtra(
                         "QR_CODE_AUTH_RESULT",
@@ -129,12 +137,18 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
                 }
                 ResponseStatus.ERROR -> {
                     Log.i(TAG, ResponseStatus.ERROR.toString())
+
+                    progressBar.visibility = View.GONE
+
                     intent.putExtra(
                         "QR_CODE_AUTH_RESULT",
                         "QR Code Authentication is failed"
                     )
                     setResult(RESULT_OK, intent)
                     finish()
+                }
+                ResponseStatus.LOADING -> {
+                    progressBar.visibility = View.VISIBLE
                 }
             }
         })
@@ -145,7 +159,7 @@ class ScanQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionC
             // Do something after user returned from app settings screen, like showing a Toast.
             Toast.makeText(
                 this,
-                R.string.returned_from_app_settings_to_activity,
+                R.string.toast_returned_from_app_settings_to_activity,
                 Toast.LENGTH_SHORT
             ).show()
             finish()

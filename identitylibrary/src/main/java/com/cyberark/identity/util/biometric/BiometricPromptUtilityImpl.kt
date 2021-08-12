@@ -1,6 +1,5 @@
 package com.cyberark.identity.util.biometric
 
-
 import android.app.Activity
 import android.content.Intent
 import android.provider.Settings
@@ -10,24 +9,20 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import com.cyberark.identity.R
-import com.cyberark.identity.util.AlertButton
-import com.cyberark.identity.util.AlertButtonType
-import com.cyberark.identity.util.AlertDialogButtonCallback
 import com.cyberark.identity.util.AlertDialogHandler
 
-
-internal class BiometricPromptUtilityImpl(authenticationCallback: BiometricAuthenticationCallback):BiometricPromptUtility {
+internal class BiometricPromptUtilityImpl(private val authenticationCallback: BiometricAuthenticationCallback) :
+    BiometricPromptUtility {
     private val TAG = "BiometricPromptUtility"
     private var mMaxRetries = 3
     private var mFailedTries = 0
 
     private var isAutoCancelElabled = true
     private var mPrompt: BiometricPrompt? = null
-    private val authenticationCallback: BiometricAuthenticationCallback = authenticationCallback
     private var negitiveButtonText: String? = null
     private val securityPin = "1234"
     private lateinit var enrollFingerPrintDlg: AlertDialogHandler
-    private var useDevicePin:Boolean = false
+    private var useDevicePin: Boolean = false
 
     private fun createBioAuthetication(
         activity: AppCompatActivity
@@ -113,40 +108,37 @@ internal class BiometricPromptUtilityImpl(authenticationCallback: BiometricAuthe
     }
 
     private fun decryptServerTokenFromStorage(authResult: BiometricPrompt.AuthenticationResult) {
-        Log.v(TAG, "authresult ")
+        Log.v(TAG, "auth result :: $authResult")
         this@BiometricPromptUtilityImpl.authenticationCallback.isAuthenticationSuccess(true)
     }
 
     private fun checkAndAuthenticate(activity: AppCompatActivity) {
         val biometricManager = getBioMetric(activity)
         println("Biometric manager $biometricManager")
-        if (biometricManager != null) {
-//            println("Biometric can authenticate ${biometricManager.canAuthenticate(getSecurityType())}")
-            when (biometricManager.canAuthenticate(getSecurityType())) {
-                BiometricManager.BIOMETRIC_SUCCESS -> {
-                    showBiometricPrompt(activity)
-                }
-                BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
-                    this.authenticationCallback.isHardwareSupported(false)
-                }
-                BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
-                    this.authenticationCallback.isHardwareSupported(false)
-                }
-                BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
-                    this.authenticationCallback.isBiometricEnrolled(false)
+        when (biometricManager.canAuthenticate(getSecurityType())) {
+            BiometricManager.BIOMETRIC_SUCCESS -> {
+                showBiometricPrompt(activity)
+            }
+            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
+                this.authenticationCallback.isHardwareSupported(false)
+            }
+            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
+                this.authenticationCallback.isHardwareSupported(false)
+            }
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                this.authenticationCallback.isBiometricEnrolled(false)
 //                    if (activity != null) {
 //                        showFingerEnrollmentAlert(activity!!)
 //                    }
-                }
-                BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> {
-                    this.authenticationCallback.isHardwareSupported(false)
-                }
-                BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> {
-                    this.authenticationCallback.biometricErrorSecurityUpdateRequired()
-                }
-                BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED -> {
-                    this.authenticationCallback.isHardwareSupported(false)
-                }
+            }
+            BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> {
+                this.authenticationCallback.isHardwareSupported(false)
+            }
+            BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> {
+                this.authenticationCallback.biometricErrorSecurityUpdateRequired()
+            }
+            BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED -> {
+                this.authenticationCallback.isHardwareSupported(false)
             }
         }
     }
@@ -170,15 +162,11 @@ internal class BiometricPromptUtilityImpl(authenticationCallback: BiometricAuthe
 //    }
 
     fun dismissFingerPrintEnroll() {
-        if (::enrollFingerPrintDlg.isInitialized) {
-            enrollFingerPrintDlg?.dismissForcefully()
-        }
+        if (::enrollFingerPrintDlg.isInitialized) enrollFingerPrintDlg?.dismissForcefully()
     }
 
     private fun launchBiometricSetup(activity: Activity?) {
-        if (activity != null) {
-            activity.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
-        }
+        activity?.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
     }
 
     private fun getSecurityType(): Int {
@@ -189,12 +177,11 @@ internal class BiometricPromptUtilityImpl(authenticationCallback: BiometricAuthe
     }
 
 
-
     private fun createPromptInfo(activity: AppCompatActivity): BiometricPrompt.PromptInfo =
         BiometricPrompt.PromptInfo.Builder().apply {
-            setTitle(activity.getString(R.string.biometricpromptTitle))
+            setTitle(activity.getString(R.string.dialog_biometric_prompt_title))
 //            setSubtitle(activity.getString(R.string.biometricpromptTitle))
-            setDescription(activity.getString(R.string.biometricpromptDescription))
+            setDescription(activity.getString(R.string.dialog_biometric_prompt_desc))
             setConfirmationRequired(false)
             setAllowedAuthenticators(getSecurityType())
             if (useDevicePin == false) {

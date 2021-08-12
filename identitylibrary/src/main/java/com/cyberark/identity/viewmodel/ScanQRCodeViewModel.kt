@@ -27,13 +27,15 @@ internal class ScanQRCodeViewModel(private val cyberarkAuthHelper: CyberarkAuthH
             try {
                 Log.i(TAG, headerPayload.toString())
                 Log.i(TAG, barcodeUrl)
-                var idapNativeClient: Boolean = headerPayload.getBoolean(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT)
+                val idapNativeClient: Boolean = headerPayload.getBoolean(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT)
                 val bearerToken: String = headerPayload.getString(EndpointUrls.HEADER_AUTHORIZATION)
                 val usersFromApi = cyberarkAuthHelper.qrCodeLogin(idapNativeClient, bearerToken, barcodeUrl)
                 Log.i(TAG, "usersFromApi :: "+ usersFromApi.success)
                 Log.i(TAG, "usersFromApi :: "+ usersFromApi.result?.displayName)
+                Log.i(TAG, "usersFromApi String :: "+ usersFromApi.toString())
                 qrCodeResponse.postValue(ResponseHandler.success(usersFromApi))
             } catch (e: Exception) {
+                Log.i(TAG, "usersFromApi Error :: "+ e.toString())
                 qrCodeResponse.postValue(ResponseHandler.error(e.toString(), null))
             }
         }

@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="permission_dialog_message_camera">Please enable camera permission in settings to scan the QR code.</string>
+    <!-- Toast string -->
+    <string name="toast_returned_from_app_settings_to_activity">Returned from app settings to MainActivity with the following permissions</string>
 
-    <string name="returned_from_app_settings_to_activity">Returned from app settings to MainActivity with the following permissions</string>
-    <!-- Permissions -->
-    <string name="permission_camera_text">Camera</string>
+    <!-- Permissions string-->
     <string name="permission_camera_rationale_message">This app needs access to your camera so you can scan QR Code.</string>
 
-    <!--string resource-->
-    <string name="biometricpromptTitle">Confirm biometrics to continue</string>
-    <string name="biometricpromptDescription">Touch the fingerprint sensor</string>
-    <string name="enrolldeviceBiometric">Enroll your finger in device</string>
-    <string name="okTitle">Enroll your finger in device</string>
+    <!-- Biometric dialog strings -->
+    <string name="dialog_biometric_prompt_title">Confirm biometrics to continue</string>
+    <string name="dialog_biometric_prompt_desc">Touch the fingerprint sensor</string>
+    <string name="security_pin">Security Pin</string>
+    <string name="enter_pin">Enter PIN</string>
 </resources>
