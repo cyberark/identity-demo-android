@@ -1,5 +1,20 @@
-package com.cyberark.identity.util.biometric
+/*
+ * Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
+package com.cyberark.identity.util.biometric
 
 import android.content.Context
 import android.content.res.Resources
@@ -68,7 +83,7 @@ class BiometricPromptUtilityImplTest {
     val mockActivity: AppCompatActivity = PowerMockito.mock(AppCompatActivity::class.java)
 
     @Test
-    public fun testShowBioAuthentication() {
+    fun testShowBioAuthentication() {
         val appContext = PowerMockito.mock(Context::class.java)
         Mockito.`when`(mockActivity.applicationContext).thenReturn(appContext)
         val biometricManager = PowerMockito.spy(BiometricManager.from(mockActivity))
@@ -119,7 +134,7 @@ class BiometricPromptUtilityImplTest {
         Whitebox.invokeMethod<Null>(biometricPromptUtility, "checkAndAuthenticate", mockActivity)
         Mockito.verify(biometricManager, atMost(3)).canAuthenticate(biometricType)
 
-        PowerMockito.`when`(mockActivity.getString(R.string.biometricpromptDescription))
+        PowerMockito.`when`(mockActivity.getString(R.string.dialog_biometric_prompt_desc))
             .thenReturn("biometricDescription")
         PowerMockito.mock(Resources.Theme::class.java)
 

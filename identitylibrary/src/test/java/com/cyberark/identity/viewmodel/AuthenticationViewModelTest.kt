@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.cyberark.identity.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -21,7 +37,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(ScanQRCodeViewModel::class,CyberarkAuthHelper::class)
 class AuthenticationViewModelTest : TestCase() {
-    private lateinit var cyberarkAuthHelper:CyberarkAuthHelper;
+    private lateinit var cyberarkAuthHelper:CyberarkAuthHelper
     private lateinit var authenticationViewModel:AuthenticationViewModel
     @Mock
     private lateinit var authObserver: Observer<ResponseHandler<AuthCodeFlowModel>>
@@ -38,7 +54,7 @@ class AuthenticationViewModelTest : TestCase() {
     }
 
     @Test
-    public fun testHandleAuthorizationCode() {
+    fun testHandleAuthorizationCode() {
         val params = HashMap<String?, String?>()
         authenticationViewModel.getAccessToken().observeForever(authObserver)
         authenticationViewModel.handleAuthorizationCode(params)
@@ -46,7 +62,7 @@ class AuthenticationViewModelTest : TestCase() {
     }
 
     @Test
-    public fun testHandleRefreshToken() {
+    fun testHandleRefreshToken() {
         val params = HashMap<String?, String?>()
         authenticationViewModel.getRefreshToken().observeForever(refreshObserver)
         authenticationViewModel.handleRefreshToken(params)
