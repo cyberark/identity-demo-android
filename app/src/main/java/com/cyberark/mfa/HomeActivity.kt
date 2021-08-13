@@ -33,6 +33,10 @@ import com.cyberark.identity.util.ResponseStatus
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.preferences.CyberarkPreferenceUtils
 
+/**
+ * Implementing SDK feature in HomeActivity
+ * 1. OAuth 2.0 PKCE driven login flow
+ */
 class HomeActivity : AppCompatActivity() {
 
     private val tag: String? = HomeActivity::class.simpleName
@@ -72,6 +76,8 @@ class HomeActivity : AppCompatActivity() {
 
     /**
      * Set-up account for OAuth 2.0 PKCE driven flow
+     *
+     * @return Cyberark Account Builder instance
      */
     private fun setupAccount(): CyberarkAccountBuilder {
         val cyberarkAccountBuilder = CyberarkAccountBuilder.Builder()
@@ -88,6 +94,8 @@ class HomeActivity : AppCompatActivity() {
 
     /**
      * Launch URL in browser, set-up view model and start authentication flow
+     *
+     * @param cyberarkAccountBuilder instance
      */
     private fun startAuthentication(cyberarkAccountBuilder: CyberarkAccountBuilder) {
         val authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>> =

@@ -24,6 +24,11 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 
+/**
+ * JWT decoder utils
+ *
+ * @constructor Create empty JWT utils
+ */
 object JWTUtils {
     private val tag: String? = JWTUtils::class.simpleName
     fun isAccessTokenExpired(JWTEncoded: String): Boolean {
@@ -61,6 +66,12 @@ object JWTUtils {
         return result
     }
 
+    /**
+     * Get json
+     *
+     * @param strEncoded
+     * @return
+     */
     private fun getJson(strEncoded: String): String {
         val charset = charset("UTF-8")
         val decodedBytes: ByteArray = Base64.decode(strEncoded, Base64.URL_SAFE)

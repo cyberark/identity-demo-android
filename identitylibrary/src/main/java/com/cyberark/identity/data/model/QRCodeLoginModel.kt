@@ -19,6 +19,11 @@ package com.cyberark.identity.data.model
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Q r code login model
+ *
+ * @constructor Create empty Q r code login model
+ */
 @Keep
 class QRCodeLoginModel {
     var success = false
@@ -50,6 +55,11 @@ class QRCodeLoginModel {
     @SerializedName("PlainResult")
     var plainResult: String? = null
 
+    /**
+     * Result
+     *
+     * @constructor Create empty Result
+     */
     inner class Result {
         @SerializedName("AuthLevel")
         var authLevel: String? = null

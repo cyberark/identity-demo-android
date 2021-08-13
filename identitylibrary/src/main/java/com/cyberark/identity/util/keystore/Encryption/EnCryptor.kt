@@ -24,8 +24,20 @@ import java.security.*
 import javax.crypto.*
 import javax.crypto.spec.IvParameterSpec
 
+/**
+ * En cryptor
+ *
+ * @constructor Create empty En cryptor
+ */
 internal class EnCryptor {
 
+    /**
+     * Encrypt text
+     *
+     * @param alias
+     * @param textToEncrypt
+     * @return
+     */
     @Throws(
         UnrecoverableEntryException::class,
         NoSuchAlgorithmException::class,
@@ -42,7 +54,7 @@ internal class EnCryptor {
     fun encryptText(alias: String, textToEncrypt: String): Pair<ByteArray,ByteArray> {
         val cipher: Cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(alias))
-        val iv = cipher.getIV()
+        val iv = cipher.iv
         val encryptedData = cipher.doFinal(textToEncrypt.toByteArray(Charsets.UTF_8))
         return Pair(iv,encryptedData)
     }

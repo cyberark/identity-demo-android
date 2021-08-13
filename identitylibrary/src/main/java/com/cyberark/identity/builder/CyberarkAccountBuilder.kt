@@ -22,6 +22,18 @@ import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.util.*
 
+/**
+ * Cyberark account builder
+ *
+ * @property domainURL
+ * @property clientId
+ * @property appId
+ * @property responseType
+ * @property state
+ * @property scope
+ * @property redirectUri
+ * @constructor Create empty Cyberark account builder
+ */
 class CyberarkAccountBuilder(
         val domainURL: String?,
         val clientId: String?,
@@ -37,6 +49,18 @@ class CyberarkAccountBuilder(
     private var codeChallenge: String? = null
     private val tag: String? = CyberarkAccountBuilder::class.simpleName
 
+    /**
+     * Builder
+     *
+     * @property domainURL
+     * @property clientId
+     * @property appId
+     * @property responseType
+     * @property state
+     * @property scope
+     * @property redirectUri
+     * @constructor Create empty Builder
+     */
     data class Builder(
             var domainURL: String? = null,
             var clientId: String? = null,
@@ -47,13 +71,59 @@ class CyberarkAccountBuilder(
             var redirectUri: String? = null
     ) {
 
+        /**
+         * Domain u r l
+         *
+         * @param domainURL
+         */
         fun domainURL(domainURL: String) = apply { this.domainURL = domainURL }
+
+        /**
+         * Client id
+         *
+         * @param clientId
+         */
         fun clientId(clientId: String) = apply { this.clientId = clientId }
+
+        /**
+         * App id
+         *
+         * @param appId
+         */
         fun appId(appId: String) = apply { this.appId = appId }
+
+        /**
+         * Response type
+         *
+         * @param responseType
+         */
         fun responseType(responseType: String) = apply { this.responseType = responseType }
+
+        /**
+         * State
+         *
+         * @param state
+         */
         fun state(state: String) = apply { this.state = state }
+
+        /**
+         * Scope
+         *
+         * @param scope
+         */
         fun scope(scope: String) = apply { this.scope = scope }
+
+        /**
+         * Redirect uri
+         *
+         * @param redirectUri
+         */
         fun redirectUri(redirectUri: String) = apply { this.redirectUri = redirectUri }
+
+        /**
+         * Build
+         *
+         */
         fun build() = CyberarkAccountBuilder(
                 domainURL,
                 clientId,

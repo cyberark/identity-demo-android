@@ -23,15 +23,32 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
 
+/**
+ * PKCE helper
+ *
+ * @constructor Create empty PKCE helper
+ */
 class PKCEHelper {
     private fun getBase64String(source: ByteArray): String {
         return Base64.encodeToString(source, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
     }
 
+    /**
+     * Get ASCII bytes
+     *
+     * @param value
+     * @return
+     */
     fun getASCIIBytes(value: String): ByteArray {
         return value.toByteArray(StandardCharsets.US_ASCII)
     }
 
+    /**
+     * Get SHA256
+     *
+     * @param input
+     * @return
+     */
     fun getSHA256(input: ByteArray): ByteArray {
         val signature: ByteArray
         signature = try {
@@ -45,6 +62,11 @@ class PKCEHelper {
         return signature
     }
 
+    /**
+     * Generate code verifier
+     *
+     * @return
+     */
     fun generateCodeVerifier(): String {
         val sr = SecureRandom()
         val code = ByteArray(32)
@@ -52,6 +74,12 @@ class PKCEHelper {
         return Base64.encodeToString(code, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
     }
 
+    /**
+     * Generate code challenge
+     *
+     * @param codeVerifier
+     * @return
+     */
     fun generateCodeChallenge(codeVerifier: String): String {
         val input = getASCIIBytes(codeVerifier)
         val signature = getSHA256(input)

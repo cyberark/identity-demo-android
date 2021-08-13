@@ -18,7 +18,18 @@ package com.cyberark.identity.provider
 
 import android.content.Intent
 
+/**
+ * Cyberark auth interface
+ *
+ * @constructor Create empty Cyberark auth interface
+ */
 internal interface CyberarkAuthInterface {
 
+    /**
+     * Update result
+     *
+     * @param intent
+     * @return
+     */
     fun updateResult(intent: Intent?): Boolean
 }

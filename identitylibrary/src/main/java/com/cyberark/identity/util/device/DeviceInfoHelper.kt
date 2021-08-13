@@ -21,20 +21,46 @@ import android.content.Context
 import android.os.Build
 import android.provider.Settings
 
+/**
+ * Device info helper
+ *
+ * @constructor Create empty Device info helper
+ */
 class DeviceInfoHelper {
 
+    /**
+     * Get device name
+     *
+     * @return
+     */
     fun getDeviceName(): String {
         return Build.MODEL
     }
 
+    /**
+     * Get device version
+     *
+     * @return
+     */
     fun getDeviceVersion(): String {
         return Build.VERSION.RELEASE
     }
 
+    /**
+     * Get manufacture
+     *
+     * @return
+     */
     fun getManufacture(): String {
         return Build.MANUFACTURER
     }
 
+    /**
+     * Get udid
+     *
+     * @param context
+     * @return
+     */
     @SuppressLint("HardwareIds")
     fun getUDID(context: Context): String {
         return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)

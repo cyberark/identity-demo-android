@@ -23,6 +23,11 @@ import android.net.Uri
 import android.text.TextUtils
 import androidx.browser.customtabs.CustomTabsService
 
+/**
+ * Custom tab helper
+ *
+ * @constructor Create empty Custom tab helper
+ */
 class CustomTabHelper {
 
     companion object {
@@ -33,13 +38,20 @@ class CustomTabHelper {
         val LOCAL_PACKAGE = "com.google.android.apps.chrome"
     }
 
+    /**
+     * Get package name to use
+     *
+     * @param context
+     * @param url
+     * @return
+     */
     fun getPackageNameToUse(context: Context, url: String): String? {
 
         sPackageNameToUse?.let {
             return it
         }
 
-        val pm = context.getPackageManager()
+        val pm = context.packageManager
 
         val activityIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         val defaultViewHandlerInfo = pm.resolveActivity(activityIntent, 0)
@@ -79,9 +91,16 @@ class CustomTabHelper {
         return sPackageNameToUse
     }
 
+    /**
+     * Has specialized handler intents
+     *
+     * @param context
+     * @param intent
+     * @return
+     */
     private fun hasSpecializedHandlerIntents(context: Context, intent: Intent): Boolean {
         try {
-            val pm = context.getPackageManager()
+            val pm = context.packageManager
             val handlers = pm.queryIntentActivities(
                 intent,
                 PackageManager.GET_RESOLVED_FILTER

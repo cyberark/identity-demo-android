@@ -16,6 +16,11 @@
 
 package com.cyberark.identity.util.endpoint
 
+/**
+ * Endpoint urls
+ *
+ * @constructor Create empty Endpoint urls
+ */
 internal object EndpointUrls {
 
     const val URL_AUTH_CODE_FLOW = "/OAuth2/Token/testoauth4"

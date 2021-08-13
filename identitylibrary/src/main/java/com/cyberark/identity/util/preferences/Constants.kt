@@ -16,6 +16,11 @@
 
 package com.cyberark.identity.util.preferences
 
+/**
+ * Constants
+ *
+ * @constructor Create empty Constants
+ */
 object Constants {
     const val AUTH_TOKEN = "AUTH_TOKEN"
     const val AUTH_TOKEN_IV = "AUTH_TOKEN_IV"

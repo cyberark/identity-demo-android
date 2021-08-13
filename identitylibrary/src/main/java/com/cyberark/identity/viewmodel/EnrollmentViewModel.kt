@@ -29,8 +29,15 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 
+/**
+ * Enrollment view model
+ *
+ * @property cyberarkAuthHelper
+ * @constructor Create empty Enrollment view model
+ */
 internal class EnrollmentViewModel(private val cyberarkAuthHelper: CyberarkAuthHelper) :
     ViewModel() {
 
@@ -43,6 +50,12 @@ internal class EnrollmentViewModel(private val cyberarkAuthHelper: CyberarkAuthH
         Log.i(TAG, "initialize EnrollViewModel")
     }
 
+    /**
+     * Handle enrollment
+     *
+     * @param headerPayload
+     * @param bodyPayload
+     */
     internal fun handleEnrollment(headerPayload: JSONObject, bodyPayload: JSONObject) {
         viewModelScope.launch {
             enrolledResponse.postValue(ResponseHandler.loading(null))
@@ -87,11 +100,22 @@ internal class EnrollmentViewModel(private val cyberarkAuthHelper: CyberarkAuthH
         }
     }
 
+    /**
+     * Create json body
+     *
+     * @param jsonStr
+     * @return
+     */
     private fun createJsonBody(jsonStr: String): RequestBody {
         //TODO.. verify deprecation warning and refactor code as needed
-        return RequestBody.create(mediaType, jsonStr)
+        return jsonStr.toRequestBody(mediaType)
     }
 
+    /**
+     * Get enrolled data
+     *
+     * @return
+     */
     internal fun getEnrolledData(): LiveData<ResponseHandler<EnrollmentModel>> {
         return enrolledResponse
     }

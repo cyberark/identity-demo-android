@@ -16,6 +16,15 @@
 
 package com.cyberark.identity.data.model
 
+/**
+ * Enrollment result
+ *
+ * @property Message
+ * @property Status
+ * @property ClientApiKey
+ * @property ErrorCode
+ * @constructor Create empty Enrollment result
+ */
 data class EnrollmentResult(
     val Message: String,
     val Status: String,

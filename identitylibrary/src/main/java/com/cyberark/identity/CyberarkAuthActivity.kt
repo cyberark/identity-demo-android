@@ -28,6 +28,11 @@ import com.cyberark.identity.provider.CyberarkAuthProvider.getAuthorizeToken
 import com.cyberark.identity.util.browser.CustomTabHelper
 import com.cyberark.identity.util.preferences.CyberarkPreferenceUtils
 
+/**
+ * Cyberark auth activity
+ *
+ * @constructor Create empty Cyberark auth activity
+ */
 class CyberarkAuthActivity : AppCompatActivity() {
 
     private val TAG: String? = CyberarkAuthActivity::class.simpleName
@@ -89,6 +94,12 @@ class CyberarkAuthActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Launch uri
+     *
+     * @param context
+     * @param uri
+     */
     fun launchUri(context: Context, uri: Uri?) {
         val builder = CustomTabsIntent.Builder()
 

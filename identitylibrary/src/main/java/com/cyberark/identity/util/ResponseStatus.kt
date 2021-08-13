@@ -16,6 +16,11 @@
 
 package com.cyberark.identity.util
 
+/**
+ * Response status
+ *
+ * @constructor Create empty Response status
+ */
 enum class ResponseStatus {
     SUCCESS,
     ERROR,

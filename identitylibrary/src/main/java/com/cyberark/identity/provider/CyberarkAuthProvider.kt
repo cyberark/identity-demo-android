@@ -31,22 +31,51 @@ object CyberarkAuthProvider {
     private val TAG: String? = CyberarkAuthProvider::class.simpleName
     internal var cyberarkAuthInterface: CyberarkAuthInterface? = null
 
+    /**
+     * Login
+     *
+     * @param account
+     * @return
+     */
     fun login(account: CyberarkAccountBuilder): LoginBuilder {
         return LoginBuilder(account)
     }
 
+    /**
+     * End session
+     *
+     * @param account
+     * @return
+     */
     fun endSession(account: CyberarkAccountBuilder): EndSessionBuilder {
         return EndSessionBuilder(account)
     }
 
+    /**
+     * Refresh token
+     *
+     * @param account
+     * @return
+     */
     fun refreshToken(account: CyberarkAccountBuilder): RefreshTokenBuilder {
         return RefreshTokenBuilder(account)
     }
 
+    /**
+     * Enroll
+     *
+     * @return
+     */
     fun enroll(): EnrollmentBuilder {
         return EnrollmentBuilder()
     }
 
+    /**
+     * Get authorize token
+     *
+     * @param intent
+     * @return
+     */
     @JvmStatic
     fun getAuthorizeToken(intent: Intent?): Boolean {
         if (cyberarkAuthInterface == null) {
@@ -59,10 +88,20 @@ object CyberarkAuthProvider {
         return true
     }
 
+    /**
+     * Clean up
+     *
+     */
     internal fun cleanUp() {
         cyberarkAuthInterface = null
     }
 
+    /**
+     * Login builder
+     *
+     * @property account
+     * @constructor Create empty Login builder
+     */
     class LoginBuilder internal constructor(
             private val account: CyberarkAccountBuilder
     ) {
@@ -77,6 +116,12 @@ object CyberarkAuthProvider {
         }
     }
 
+    /**
+     * End session builder
+     *
+     * @property account
+     * @constructor Create empty End session builder
+     */
     class EndSessionBuilder internal constructor(
             private val account: CyberarkAccountBuilder
     ) {
@@ -89,6 +134,12 @@ object CyberarkAuthProvider {
         }
     }
 
+    /**
+     * Refresh token builder
+     *
+     * @property account
+     * @constructor Create empty Refresh token builder
+     */
     class RefreshTokenBuilder internal constructor(
             private val account: CyberarkAccountBuilder
     ) {
@@ -101,6 +152,11 @@ object CyberarkAuthProvider {
         }
     }
 
+    /**
+     * Enrollment builder
+     *
+     * @constructor Create empty Enrollment builder
+     */
     class EnrollmentBuilder internal constructor(
     ) {
         fun start(context: Context, accessToken: String): LiveData<ResponseHandler<EnrollmentModel>> {

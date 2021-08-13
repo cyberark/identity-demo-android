@@ -16,7 +16,18 @@
 
 package com.cyberark.identity.util.biometric
 
+/**
+ * Biometric manager
+ *
+ * @constructor Create empty Biometric manager
+ */
 class BiometricManager {
+    /**
+     * Get biometric utility
+     *
+     * @param callback
+     * @return
+     */
     fun getBiometricUtility(callback: BiometricAuthenticationCallback):BiometricPromptUtility {
         val biometricPromptUtility:BiometricPromptUtility =  BiometricPromptUtilityImpl(callback)
         return biometricPromptUtility

@@ -16,6 +16,17 @@
 
 package com.cyberark.identity.data.model
 
+/**
+ * Auth code flow model
+ *
+ * @property access_token
+ * @property token_type
+ * @property refresh_token
+ * @property state
+ * @property expires_in
+ * @property scope
+ * @constructor Create empty Auth code flow model
+ */
 data class AuthCodeFlowModel(
         val access_token: String,
         val token_type: String,

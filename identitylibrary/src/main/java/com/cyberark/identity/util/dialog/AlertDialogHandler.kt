@@ -20,24 +20,65 @@ import android.app.Activity
 import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 
+/**
+ * Alert dialog button callback
+ *
+ * @constructor Create empty Alert dialog button callback
+ */
 interface AlertDialogButtonCallback {
+    /**
+     * Tapped buttonwith type
+     *
+     * @param buttonType
+     */
     fun tappedButtonwithType(buttonType: AlertButtonType)
 }
 
+/**
+ * Alert button type
+ *
+ * @constructor Create empty Alert button type
+ */
 enum class AlertButtonType {
-    POSITIVE,NEGATIVE,NEUTRAL
+    POSITIVE,
+    NEGATIVE,
+    NEUTRAL
 }
 
-class AlertButton(title:String,buttonType:AlertButtonType) {
+/**
+ * Alert button
+ *
+ * @constructor
+ *
+ * @param title
+ * @param buttonType
+ */
+class AlertButton(title:String, buttonType:AlertButtonType) {
     var buttonTitle = title; private set
     var buttonType = buttonType; private set
 }
 
+/**
+ * Alert dialog handler
+ *
+ * @property callback
+ * @constructor Create empty Alert dialog handler
+ */
 class AlertDialogHandler(private val callback: AlertDialogButtonCallback):DialogInterface.OnClickListener {
     private lateinit var alertDialog:AlertDialog
     private var cancellable:Boolean = true
 
-    fun displayAlert(activity:Activity,title:String,message:String,cancellable:Boolean,pButtons:List<AlertButton> ): AlertDialog {
+    /**
+     * Display alert
+     *
+     * @param activity
+     * @param title
+     * @param message
+     * @param cancellable
+     * @param pButtons
+     * @return
+     */
+    fun displayAlert(activity:Activity, title:String, message:String, cancellable:Boolean, pButtons:List<AlertButton> ): AlertDialog {
         val alerBuilder = AlertDialog.Builder(activity)
         alerBuilder.setTitle(title)
         alerBuilder.setMessage(message)
@@ -60,23 +101,40 @@ class AlertDialogHandler(private val callback: AlertDialogButtonCallback):Dialog
         return alertDialog
     }
 
+    /**
+     * Dismiss alert
+     *
+     */
     fun dismissAlert() {
         if (this.cancellable) {
             alertDialog.dismiss()
         }
     }
 
+    /**
+     * Dismiss
+     *
+     */
     fun dismiss() {
         if (this.cancellable) {
             alertDialog.dismiss()
         }
     }
 
+    /**
+     * Dismiss forcefully
+     *
+     */
     fun dismissForcefully() {
         alertDialog.dismiss()
     }
 
-
+    /**
+     * On click
+     *
+     * @param dialog
+     * @param which
+     */
     override fun onClick(dialog: DialogInterface?, which: Int) {
         print("Dialog button selected")
         var buttonType:AlertButtonType = AlertButtonType.NEUTRAL
@@ -88,7 +146,6 @@ class AlertDialogHandler(private val callback: AlertDialogButtonCallback):Dialog
         }
         callback.tappedButtonwithType(buttonType)
     }
-
 
 }
 

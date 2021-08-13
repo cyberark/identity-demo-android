@@ -64,7 +64,7 @@ class ScanQRCodeViewModelTest : TestCase() {
         val qrModel = PowerMockito.mock(QRCodeLoginModel::class.java)
 
         scanQRCodeViewModel.qrCodeLogin().observeForever(observer)
-            val payload = getHeaderPayload(accessToken!!)
+            val payload = getHeaderPayload(accessToken)
         runBlocking {
                 PowerMockito.`when`(cyberarkAuthHelper.qrCodeLogin(anyBoolean(), anyString(), anyString())).thenReturn(qrModel)
                 scanQRCodeViewModel.handleQRCodeResult(payload, "qrCodeString")

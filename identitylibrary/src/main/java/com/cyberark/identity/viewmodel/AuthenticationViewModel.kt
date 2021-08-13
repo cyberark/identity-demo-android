@@ -30,6 +30,12 @@ import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.keystore.KeyStoreManager
 import kotlinx.coroutines.launch
 
+/**
+ * Authentication view model
+ *
+ * @property cyberarkAuthHelper
+ * @constructor Create empty Authentication view model
+ */
 internal class AuthenticationViewModel(private val cyberarkAuthHelper: CyberarkAuthHelper) : ViewModel() {
 
     private val TAG: String? = AuthenticationViewModel::class.simpleName
@@ -40,6 +46,11 @@ internal class AuthenticationViewModel(private val cyberarkAuthHelper: CyberarkA
         Log.i(TAG, "initialize AuthenticationViewModel")
     }
 
+    /**
+     * Handle authorization code
+     *
+     * @param params
+     */
     internal fun handleAuthorizationCode(params: HashMap<String?, String?>) {
         viewModelScope.launch {
             authResponse.postValue(ResponseHandler.loading(null))
@@ -60,6 +71,11 @@ internal class AuthenticationViewModel(private val cyberarkAuthHelper: CyberarkA
         }
     }
 
+    /**
+     * Handle refresh token
+     *
+     * @param params
+     */
     internal fun handleRefreshToken(params: HashMap<String?, String?>) {
         viewModelScope.launch {
             refreshTokenResponse.postValue(ResponseHandler.loading(null))
@@ -76,10 +92,20 @@ internal class AuthenticationViewModel(private val cyberarkAuthHelper: CyberarkA
         }
     }
 
+    /**
+     * Get access token
+     *
+     * @return
+     */
     internal fun getAccessToken(): LiveData<ResponseHandler<AuthCodeFlowModel>> {
         return authResponse
     }
 
+    /**
+     * Get refresh token
+     *
+     * @return
+     */
     internal fun getRefreshToken(): LiveData<ResponseHandler<RefreshTokenModel>> {
         return refreshTokenResponse
     }

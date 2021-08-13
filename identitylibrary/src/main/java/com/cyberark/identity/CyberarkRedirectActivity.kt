@@ -21,6 +21,11 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * Cyberark redirect activity
+ *
+ * @constructor Create empty Cyberark redirect activity
+ */
 class CyberarkRedirectActivity : AppCompatActivity() {
 
     private val TAG: String? = CyberarkRedirectActivity::class.simpleName

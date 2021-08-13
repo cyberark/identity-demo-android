@@ -22,6 +22,11 @@ import javax.crypto.*
 import javax.crypto.spec.GCMParameterSpec
 import javax.security.cert.CertificateException
 
+/**
+ * De cryptor
+ *
+ * @constructor Create empty De cryptor
+ */
 internal class DeCryptor {
     private var keyStore: KeyStore? = null
 
@@ -36,6 +41,14 @@ internal class DeCryptor {
         keyStore!!.load(null)
     }
 
+    /**
+     * Decrypt data
+     *
+     * @param alias
+     * @param encryptedData
+     * @param encryptionIv
+     * @return
+     */
     @Throws(
         UnrecoverableEntryException::class,
         NoSuchAlgorithmException::class,
@@ -61,7 +74,7 @@ internal class DeCryptor {
         KeyStoreException::class
     )
     private fun getSecretKey(alias: String): SecretKey {
-        return (keyStore!!.getEntry(alias, null) as KeyStore.SecretKeyEntry).getSecretKey()
+        return (keyStore!!.getEntry(alias, null) as KeyStore.SecretKeyEntry).secretKey
     }
 
     companion object {

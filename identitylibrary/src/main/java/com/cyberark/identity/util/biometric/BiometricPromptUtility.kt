@@ -20,7 +20,20 @@ import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import com.cyberark.identity.util.AlertDialogButtonCallback
 
+/**
+ * Biometric prompt utility
+ *
+ * @constructor Create empty Biometric prompt utility
+ */
 interface BiometricPromptUtility {
+    /**
+     * Show bio authentication
+     *
+     * @param activity
+     * @param retries
+     * @param negitiveButtonText
+     * @param useDevicePin
+     */
     fun showBioAuthentication(
         activity: AppCompatActivity,
         retries: Int?,

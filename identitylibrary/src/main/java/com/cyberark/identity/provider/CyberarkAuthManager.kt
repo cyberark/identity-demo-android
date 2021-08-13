@@ -29,6 +29,13 @@ import com.cyberark.identity.data.network.CyberarkAuthHelper
 import com.cyberark.identity.viewmodel.AuthenticationViewModel
 import com.cyberark.identity.viewmodel.base.CyberarkViewModelFactory
 
+/**
+ * Cyberark auth manager
+ *
+ * @property context
+ * @property account
+ * @constructor Create empty Cyberark auth manager
+ */
 internal class CyberarkAuthManager(
         private val context: Context,
         private val account: CyberarkAccountBuilder
@@ -37,6 +44,12 @@ internal class CyberarkAuthManager(
     private val TAG: String? = CyberarkAuthManager::class.simpleName
     private val viewModel: AuthenticationViewModel
 
+    /**
+     * Update result
+     *
+     * @param intent
+     * @return
+     */
     override fun updateResult(intent: Intent?): Boolean {
         val code = intent?.data?.getQueryParameter(CyberarkAccountBuilder.KEY_CODE)
 
@@ -60,6 +73,11 @@ internal class CyberarkAuthManager(
         return true
     }
 
+    /**
+     * Refresh token
+     *
+     * @param refreshTokenData
+     */
     internal fun refreshToken(refreshTokenData: String) {
         val params = HashMap<String?, String?>()
         params[CyberarkAccountBuilder.KEY_CLIENT_ID] = account.getClientId
@@ -78,6 +96,10 @@ internal class CyberarkAuthManager(
         }
     }
 
+    /**
+     * Start authentication
+     *
+     */
     internal fun startAuthentication() {
         CyberarkAuthActivity.authenticateUsingCustomTab(
                 context,
@@ -85,6 +107,10 @@ internal class CyberarkAuthManager(
         )
     }
 
+    /**
+     * End session
+     *
+     */
     internal fun endSession() {
         CyberarkAuthActivity.authenticateUsingCustomTab(
                 context,
@@ -92,6 +118,9 @@ internal class CyberarkAuthManager(
         )
     }
 
+    /**
+     * Get view model instance
+     */
     internal val getViewModelInstance: AuthenticationViewModel
         get() = viewModel
 

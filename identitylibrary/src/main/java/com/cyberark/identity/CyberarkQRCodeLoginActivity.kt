@@ -37,6 +37,11 @@ import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
+/**
+ * Cyberark QR code login activity
+ *
+ * @constructor Create empty Cyberark q r code login activity
+ */
 class CyberarkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     // Progress indicator variable
@@ -64,18 +69,19 @@ class CyberarkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Permiss
         requestCameraPermission()
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-    }
-
+    /**
+     * Has camera permission
+     *
+     * @return
+     */
     private fun hasCameraPermission(): Boolean {
         return EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)
     }
 
+    /**
+     * Request camera permission
+     *
+     */
     @AfterPermissionGranted(REQUEST_CODE_CAMERA_PERMISSION)
     private fun requestCameraPermission() {
         if (hasCameraPermission()) {
@@ -117,12 +123,20 @@ class CyberarkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Permiss
         }
     }
 
+    /**
+     * Start QR code scan
+     *
+     */
     private fun startQRCodeScan() {
         val integrator = IntentIntegrator(this)
         integrator.setPrompt("Place a QR code inside the viewfinder rectangle to scan it")
         integrator.initiateScan()
     }
 
+    /**
+     * Setup view model
+     *
+     */
     private fun setupViewModel() {
         viewModel = ViewModelProviders.of(
             this,
@@ -130,6 +144,10 @@ class CyberarkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Permiss
         ).get(ScanQRCodeViewModel::class.java)
     }
 
+    /**
+     * Setup observer
+     *
+     */
     private fun setupObserver() {
         viewModel.qrCodeLogin().observe(this, {
             val intent = Intent()
@@ -203,6 +221,11 @@ class CyberarkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Permiss
         }
     }
 
+    /**
+     * Get header payload
+     *
+     * @return
+     */
     private fun getHeaderPayload(): JSONObject {
         val payload = JSONObject()
         payload.put(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT, true)

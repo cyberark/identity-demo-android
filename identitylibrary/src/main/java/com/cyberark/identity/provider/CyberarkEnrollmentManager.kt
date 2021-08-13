@@ -28,6 +28,13 @@ import com.cyberark.identity.viewmodel.EnrollmentViewModel
 import com.cyberark.identity.viewmodel.base.CyberarkViewModelFactory
 import org.json.JSONObject
 
+/**
+ * Cyberark enrollment manager
+ *
+ * @property context
+ * @property accessToken
+ * @constructor Create empty Cyberark enrollment manager
+ */
 internal class CyberarkEnrollmentManager(
     private val context: Context,
     private val accessToken: String
@@ -35,12 +42,20 @@ internal class CyberarkEnrollmentManager(
     private val tag: String? = CyberarkEnrollmentManager::class.simpleName
     private val viewModel: EnrollmentViewModel
 
+    /**
+     * Enroll
+     *
+     */
     internal fun enroll() {
         viewModel.handleEnrollment(getHeaderPayload(), getBodyPayload())
     }
 
+    /**
+     * Get view model instance
+     */
     internal val getViewModelInstance: EnrollmentViewModel
         get() = viewModel
+
 
     init {
         val appContext: AppCompatActivity = context as AppCompatActivity
@@ -50,6 +65,11 @@ internal class CyberarkEnrollmentManager(
         ).get(EnrollmentViewModel::class.java)
     }
 
+    /**
+     * Get body payload
+     *
+     * @return
+     */
     private fun getBodyPayload(): JSONObject {
         val deviceInfoHelper = DeviceInfoHelper()
         val payload = JSONObject()
@@ -63,6 +83,11 @@ internal class CyberarkEnrollmentManager(
         return payload
     }
 
+    /**
+     * Get header payload
+     *
+     * @return
+     */
     private fun getHeaderPayload(): JSONObject {
         val payload = JSONObject()
         payload.put(EndpointUrls.HEADER_X_CENTRIFY_NATIVE_CLIENT, true)

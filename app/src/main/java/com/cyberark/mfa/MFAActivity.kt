@@ -45,6 +45,14 @@ import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberarkPreferenceUtils
 import java.util.*
 
+/**
+ * Implementing SDK features in MFAActivity
+ * 1. Enroll
+ * 2. QR Code Authenticator
+ * 3. logout
+ * 4. Invoke biometrics on app launch
+ * 5. Invoke biometrics when access token expires
+ */
 class MFAActivity : AppCompatActivity() {
 
     private val tag: String? = MFAActivity::class.simpleName
@@ -76,7 +84,7 @@ class MFAActivity : AppCompatActivity() {
     private var isEnrolled:Boolean = false
 
     /**
-     * Callback to handle QR Authenticator result
+     * Callback to handle QR Code Authenticator result
      */
     private val startForResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -240,6 +248,8 @@ class MFAActivity : AppCompatActivity() {
 
     /**
      * Set-up account for OAuth 2.0 PKCE driven flow
+     *
+     * @return cyberark Account Builder instance
      */
     private fun setupAccount(): CyberarkAccountBuilder {
         val cyberarkAccountBuilder = CyberarkAccountBuilder.Builder()
@@ -256,6 +266,8 @@ class MFAActivity : AppCompatActivity() {
 
     /**
      * End session from custom tab browser
+     *
+     * @param cyberarkAccountBuilder instance
      */
     private fun endSession(cyberarkAccountBuilder: CyberarkAccountBuilder) {
         logoutStatus = true
@@ -264,6 +276,8 @@ class MFAActivity : AppCompatActivity() {
 
     /**
      * Get the access token using refresh token
+     *
+     * @param cyberarkAccountBuilder instance
      */
     private fun getAccessTokenUsingRefreshToken(cyberarkAccountBuilder: CyberarkAccountBuilder) {
         val refreshTokenResponseHandler: LiveData<ResponseHandler<RefreshTokenModel>> =
@@ -312,6 +326,8 @@ class MFAActivity : AppCompatActivity() {
 
     /**
      * Handle all click actions
+     *
+     * @param view
      */
     private fun handleClick(view: View) {
         if (!isAuthenticated && isAuthenticationReq) {
@@ -362,6 +378,8 @@ class MFAActivity : AppCompatActivity() {
 
     /**
      * Save "Invoke biometrics on app launch" status in shared preference
+     *
+     * @param checked: Boolean
      */
     private fun saveBioReqOnAppLaunch(checked: Boolean) {
         var value = checked
@@ -374,6 +392,8 @@ class MFAActivity : AppCompatActivity() {
 
     /**
      * Save "Invoke biometrics when access token expires" status in shared preference
+     *
+     * @param checked: Boolean
      */
     private fun saveRefreshBio(checked: Boolean) {
         var value = checked

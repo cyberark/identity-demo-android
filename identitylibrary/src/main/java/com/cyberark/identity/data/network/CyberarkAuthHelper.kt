@@ -22,18 +22,54 @@ import com.cyberark.identity.data.model.QRCodeLoginModel
 import com.cyberark.identity.data.model.RefreshTokenModel
 import okhttp3.RequestBody
 
+/**
+ * Cyberark auth helper
+ *
+ * @property cyberarkAuthService
+ * @constructor Create empty Cyberark auth helper
+ */
 class CyberarkAuthHelper(private val cyberarkAuthService: CyberarkAuthService) {
 
+    /**
+     * Qr code login
+     *
+     * @param dapNativeClient
+     * @param bearerToken
+     * @param url
+     * @return
+     */
     suspend fun qrCodeLogin(dapNativeClient: Boolean,
                             bearerToken: String,
                             url: String): QRCodeLoginModel = cyberarkAuthService.qrCodeLogin(dapNativeClient, bearerToken, url)
 
+    /**
+     * Get access token
+     *
+     * @param params
+     * @return
+     */
     suspend fun getAccessToken(params: HashMap<String?,
             String?>): AuthCodeFlowModel = cyberarkAuthService.getAccessToken(params)
 
+    /**
+     * Refresh token
+     *
+     * @param params
+     * @return
+     */
     suspend fun refreshToken(params: HashMap<String?,
             String?>): RefreshTokenModel = cyberarkAuthService.refreshToken(params)
 
+    /**
+     * Fast enroll v3
+     *
+     * @param centrifyNativeClient
+     * @param idapNativeClient
+     * @param acceptLang
+     * @param bearerToken
+     * @param body
+     * @return
+     */
     suspend fun fastEnrollV3(centrifyNativeClient: Boolean,
                              idapNativeClient: Boolean,
                              acceptLang: String,

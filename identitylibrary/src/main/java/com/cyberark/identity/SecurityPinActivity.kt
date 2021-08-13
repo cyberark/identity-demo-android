@@ -27,7 +27,12 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
-//TODO.. remove all hardcoded strings
+/**
+ * Security pin activity
+ *
+ * @constructor Create empty Security pin activity
+ * TODO.. remove all hardcoded strings
+ */
 class SecurityPinActivity : AppCompatActivity(), View.OnClickListener {
 
     private val TAG = "SecurityPinActivity"

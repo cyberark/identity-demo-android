@@ -21,8 +21,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object CyberarkAuthBuilder {
 
+    /**
+     * Base URL
+     */
     private const val BASE_URL = "https://aaj7617.my.dev.idaptive.app/"
 
+    /**
+     * Get retrofit
+     *
+     * @return
+     */
     private fun getRetrofit(): Retrofit {
         return Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -30,6 +38,9 @@ object CyberarkAuthBuilder {
                 .build()
     }
 
+    /**
+     * Cyberark auth service
+     */
     val cyberarkAuthService: CyberarkAuthService = getRetrofit().create(CyberarkAuthService::class.java)
 
 }

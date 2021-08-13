@@ -28,6 +28,12 @@ import com.cyberark.identity.util.endpoint.EndpointUrls
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
+/**
+ * Scan QR code view model
+ *
+ * @property cyberarkAuthHelper
+ * @constructor Create empty Scan q r code view model
+ */
 internal class ScanQRCodeViewModel(private val cyberarkAuthHelper: CyberarkAuthHelper) : ViewModel() {
 
     private val TAG: String? = ScanQRCodeViewModel::class.simpleName
@@ -37,6 +43,12 @@ internal class ScanQRCodeViewModel(private val cyberarkAuthHelper: CyberarkAuthH
         Log.i(TAG, "initialize ScanQRCodeViewModel")
     }
 
+    /**
+     * Handle QR code result
+     *
+     * @param headerPayload
+     * @param barcodeUrl
+     */
     internal fun handleQRCodeResult(headerPayload: JSONObject, barcodeUrl: String) {
         viewModelScope.launch {
             qrCodeResponse.postValue(ResponseHandler.loading(null))
@@ -46,17 +58,22 @@ internal class ScanQRCodeViewModel(private val cyberarkAuthHelper: CyberarkAuthH
                 val idapNativeClient: Boolean = headerPayload.getBoolean(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT)
                 val bearerToken: String = headerPayload.getString(EndpointUrls.HEADER_AUTHORIZATION)
                 val usersFromApi = cyberarkAuthHelper.qrCodeLogin(idapNativeClient, bearerToken, barcodeUrl)
-                Log.i(TAG, "usersFromApi :: "+ usersFromApi.success)
-                Log.i(TAG, "usersFromApi :: "+ usersFromApi.result?.displayName)
-                Log.i(TAG, "usersFromApi String :: "+ usersFromApi.toString())
+                Log.i(TAG, "usersFromApi :: " + usersFromApi.success)
+                Log.i(TAG, "usersFromApi :: " + usersFromApi.result?.displayName)
+                Log.i(TAG, "usersFromApi String :: " + usersFromApi.toString())
                 qrCodeResponse.postValue(ResponseHandler.success(usersFromApi))
             } catch (e: Exception) {
-                Log.i(TAG, "usersFromApi Error :: "+ e.toString())
+                Log.i(TAG, "usersFromApi Error :: " + e.toString())
                 qrCodeResponse.postValue(ResponseHandler.error(e.toString(), null))
             }
         }
     }
 
+    /**
+     * QR code login
+     *
+     * @return
+     */
     internal fun qrCodeLogin(): LiveData<ResponseHandler<QRCodeLoginModel>> {
         return qrCodeResponse
     }

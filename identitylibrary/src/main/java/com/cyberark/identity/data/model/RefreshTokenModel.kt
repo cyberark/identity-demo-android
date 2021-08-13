@@ -16,6 +16,15 @@
 
 package com.cyberark.identity.data.model
 
+/**
+ * Refresh token model
+ *
+ * @property access_token
+ * @property token_type
+ * @property expires_in
+ * @property scope
+ * @constructor Create empty Refresh token model
+ */
 data class RefreshTokenModel(
         val access_token: String,
         val token_type: String,

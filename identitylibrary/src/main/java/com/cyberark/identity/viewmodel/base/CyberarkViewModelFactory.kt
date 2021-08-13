@@ -23,6 +23,12 @@ import com.cyberark.identity.viewmodel.AuthenticationViewModel
 import com.cyberark.identity.viewmodel.EnrollmentViewModel
 import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
 
+/**
+ * Cyberark view model factory
+ *
+ * @property cyberarkAuthHelper
+ * @constructor Create empty Cyberark view model factory
+ */
 class CyberarkViewModelFactory(private val cyberarkAuthHelper: CyberarkAuthHelper) :
         ViewModelProvider.Factory {
 

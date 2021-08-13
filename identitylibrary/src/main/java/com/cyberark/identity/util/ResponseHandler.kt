@@ -16,6 +16,15 @@
 
 package com.cyberark.identity.util
 
+/**
+ * Response handler
+ *
+ * @param T
+ * @property status
+ * @property data
+ * @property message
+ * @constructor Create empty Response handler
+ */
 data class ResponseHandler<out T>(val status: ResponseStatus, val data: T?, val message: String?) {
 
     companion object {
