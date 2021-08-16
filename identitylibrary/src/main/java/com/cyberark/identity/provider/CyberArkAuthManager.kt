@@ -22,12 +22,12 @@ import android.net.Uri
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
-import com.cyberark.identity.CyberarkAuthActivity
+import com.cyberark.identity.CyberArkAuthActivity
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.viewmodel.AuthenticationViewModel
-import com.cyberark.identity.viewmodel.base.CyberarkViewModelFactory
+import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
 
 /**
  * Cyberark auth manager
@@ -101,7 +101,7 @@ internal class CyberArkAuthManager(
      *
      */
     internal fun startAuthentication() {
-        CyberarkAuthActivity.authenticateUsingCustomTab(
+        CyberArkAuthActivity.authenticateUsingCustomTab(
                 context,
                 Uri.parse(account.OAuthBaseURL)
         )
@@ -112,7 +112,7 @@ internal class CyberArkAuthManager(
      *
      */
     internal fun endSession() {
-        CyberarkAuthActivity.authenticateUsingCustomTab(
+        CyberArkAuthActivity.authenticateUsingCustomTab(
                 context,
                 Uri.parse(account.OAuthEndSessionURL)
         )
@@ -128,7 +128,7 @@ internal class CyberArkAuthManager(
         val appContext: AppCompatActivity = context as AppCompatActivity
         viewModel = ViewModelProviders.of(
                 appContext,
-                CyberarkViewModelFactory(CyberArkAuthHelper(CyberArkAuthBuilder.CYBER_ARK_AUTH_SERVICE))
+                CyberArkViewModelFactory(CyberArkAuthHelper(CyberArkAuthBuilder.CYBER_ARK_AUTH_SERVICE))
         ).get(AuthenticationViewModel::class.java)
     }
 

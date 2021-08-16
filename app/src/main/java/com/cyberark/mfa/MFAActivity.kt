@@ -30,7 +30,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
-import com.cyberark.identity.CyberarkQRCodeLoginActivity
+import com.cyberark.identity.CyberArkQRCodeLoginActivity
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.model.EnrollmentModel
 import com.cyberark.identity.data.model.RefreshTokenModel
@@ -379,7 +379,7 @@ class MFAActivity : AppCompatActivity() {
                         showAccessTokenExpireAlert()
                     } else {
                         // Start QR Code Authenticator flow
-                        val intent = Intent(this, CyberarkQRCodeLoginActivity::class.java)
+                        val intent = Intent(this, CyberArkQRCodeLoginActivity::class.java)
                         intent.putExtra("access_token", accessTokenData)
                         startForResult.launch(intent)
                     }

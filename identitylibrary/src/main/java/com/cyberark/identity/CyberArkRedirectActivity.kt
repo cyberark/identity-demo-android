@@ -26,13 +26,13 @@ import androidx.appcompat.app.AppCompatActivity
  *
  * @constructor Create empty Cyberark redirect activity
  */
-class CyberarkRedirectActivity : AppCompatActivity() {
+class CyberArkRedirectActivity : AppCompatActivity() {
 
-    private val TAG: String? = CyberarkRedirectActivity::class.simpleName
+    private val TAG: String? = CyberArkRedirectActivity::class.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val cyberarkAuthActivityIntent = Intent(this, CyberarkAuthActivity::class.java)
+        val cyberarkAuthActivityIntent = Intent(this, CyberArkAuthActivity::class.java)
         cyberarkAuthActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         if (intent != null) {
             cyberarkAuthActivityIntent.data = intent.data

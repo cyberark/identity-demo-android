@@ -25,7 +25,7 @@ import com.cyberark.identity.util.device.DeviceConstants
 import com.cyberark.identity.util.device.DeviceInfoHelper
 import com.cyberark.identity.util.endpoint.EndpointUrls
 import com.cyberark.identity.viewmodel.EnrollmentViewModel
-import com.cyberark.identity.viewmodel.base.CyberarkViewModelFactory
+import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
 import org.json.JSONObject
 
 /**
@@ -61,7 +61,7 @@ internal class CyberArkEnrollmentManager(
         val appContext: AppCompatActivity = context as AppCompatActivity
         viewModel = ViewModelProviders.of(
             appContext,
-            CyberarkViewModelFactory(CyberArkAuthHelper(CyberArkAuthBuilder.CYBER_ARK_AUTH_SERVICE))
+            CyberArkViewModelFactory(CyberArkAuthHelper(CyberArkAuthBuilder.CYBER_ARK_AUTH_SERVICE))
         ).get(EnrollmentViewModel::class.java)
     }
 

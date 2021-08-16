@@ -32,7 +32,7 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.cyberark.identity.CyberarkQRCodeLoginActivity"
+            android:name="com.cyberark.identity.CyberArkQRCodeLoginActivity"
             android:screenOrientation="portrait"
             tools:replace="screenOrientation" />
         <activity

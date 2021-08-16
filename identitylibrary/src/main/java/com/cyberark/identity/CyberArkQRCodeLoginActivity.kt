@@ -30,7 +30,7 @@ import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.util.*
 import com.cyberark.identity.util.endpoint.EndpointUrls
 import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
-import com.cyberark.identity.viewmodel.base.CyberarkViewModelFactory
+import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
 import com.google.zxing.integration.android.IntentIntegrator
 import org.json.JSONObject
 import pub.devrel.easypermissions.AfterPermissionGranted
@@ -42,7 +42,7 @@ import pub.devrel.easypermissions.EasyPermissions
  *
  * @constructor Create empty Cyberark q r code login activity
  */
-class CyberarkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
+class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     // Progress indicator variable
     private lateinit var progressBar: ProgressBar
@@ -140,7 +140,7 @@ class CyberarkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Permiss
     private fun setupViewModel() {
         viewModel = ViewModelProviders.of(
             this,
-            CyberarkViewModelFactory(CyberArkAuthHelper(CyberArkAuthBuilder.CYBER_ARK_AUTH_SERVICE))
+            CyberArkViewModelFactory(CyberArkAuthHelper(CyberArkAuthBuilder.CYBER_ARK_AUTH_SERVICE))
         ).get(ScanQRCodeViewModel::class.java)
     }
 

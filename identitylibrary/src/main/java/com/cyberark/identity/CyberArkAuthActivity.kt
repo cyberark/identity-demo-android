@@ -33,9 +33,9 @@ import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
  *
  * @constructor Create empty Cyberark auth activity
  */
-class CyberarkAuthActivity : AppCompatActivity() {
+class CyberArkAuthActivity : AppCompatActivity() {
 
-    private val TAG: String? = CyberarkAuthActivity::class.simpleName
+    private val TAG: String? = CyberArkAuthActivity::class.simpleName
 
     private var activityLaunched = false
     private var customTabHelper: CustomTabHelper = CustomTabHelper()
@@ -87,7 +87,7 @@ class CyberarkAuthActivity : AppCompatActivity() {
                 context: Context,
                 authorizeUri: Uri
         ) {
-            val intent = Intent(context, CyberarkAuthActivity::class.java)
+            val intent = Intent(context, CyberArkAuthActivity::class.java)
             intent.putExtra(AUTHORIZE_URI, authorizeUri)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             context.startActivity(intent)

@@ -42,15 +42,15 @@
             android:autoRemoveFromRecents="true" />
 
         <activity
-            android:name="com.cyberark.identity.CyberarkAuthActivity"
+            android:name="com.cyberark.identity.CyberArkAuthActivity"
             android:autoRemoveFromRecents="true"
             android:exported="false"
             android:launchMode="singleTask" />
 
-        <activity android:name="com.cyberark.identity.CyberarkQRCodeLoginActivity" />
+        <activity android:name="com.cyberark.identity.CyberArkQRCodeLoginActivity" />
 
         <activity
-            android:name="com.cyberark.identity.CyberarkRedirectActivity"
+            android:name="com.cyberark.identity.CyberArkRedirectActivity"
             android:autoRemoveFromRecents="true"
             android:exported="true">
             <intent-filter

@@ -29,7 +29,7 @@ import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
  * @property cyberArkAuthHelper
  * @constructor Create empty Cyberark view model factory
  */
-class CyberarkViewModelFactory(private val cyberArkAuthHelper: CyberArkAuthHelper) :
+class CyberArkViewModelFactory(private val cyberArkAuthHelper: CyberArkAuthHelper) :
         ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
