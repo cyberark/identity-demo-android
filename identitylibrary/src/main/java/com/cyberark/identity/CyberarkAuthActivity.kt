@@ -24,9 +24,9 @@ import android.os.PersistableBundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
-import com.cyberark.identity.provider.CyberarkAuthProvider.getAuthorizeToken
+import com.cyberark.identity.provider.CyberArkAuthProvider.getAuthorizeToken
 import com.cyberark.identity.util.browser.CustomTabHelper
-import com.cyberark.identity.util.preferences.CyberarkPreferenceUtils
+import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 
 /**
  * Cyberark auth activity
@@ -47,7 +47,7 @@ class CyberarkAuthActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        CyberarkPreferenceUtils.init(this)
+        CyberArkPreferenceUtil.init(this)
         if (savedInstanceState != null) {
             activityLaunched = savedInstanceState.getBoolean(ACTIVITY_LAUNCHED, false)
         }
@@ -113,7 +113,7 @@ class CyberarkAuthActivity : AppCompatActivity() {
         val customTabsIntent = builder.build()
 
         // check is chrome available
-        val packageName = customTabHelper.getPackageNameToUse(context, uri.toString())
+        val packageName = customTabHelper.getPackageName(context, uri.toString())
 
         if (packageName == null) {
             Log.i(TAG, "Chrome custom tab is not available")

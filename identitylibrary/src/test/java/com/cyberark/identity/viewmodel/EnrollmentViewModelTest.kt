@@ -19,10 +19,9 @@ package com.cyberark.identity.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.cyberark.identity.data.model.EnrollmentModel
-import com.cyberark.identity.data.network.CyberarkAuthHelper
+import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.util.ResponseHandler
 import com.cyberark.identity.util.endpoint.EndpointUrls
-import com.google.gson.JsonObject
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import okhttp3.RequestBody
@@ -39,10 +38,10 @@ import org.powermock.modules.junit4.PowerMockRunner
 import org.powermock.reflect.Whitebox
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(EnrollmentViewModel::class, CyberarkAuthHelper::class,JSONObject::class,EnrollmentModel::class)
+@PrepareForTest(EnrollmentViewModel::class, CyberArkAuthHelper::class,JSONObject::class,EnrollmentModel::class)
 class EnrollmentViewModelTest : TestCase() {
 
-    private lateinit var cyberarkAuthHelper:CyberarkAuthHelper
+    private lateinit var cyberArkAuthHelper:CyberArkAuthHelper
     private lateinit var enrollmentViewModel:EnrollmentViewModel
 
     @Mock
@@ -54,8 +53,8 @@ class EnrollmentViewModelTest : TestCase() {
 
     @Before
     public override fun setUp() {
-        cyberarkAuthHelper = PowerMockito.mock(CyberarkAuthHelper::class.java)
-        enrollmentViewModel = EnrollmentViewModel(cyberarkAuthHelper)
+        cyberArkAuthHelper = PowerMockito.mock(CyberArkAuthHelper::class.java)
+        enrollmentViewModel = EnrollmentViewModel(cyberArkAuthHelper)
     }
 
     @Test
@@ -75,7 +74,7 @@ class EnrollmentViewModelTest : TestCase() {
         val requestBody = Whitebox.invokeMethod<RequestBody>(enrollmentViewModel,"createJsonBody",getBodyPayload().toString())
 
         runBlocking {
-            PowerMockito.`when`(cyberarkAuthHelper.fastEnrollV3(isCentrify,isIdaptive,acceptCode,authorization,requestBody)).thenReturn( PowerMockito.mock(EnrollmentModel::class.java))
+            PowerMockito.`when`(cyberArkAuthHelper.fastEnrollV3(isCentrify,isIdaptive,acceptCode,authorization,requestBody)).thenReturn( PowerMockito.mock(EnrollmentModel::class.java))
             enrollmentViewModel.getEnrolledData().observeForever(enrollObserver)
             enrollmentViewModel.handleEnrollment(jsonObject,getBodyPayload())
             verify(enrollObserver, atLeastOnce()).onChanged(any())

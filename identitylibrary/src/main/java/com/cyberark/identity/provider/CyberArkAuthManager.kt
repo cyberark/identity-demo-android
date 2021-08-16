@@ -23,9 +23,9 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.cyberark.identity.CyberarkAuthActivity
-import com.cyberark.identity.builder.CyberarkAccountBuilder
-import com.cyberark.identity.data.network.CyberarkAuthBuilder
-import com.cyberark.identity.data.network.CyberarkAuthHelper
+import com.cyberark.identity.builder.CyberArkAccountBuilder
+import com.cyberark.identity.data.network.CyberArkAuthBuilder
+import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.viewmodel.AuthenticationViewModel
 import com.cyberark.identity.viewmodel.base.CyberarkViewModelFactory
 
@@ -36,12 +36,12 @@ import com.cyberark.identity.viewmodel.base.CyberarkViewModelFactory
  * @property account
  * @constructor Create empty Cyberark auth manager
  */
-internal class CyberarkAuthManager(
+internal class CyberArkAuthManager(
         private val context: Context,
-        private val account: CyberarkAccountBuilder
-) : CyberarkAuthInterface {
+        private val account: CyberArkAccountBuilder
+) : CyberArkAuthInterface {
 
-    private val TAG: String? = CyberarkAuthManager::class.simpleName
+    private val TAG: String? = CyberArkAuthManager::class.simpleName
     private val viewModel: AuthenticationViewModel
 
     /**
@@ -51,14 +51,14 @@ internal class CyberarkAuthManager(
      * @return
      */
     override fun updateResult(intent: Intent?): Boolean {
-        val code = intent?.data?.getQueryParameter(CyberarkAccountBuilder.KEY_CODE)
+        val code = intent?.data?.getQueryParameter(CyberArkAccountBuilder.KEY_CODE)
 
         val params = HashMap<String?, String?>()
-        params[CyberarkAccountBuilder.KEY_GRANT_TYPE] = CyberarkAccountBuilder.AUTHORIZATION_CODE_VALUE
-        params[CyberarkAccountBuilder.KEY_CODE] = code.toString()
-        params[CyberarkAccountBuilder.KEY_REDIRECT_URI] = account.getRedirectURL
-        params[CyberarkAccountBuilder.KEY_CLIENT_ID] = account.getClientId
-        params[CyberarkAccountBuilder.KEY_CODE_VERIFIER] = account.getCodeVerifier
+        params[CyberArkAccountBuilder.KEY_GRANT_TYPE] = CyberArkAccountBuilder.AUTHORIZATION_CODE_VALUE
+        params[CyberArkAccountBuilder.KEY_CODE] = code.toString()
+        params[CyberArkAccountBuilder.KEY_REDIRECT_URI] = account.getRedirectURL
+        params[CyberArkAccountBuilder.KEY_CLIENT_ID] = account.getClientId
+        params[CyberArkAccountBuilder.KEY_CODE_VERIFIER] = account.getCodeVerifier
 
         //TODO.. for testing only added this log and should be removed later
         Log.i(TAG, "params" + params.toString())
@@ -80,9 +80,9 @@ internal class CyberarkAuthManager(
      */
     internal fun refreshToken(refreshTokenData: String) {
         val params = HashMap<String?, String?>()
-        params[CyberarkAccountBuilder.KEY_CLIENT_ID] = account.getClientId
-        params[CyberarkAccountBuilder.KEY_GRANT_TYPE] = CyberarkAccountBuilder.KEY_REFRESH_TOKEN
-        params[CyberarkAccountBuilder.KEY_REFRESH_TOKEN] = refreshTokenData
+        params[CyberArkAccountBuilder.KEY_CLIENT_ID] = account.getClientId
+        params[CyberArkAccountBuilder.KEY_GRANT_TYPE] = CyberArkAccountBuilder.KEY_REFRESH_TOKEN
+        params[CyberArkAccountBuilder.KEY_REFRESH_TOKEN] = refreshTokenData
 
         //TODO.. for testing only added this log and should be removed later
         Log.i(TAG, "params" + params.toString())
@@ -128,7 +128,7 @@ internal class CyberarkAuthManager(
         val appContext: AppCompatActivity = context as AppCompatActivity
         viewModel = ViewModelProviders.of(
                 appContext,
-                CyberarkViewModelFactory(CyberarkAuthHelper(CyberarkAuthBuilder.cyberarkAuthService))
+                CyberarkViewModelFactory(CyberArkAuthHelper(CyberArkAuthBuilder.CYBER_ARK_AUTH_SERVICE))
         ).get(AuthenticationViewModel::class.java)
     }
 

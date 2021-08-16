@@ -22,7 +22,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cyberark.identity.data.model.EnrollmentModel
-import com.cyberark.identity.data.network.CyberarkAuthHelper
+import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.util.ResponseHandler
 import com.cyberark.identity.util.endpoint.EndpointUrls
 import kotlinx.coroutines.launch
@@ -35,10 +35,10 @@ import org.json.JSONObject
 /**
  * Enrollment view model
  *
- * @property cyberarkAuthHelper
+ * @property cyberArkAuthHelper
  * @constructor Create empty Enrollment view model
  */
-internal class EnrollmentViewModel(private val cyberarkAuthHelper: CyberarkAuthHelper) :
+internal class EnrollmentViewModel(private val cyberArkAuthHelper: CyberArkAuthHelper) :
     ViewModel() {
 
     private val TAG: String? = EnrollmentViewModel::class.simpleName
@@ -78,7 +78,7 @@ internal class EnrollmentViewModel(private val cyberarkAuthHelper: CyberarkAuthH
                 Log.i(TAG, "headerPayload 3:: " + acceptLang)
                 Log.i(TAG, "headerPayload 4:: " + bearerToken)
 
-                val enrollmentData = cyberarkAuthHelper.fastEnrollV3(
+                val enrollmentData = cyberArkAuthHelper.fastEnrollV3(
                     centrifyNativeClient,
                     idapNativeClient,
                     acceptLang,

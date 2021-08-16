@@ -17,14 +17,11 @@
 package com.cyberark.identity.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.cyberark.identity.data.model.QRCodeLoginModel
-import com.cyberark.identity.data.network.CyberarkAuthHelper
+import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.util.ResponseHandler
 import com.cyberark.identity.util.endpoint.EndpointUrls
-import com.cyberark.identity.util.keystore.KeyStoreProvider
 import junit.framework.TestCase
 import kotlinx.coroutines.*
 import org.json.JSONObject
@@ -39,12 +36,11 @@ import org.mockito.Mockito.verify
 import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
-import org.powermock.reflect.Whitebox
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ScanQRCodeViewModel::class,CyberarkAuthHelper::class,QRCodeLoginModel::class)
+@PrepareForTest(ScanQRCodeViewModel::class,CyberArkAuthHelper::class,QRCodeLoginModel::class)
 class ScanQRCodeViewModelTest : TestCase() {
-    private lateinit var cyberarkAuthHelper:CyberarkAuthHelper
+    private lateinit var cyberArkAuthHelper:CyberArkAuthHelper
     private lateinit var scanQRCodeViewModel:ScanQRCodeViewModel
     @Rule
     @JvmField
@@ -54,8 +50,8 @@ class ScanQRCodeViewModelTest : TestCase() {
 
     @Before
     public override fun setUp() {
-        cyberarkAuthHelper = PowerMockito.mock(CyberarkAuthHelper::class.java)
-        scanQRCodeViewModel = ScanQRCodeViewModel(cyberarkAuthHelper)
+        cyberArkAuthHelper = PowerMockito.mock(CyberArkAuthHelper::class.java)
+        scanQRCodeViewModel = ScanQRCodeViewModel(cyberArkAuthHelper)
     }
 
     @Test
@@ -66,7 +62,7 @@ class ScanQRCodeViewModelTest : TestCase() {
         scanQRCodeViewModel.qrCodeLogin().observeForever(observer)
             val payload = getHeaderPayload(accessToken)
         runBlocking {
-                PowerMockito.`when`(cyberarkAuthHelper.qrCodeLogin(anyBoolean(), anyString(), anyString())).thenReturn(qrModel)
+                PowerMockito.`when`(cyberArkAuthHelper.qrCodeLogin(anyBoolean(), anyString(), anyString())).thenReturn(qrModel)
                 scanQRCodeViewModel.handleQRCodeResult(payload, "qrCodeString")
                 verify(observer, atLeastOnce()).onChanged(any())
         }

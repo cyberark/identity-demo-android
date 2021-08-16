@@ -25,13 +25,13 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.lifecycle.LiveData
-import com.cyberark.identity.builder.CyberarkAccountBuilder
+import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.model.AuthCodeFlowModel
-import com.cyberark.identity.provider.CyberarkAuthProvider
+import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.ResponseHandler
 import com.cyberark.identity.util.ResponseStatus
 import com.cyberark.identity.util.keystore.KeyStoreProvider
-import com.cyberark.identity.util.preferences.CyberarkPreferenceUtils
+import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 
 /**
  * Implementing SDK feature in HomeActivity
@@ -64,7 +64,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         // Verify if access token is present or not
-        CyberarkPreferenceUtils.init(this)
+        CyberArkPreferenceUtil.init(this)
         val accessToken = KeyStoreProvider.get().getAuthToken()
         if (accessToken != null) {
             //Start MFA activity if access token is available
@@ -75,12 +75,12 @@ class HomeActivity : AppCompatActivity() {
     }
 
     /**
-     * Set-up account for OAuth 2.0 PKCE driven flow
+     * Set-up account for OAuth 2.0 PKCE driven flow in "res/values/config.xml"
      *
-     * @return Cyberark Account Builder instance
+     * @return CyberArk Account Builder instance
      */
-    private fun setupAccount(): CyberarkAccountBuilder {
-        val cyberarkAccountBuilder = CyberarkAccountBuilder.Builder()
+    private fun setupAccount(): CyberArkAccountBuilder {
+        val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
                 .clientId(getString(R.string.cyberark_account_client_id))
                 .domainURL(getString(R.string.cyberark_account_host))
                 .appId(getString(R.string.cyberark_account_app_id))
@@ -88,54 +88,49 @@ class HomeActivity : AppCompatActivity() {
                 .scope(getString(R.string.cyberark_account_scope))
                 .redirectUri(getString(R.string.cyberark_account_redirect_uri))
                 .build()
-        Log.i(tag, cyberarkAccountBuilder.OAuthBaseURL)
-        return cyberarkAccountBuilder
+        // Print authorize URL
+        Log.i(tag, cyberArkAccountBuilder.OAuthBaseURL)
+        return cyberArkAccountBuilder
     }
 
     /**
      * Launch URL in browser, set-up view model and start authentication flow
      *
-     * @param cyberarkAccountBuilder instance
+     * @param cyberArkAccountBuilder instance
      */
-    private fun startAuthentication(cyberarkAccountBuilder: CyberarkAccountBuilder) {
+    private fun startAuthentication(cyberArkAccountBuilder: CyberArkAccountBuilder) {
         val authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>> =
-                CyberarkAuthProvider.login(cyberarkAccountBuilder).start(this)
+                CyberArkAuthProvider.login(cyberArkAccountBuilder).start(this)
 
-        // Verify if there is any active observer, if not then add observe to get API response
+        // Verify if there is any active observer, if not then add observer to get API response
         if (!authResponseHandler.hasActiveObservers()) {
             authResponseHandler.observe(this, {
                 when (it.status) {
                     ResponseStatus.SUCCESS -> {
-
-                        //TODO.. need to verify and remove all logs
+                        // Print authentication success message in log
                         Log.i(tag, ResponseStatus.SUCCESS.toString())
-                        Log.i(tag, it.data.toString())
-                        Log.i(tag, it.data!!.access_token)
-                        Log.i(tag, it.data!!.refresh_token)
-
+                        // Show authentication success message using Toast
                         Toast.makeText(
                                 this,
-                                "Received Access Token & Refresh Token",
+                                "Received Access Token & Refresh Token" + ResponseStatus.SUCCESS.toString(),
                                 Toast.LENGTH_SHORT
                         ).show()
-
-                        val accessTokenData: String = it.data!!.access_token
-                        val refreshTokenData: String = it.data!!.refresh_token
-
+                        // Save access token and refresh token in SharedPref using keystore encryption
+                        KeyStoreProvider.get().saveAuthToken(it.data!!.access_token)
+                        KeyStoreProvider.get().saveRefreshToken(it.data!!.refresh_token)
+                        // Hide progress indicator
                         progressBar.visibility = View.GONE
-
-                        //Save access token and refresh token in keystore
-                        KeyStoreProvider.get().saveAuthToken(accessTokenData)
-                        KeyStoreProvider.get().saveRefreshToken(refreshTokenData)
-
-                        //Start MFA activity
+                        // Start MFAActivity
                         val intent = Intent(this, MFAActivity::class.java)
                         startActivity(intent)
                         finish()
                     }
                     ResponseStatus.ERROR -> {
+                        // Hide progress indicator
                         progressBar.visibility = View.GONE
+                        // Print authentication error message in log
                         Log.i(tag, ResponseStatus.ERROR.toString())
+                        // Show authentication error message using Toast
                         Toast.makeText(
                                 this,
                                 "Error: Unable to fetch Access Token & Refresh Token",
@@ -143,6 +138,7 @@ class HomeActivity : AppCompatActivity() {
                         ).show()
                     }
                     ResponseStatus.LOADING -> {
+                        // Show progress indicator
                         progressBar.visibility = View.VISIBLE
                     }
                 }

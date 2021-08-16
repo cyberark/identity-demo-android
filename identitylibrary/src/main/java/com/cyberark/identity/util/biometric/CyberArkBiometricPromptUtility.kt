@@ -16,16 +16,14 @@
 
 package com.cyberark.identity.util.biometric
 
-import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
-import com.cyberark.identity.util.AlertDialogButtonCallback
 
 /**
  * Biometric prompt utility
  *
  * @constructor Create empty Biometric prompt utility
  */
-interface BiometricPromptUtility {
+interface CyberArkBiometricPromptUtility {
     /**
      * Show bio authentication
      *

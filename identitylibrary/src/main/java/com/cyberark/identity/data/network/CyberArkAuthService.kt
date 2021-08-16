@@ -31,7 +31,7 @@ import retrofit2.http.*
  *
  * @constructor Create empty Cyberark auth service
  */
-interface CyberarkAuthService {
+interface CyberArkAuthService {
 
     /**
      * Qr code login

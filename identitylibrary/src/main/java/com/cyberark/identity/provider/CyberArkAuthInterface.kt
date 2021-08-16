@@ -23,7 +23,7 @@ import android.content.Intent
  *
  * @constructor Create empty Cyberark auth interface
  */
-internal interface CyberarkAuthInterface {
+internal interface CyberArkAuthInterface {
 
     /**
      * Update result

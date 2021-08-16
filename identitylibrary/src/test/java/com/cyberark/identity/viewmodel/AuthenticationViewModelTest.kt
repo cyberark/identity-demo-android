@@ -19,9 +19,8 @@ package com.cyberark.identity.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.cyberark.identity.data.model.AuthCodeFlowModel
-import com.cyberark.identity.data.model.QRCodeLoginModel
 import com.cyberark.identity.data.model.RefreshTokenModel
-import com.cyberark.identity.data.network.CyberarkAuthHelper
+import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.util.ResponseHandler
 import junit.framework.TestCase
 import org.junit.Before
@@ -35,9 +34,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ScanQRCodeViewModel::class,CyberarkAuthHelper::class)
+@PrepareForTest(ScanQRCodeViewModel::class,CyberArkAuthHelper::class)
 class AuthenticationViewModelTest : TestCase() {
-    private lateinit var cyberarkAuthHelper:CyberarkAuthHelper
+    private lateinit var cyberArkAuthHelper:CyberArkAuthHelper
     private lateinit var authenticationViewModel:AuthenticationViewModel
     @Mock
     private lateinit var authObserver: Observer<ResponseHandler<AuthCodeFlowModel>>
@@ -49,8 +48,8 @@ class AuthenticationViewModelTest : TestCase() {
 
     @Before
     public override fun setUp() {
-        cyberarkAuthHelper = PowerMockito.mock(CyberarkAuthHelper::class.java)
-        authenticationViewModel = AuthenticationViewModel(cyberarkAuthHelper)
+        cyberArkAuthHelper = PowerMockito.mock(CyberArkAuthHelper::class.java)
+        authenticationViewModel = AuthenticationViewModel(cyberArkAuthHelper)
     }
 
     @Test

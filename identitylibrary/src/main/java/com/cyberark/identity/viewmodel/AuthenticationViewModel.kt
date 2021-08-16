@@ -23,20 +23,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cyberark.identity.data.model.AuthCodeFlowModel
 import com.cyberark.identity.data.model.RefreshTokenModel
-import com.cyberark.identity.data.network.CyberarkAuthHelper
+import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.util.ResponseHandler
-import com.cyberark.identity.util.ResponseStatus
-import com.cyberark.identity.util.keystore.KeyStoreProvider
-import com.cyberark.identity.util.keystore.KeyStoreManager
 import kotlinx.coroutines.launch
 
 /**
  * Authentication view model
  *
- * @property cyberarkAuthHelper
+ * @property cyberArkAuthHelper
  * @constructor Create empty Authentication view model
  */
-internal class AuthenticationViewModel(private val cyberarkAuthHelper: CyberarkAuthHelper) : ViewModel() {
+internal class AuthenticationViewModel(private val cyberArkAuthHelper: CyberArkAuthHelper) : ViewModel() {
 
     private val TAG: String? = AuthenticationViewModel::class.simpleName
     private val authResponse = MutableLiveData<ResponseHandler<AuthCodeFlowModel>>()
@@ -55,7 +52,7 @@ internal class AuthenticationViewModel(private val cyberarkAuthHelper: CyberarkA
         viewModelScope.launch {
             authResponse.postValue(ResponseHandler.loading(null))
             try {
-                val accessTokenCreds = cyberarkAuthHelper.getAccessToken(params)
+                val accessTokenCreds = cyberArkAuthHelper.getAccessToken(params)
                 //TODO.. for testing only added this log and should be removed later
                 Log.i(TAG, "accessCredentials :: " + accessTokenCreds.toString())
                 //Save Access token we recieved if it is success
@@ -80,7 +77,7 @@ internal class AuthenticationViewModel(private val cyberarkAuthHelper: CyberarkA
         viewModelScope.launch {
             refreshTokenResponse.postValue(ResponseHandler.loading(null))
             try {
-                val refreshTokenCreds = cyberarkAuthHelper.refreshToken(params)
+                val refreshTokenCreds = cyberArkAuthHelper.refreshToken(params)
                 //TODO.. for testing only added this log and should be removed later
                 Log.i(TAG, "refreshTokenCreds :: " + refreshTokenCreds.toString())
                 refreshTokenResponse.postValue(ResponseHandler.success(refreshTokenCreds))

@@ -25,10 +25,10 @@ import okhttp3.RequestBody
 /**
  * Cyberark auth helper
  *
- * @property cyberarkAuthService
+ * @property cyberArkAuthService
  * @constructor Create empty Cyberark auth helper
  */
-class CyberarkAuthHelper(private val cyberarkAuthService: CyberarkAuthService) {
+class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
 
     /**
      * Qr code login
@@ -40,7 +40,7 @@ class CyberarkAuthHelper(private val cyberarkAuthService: CyberarkAuthService) {
      */
     suspend fun qrCodeLogin(dapNativeClient: Boolean,
                             bearerToken: String,
-                            url: String): QRCodeLoginModel = cyberarkAuthService.qrCodeLogin(dapNativeClient, bearerToken, url)
+                            url: String): QRCodeLoginModel = cyberArkAuthService.qrCodeLogin(dapNativeClient, bearerToken, url)
 
     /**
      * Get access token
@@ -49,7 +49,7 @@ class CyberarkAuthHelper(private val cyberarkAuthService: CyberarkAuthService) {
      * @return
      */
     suspend fun getAccessToken(params: HashMap<String?,
-            String?>): AuthCodeFlowModel = cyberarkAuthService.getAccessToken(params)
+            String?>): AuthCodeFlowModel = cyberArkAuthService.getAccessToken(params)
 
     /**
      * Refresh token
@@ -58,7 +58,7 @@ class CyberarkAuthHelper(private val cyberarkAuthService: CyberarkAuthService) {
      * @return
      */
     suspend fun refreshToken(params: HashMap<String?,
-            String?>): RefreshTokenModel = cyberarkAuthService.refreshToken(params)
+            String?>): RefreshTokenModel = cyberArkAuthService.refreshToken(params)
 
     /**
      * Fast enroll v3
@@ -74,6 +74,6 @@ class CyberarkAuthHelper(private val cyberarkAuthService: CyberarkAuthService) {
                              idapNativeClient: Boolean,
                              acceptLang: String,
                              bearerToken: String,
-                             body: RequestBody): EnrollmentModel = cyberarkAuthService.fastEnrollV3(centrifyNativeClient, idapNativeClient, acceptLang, bearerToken, body)
+                             body: RequestBody): EnrollmentModel = cyberArkAuthService.fastEnrollV3(centrifyNativeClient, idapNativeClient, acceptLang, bearerToken, body)
 
 }

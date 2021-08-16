@@ -30,11 +30,11 @@ import com.cyberark.identity.util.AlertDialogHandler
 /**
  * Biometric prompt utility impl
  *
- * @property authenticationCallback
+ * @property callbackCyberArk
  * @constructor Create empty Biometric prompt utility impl
  */
-internal class BiometricPromptUtilityImpl(private val authenticationCallback: BiometricAuthenticationCallback) :
-        BiometricPromptUtility {
+internal class CyberArkBiometricPromptUtilityImpl(private val callbackCyberArk: CyberArkBiometricCallback) :
+        CyberArkBiometricPromptUtility {
     private val TAG = "BiometricPromptUtility"
     private var mMaxRetries = 3
     private var mFailedTries = 0
@@ -70,10 +70,10 @@ internal class BiometricPromptUtilityImpl(private val authenticationCallback: Bi
         override fun onAuthenticationError(errCode: Int, errString: CharSequence) {
             super.onAuthenticationError(errCode, errString)
             if (errCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
-                this@BiometricPromptUtilityImpl.authenticationCallback.passwordAuthenticationSelected()
+                this@CyberArkBiometricPromptUtilityImpl.callbackCyberArk.passwordAuthenticationSelected()
                 mPrompt!!.cancelAuthentication()
             } else {
-                this@BiometricPromptUtilityImpl.authenticationCallback.showErrorMessage(errString.toString())
+                this@CyberArkBiometricPromptUtilityImpl.callbackCyberArk.showErrorMessage(errString.toString())
             }
             mPrompt = null
             Log.d(TAG, "errCode is $errCode and errString is: $errString")
@@ -88,7 +88,7 @@ internal class BiometricPromptUtilityImpl(private val authenticationCallback: Bi
                     //If same object used multiple times by client
                     mFailedTries = 0
                     mPrompt?.cancelAuthentication()
-                    this@BiometricPromptUtilityImpl.authenticationCallback.isAuthenticationSuccess(
+                    this@CyberArkBiometricPromptUtilityImpl.callbackCyberArk.isAuthenticationSuccess(
                             false
                     )
                 }
@@ -157,7 +157,7 @@ internal class BiometricPromptUtilityImpl(private val authenticationCallback: Bi
      */
     private fun decryptServerTokenFromStorage(authResult: BiometricPrompt.AuthenticationResult) {
         Log.v(TAG, "auth result :: $authResult")
-        this@BiometricPromptUtilityImpl.authenticationCallback.isAuthenticationSuccess(true)
+        this@CyberArkBiometricPromptUtilityImpl.callbackCyberArk.isAuthenticationSuccess(true)
     }
 
     /**
@@ -173,25 +173,25 @@ internal class BiometricPromptUtilityImpl(private val authenticationCallback: Bi
                 showBiometricPrompt(activity)
             }
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
-                this.authenticationCallback.isHardwareSupported(false)
+                this.callbackCyberArk.isHardwareSupported(false)
             }
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
-                this.authenticationCallback.isHardwareSupported(false)
+                this.callbackCyberArk.isHardwareSupported(false)
             }
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
-                this.authenticationCallback.isBiometricEnrolled(false)
+                this.callbackCyberArk.isBiometricEnrolled(false)
 //                    if (activity != null) {
 //                        showFingerEnrollmentAlert(activity!!)
 //                    }
             }
             BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> {
-                this.authenticationCallback.isHardwareSupported(false)
+                this.callbackCyberArk.isHardwareSupported(false)
             }
             BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> {
-                this.authenticationCallback.biometricErrorSecurityUpdateRequired()
+                this.callbackCyberArk.biometricErrorSecurityUpdateRequired()
             }
             BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED -> {
-                this.authenticationCallback.isHardwareSupported(false)
+                this.callbackCyberArk.isHardwareSupported(false)
             }
         }
     }

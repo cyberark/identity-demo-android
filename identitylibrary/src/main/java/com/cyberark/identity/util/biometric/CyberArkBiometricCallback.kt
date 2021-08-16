@@ -21,7 +21,7 @@ package com.cyberark.identity.util.biometric
  *
  * @constructor Create empty Biometric authentication callback
  */
-interface BiometricAuthenticationCallback {
+interface CyberArkBiometricCallback {
     /**
      * Is authentication success
      *

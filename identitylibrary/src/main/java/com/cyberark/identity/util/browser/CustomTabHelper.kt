@@ -31,7 +31,7 @@ import androidx.browser.customtabs.CustomTabsService
 class CustomTabHelper {
 
     companion object {
-        var sPackageNameToUse: String? = null
+        var packageName: String? = null
         val STABLE_PACKAGE = "com.android.chrome"
         val BETA_PACKAGE = "com.chrome.beta"
         val DEV_PACKAGE = "com.chrome.dev"
@@ -45,9 +45,9 @@ class CustomTabHelper {
      * @param url
      * @return
      */
-    fun getPackageNameToUse(context: Context, url: String): String? {
+    fun getPackageName(context: Context, url: String): String? {
 
-        sPackageNameToUse?.let {
+        packageName?.let {
             return it
         }
 
@@ -74,21 +74,21 @@ class CustomTabHelper {
         }
 
         when {
-            packagesSupportingCustomTabs.isEmpty() -> sPackageNameToUse = null
-            packagesSupportingCustomTabs.size == 1 -> sPackageNameToUse =
+            packagesSupportingCustomTabs.isEmpty() -> packageName = null
+            packagesSupportingCustomTabs.size == 1 -> packageName =
                 packagesSupportingCustomTabs.get(0)
             !TextUtils.isEmpty(defaultViewHandlerPackageName)
                     && !hasSpecializedHandlerIntents(context, activityIntent)
                     && packagesSupportingCustomTabs.contains(defaultViewHandlerPackageName) ->
-                sPackageNameToUse = defaultViewHandlerPackageName
-            packagesSupportingCustomTabs.contains(STABLE_PACKAGE) -> sPackageNameToUse =
+                packageName = defaultViewHandlerPackageName
+            packagesSupportingCustomTabs.contains(STABLE_PACKAGE) -> packageName =
                 STABLE_PACKAGE
-            packagesSupportingCustomTabs.contains(BETA_PACKAGE) -> sPackageNameToUse = BETA_PACKAGE
-            packagesSupportingCustomTabs.contains(DEV_PACKAGE) -> sPackageNameToUse = DEV_PACKAGE
-            packagesSupportingCustomTabs.contains(LOCAL_PACKAGE) -> sPackageNameToUse =
+            packagesSupportingCustomTabs.contains(BETA_PACKAGE) -> packageName = BETA_PACKAGE
+            packagesSupportingCustomTabs.contains(DEV_PACKAGE) -> packageName = DEV_PACKAGE
+            packagesSupportingCustomTabs.contains(LOCAL_PACKAGE) -> packageName =
                 LOCAL_PACKAGE
         }
-        return sPackageNameToUse
+        return packageName
     }
 
     /**

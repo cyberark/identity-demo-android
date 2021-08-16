@@ -19,7 +19,7 @@ package com.cyberark.identity.data.network
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object CyberarkAuthBuilder {
+object CyberArkAuthBuilder {
 
     /**
      * Base URL
@@ -41,6 +41,6 @@ object CyberarkAuthBuilder {
     /**
      * Cyberark auth service
      */
-    val cyberarkAuthService: CyberarkAuthService = getRetrofit().create(CyberarkAuthService::class.java)
+    val CYBER_ARK_AUTH_SERVICE: CyberArkAuthService = getRetrofit().create(CyberArkAuthService::class.java)
 
 }

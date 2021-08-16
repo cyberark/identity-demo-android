@@ -22,7 +22,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cyberark.identity.data.model.QRCodeLoginModel
-import com.cyberark.identity.data.network.CyberarkAuthHelper
+import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.util.ResponseHandler
 import com.cyberark.identity.util.endpoint.EndpointUrls
 import kotlinx.coroutines.launch
@@ -31,10 +31,10 @@ import org.json.JSONObject
 /**
  * Scan QR code view model
  *
- * @property cyberarkAuthHelper
+ * @property cyberArkAuthHelper
  * @constructor Create empty Scan q r code view model
  */
-internal class ScanQRCodeViewModel(private val cyberarkAuthHelper: CyberarkAuthHelper) : ViewModel() {
+internal class ScanQRCodeViewModel(private val cyberArkAuthHelper: CyberArkAuthHelper) : ViewModel() {
 
     private val TAG: String? = ScanQRCodeViewModel::class.simpleName
     private val qrCodeResponse = MutableLiveData<ResponseHandler<QRCodeLoginModel>>()
@@ -57,7 +57,7 @@ internal class ScanQRCodeViewModel(private val cyberarkAuthHelper: CyberarkAuthH
                 Log.i(TAG, barcodeUrl)
                 val idapNativeClient: Boolean = headerPayload.getBoolean(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT)
                 val bearerToken: String = headerPayload.getString(EndpointUrls.HEADER_AUTHORIZATION)
-                val usersFromApi = cyberarkAuthHelper.qrCodeLogin(idapNativeClient, bearerToken, barcodeUrl)
+                val usersFromApi = cyberArkAuthHelper.qrCodeLogin(idapNativeClient, bearerToken, barcodeUrl)
                 Log.i(TAG, "usersFromApi :: " + usersFromApi.success)
                 Log.i(TAG, "usersFromApi :: " + usersFromApi.result?.displayName)
                 Log.i(TAG, "usersFromApi String :: " + usersFromApi.toString())

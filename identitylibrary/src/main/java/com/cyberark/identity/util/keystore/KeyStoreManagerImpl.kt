@@ -20,7 +20,7 @@ import android.util.Base64
 import com.cyberark.identity.util.keystore.Encryption.DeCryptor
 import com.cyberark.identity.util.keystore.Encryption.EnCryptor
 import com.cyberark.identity.util.preferences.Constants
-import com.cyberark.identity.util.preferences.CyberarkPreferenceUtils
+import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import java.io.IOException
 import java.security.*
 import javax.crypto.BadPaddingException
@@ -43,9 +43,9 @@ private class KeyStoreManagerImpl : KeyStoreManager {
     override fun saveAuthToken(authToken: String): Boolean {
         val returnValues = encryptText(Constants.AUTH_ALIAS, authToken)
         if (returnValues != null) {
-            CyberarkPreferenceUtils.putString(Constants.AUTH_TOKEN_IV, Base64.encodeToString(returnValues.first, Base64.DEFAULT))
-            CyberarkPreferenceUtils.putString(Constants.AUTH_TOKEN, Base64.encodeToString(returnValues.second, Base64.DEFAULT))
-            DeCryptor().decryptData(Constants.AUTH_ALIAS, Base64.decode(CyberarkPreferenceUtils.getString(Constants.AUTH_TOKEN, ""), Base64.DEFAULT), Base64.decode(CyberarkPreferenceUtils.getString(Constants.AUTH_TOKEN_IV, ""), Base64.DEFAULT))
+            CyberArkPreferenceUtil.putString(Constants.ACCESS_TOKEN_IV, Base64.encodeToString(returnValues.first, Base64.DEFAULT))
+            CyberArkPreferenceUtil.putString(Constants.ACCESS_TOKEN, Base64.encodeToString(returnValues.second, Base64.DEFAULT))
+            DeCryptor().decryptData(Constants.AUTH_ALIAS, Base64.decode(CyberArkPreferenceUtil.getString(Constants.ACCESS_TOKEN, ""), Base64.DEFAULT), Base64.decode(CyberArkPreferenceUtil.getString(Constants.ACCESS_TOKEN_IV, ""), Base64.DEFAULT))
             return true
         }
         return false
@@ -78,8 +78,8 @@ private class KeyStoreManagerImpl : KeyStoreManager {
     override fun saveRefreshToken(refreshToken: String): Boolean {
         val returnValues = encryptText(Constants.REFRESH_ALIAS, refreshToken)
         if (returnValues != null) {
-            CyberarkPreferenceUtils.putString(Constants.REFRESH_TOKEN_IV, Base64.encodeToString(returnValues.first, Base64.DEFAULT))
-            CyberarkPreferenceUtils.putString(Constants.REFRESH_TOKEN, Base64.encodeToString(returnValues.second, Base64.DEFAULT))
+            CyberArkPreferenceUtil.putString(Constants.REFRESH_TOKEN_IV, Base64.encodeToString(returnValues.first, Base64.DEFAULT))
+            CyberArkPreferenceUtil.putString(Constants.REFRESH_TOKEN, Base64.encodeToString(returnValues.second, Base64.DEFAULT))
             return true
         }
         return false
@@ -92,8 +92,8 @@ private class KeyStoreManagerImpl : KeyStoreManager {
      */
     private fun getAuthTokenKeyStore(): String? {
         var decryptedToken: String? = null
-        val accessTokenIV = CyberarkPreferenceUtils.getString(Constants.AUTH_TOKEN_IV, null)
-        val accessToken = CyberarkPreferenceUtils.getString(Constants.AUTH_TOKEN, null)
+        val accessTokenIV = CyberArkPreferenceUtil.getString(Constants.ACCESS_TOKEN_IV, null)
+        val accessToken = CyberArkPreferenceUtil.getString(Constants.ACCESS_TOKEN, null)
         if (accessTokenIV != null || accessToken != null) {
             decryptedToken = decryptText(Constants.AUTH_ALIAS, Base64.decode(accessToken!!, Base64.DEFAULT), Base64.decode(accessTokenIV!!, Base64.DEFAULT))
         }
@@ -107,8 +107,8 @@ private class KeyStoreManagerImpl : KeyStoreManager {
      */
     private fun getRefreshTokenKeyStore(): String? {
         var decryptedToken: String? = null
-        val refreshTokenIV = CyberarkPreferenceUtils.getString(Constants.REFRESH_TOKEN_IV, null)
-        val refreshToken = CyberarkPreferenceUtils.getString(Constants.REFRESH_TOKEN, null)
+        val refreshTokenIV = CyberArkPreferenceUtil.getString(Constants.REFRESH_TOKEN_IV, null)
+        val refreshToken = CyberArkPreferenceUtil.getString(Constants.REFRESH_TOKEN, null)
         if (refreshTokenIV != null || refreshToken != null) {
             decryptedToken = decryptText(Constants.REFRESH_ALIAS, Base64.decode(refreshToken!!, Base64.DEFAULT), Base64.decode(refreshTokenIV!!, Base64.DEFAULT))
         }

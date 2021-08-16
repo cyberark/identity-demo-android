@@ -34,7 +34,7 @@ import java.util.*
  * @property redirectUri
  * @constructor Create empty Cyberark account builder
  */
-class CyberarkAccountBuilder(
+class CyberArkAccountBuilder(
         val domainURL: String?,
         val clientId: String?,
         val appId: String?,
@@ -47,7 +47,7 @@ class CyberarkAccountBuilder(
     private val baseURL: HttpUrl?
     private var codeVerifier: String? = null
     private var codeChallenge: String? = null
-    private val tag: String? = CyberarkAccountBuilder::class.simpleName
+    private val tag: String? = CyberArkAccountBuilder::class.simpleName
 
     /**
      * Builder
@@ -124,7 +124,7 @@ class CyberarkAccountBuilder(
          * Build
          *
          */
-        fun build() = CyberarkAccountBuilder(
+        fun build() = CyberArkAccountBuilder(
                 domainURL,
                 clientId,
                 appId,

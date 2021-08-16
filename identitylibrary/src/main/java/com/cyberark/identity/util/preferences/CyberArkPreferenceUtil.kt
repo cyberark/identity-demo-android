@@ -27,7 +27,7 @@ import java.lang.ref.WeakReference
  *
  * @constructor Create empty Cyberark preference utils
  */
-object CyberarkPreferenceUtils {
+object CyberArkPreferenceUtil {
     private var mContext: WeakReference<Context>? = null
     fun init(context: Context) {
         mContext = WeakReference(context.applicationContext)
