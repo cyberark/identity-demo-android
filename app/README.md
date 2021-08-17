@@ -108,20 +108,6 @@ manifestPlaceholders = [cyberarkIdentityHost: "@string/cyberark_account_host",
 ```
 Make sure this is consistent with the CyberArk Identity Account Info
 
-
-* Then create a client like the following:
-
-```kotlin
-val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
-                .clientId(getString(R.string.cyberark_account_client_id))
-                .domainURL(getString(R.string.cyberark_account_host))
-                .appId(getString(R.string.cyberark_account_app_id))
-                .responseType(getString(R.string.cyberark_account_response_type))
-                .scope(getString(R.string.cyberark_account_scope))
-                .redirectUri(getString(R.string.cyberark_account_redirect_uri))
-                .build()
-```
-
 ## Use Cases
 
 ### Login with a browser
@@ -143,7 +129,7 @@ val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
                 .build()
 ```
 
-* Launch URL in browser, set-up view model and start authentication flow using `CyberArkAuthProvider` class
+* Launch URL in browser, set-up view model and start authentication flow using `CyberArkAuthProvider` class, Param - `CyberArkAccountBuilder`instance
 ```kotlin
    val authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>> =
                 CyberArkAuthProvider.login(cyberArkAccountBuilder).start(this)
@@ -168,9 +154,20 @@ val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
 2. Clear access token from browser cookie
 3. End session
 
+*  End session using `CyberArkAuthProvider` class, Param - `CyberArkAccountBuilder`instance
+```kotlin
+   CyberArkAuthProvider.endSession(cyberArkAccountBuilder).start(this)
+```
+
 ### Enroll Device
 1. First Enroll device with the CyberArk Identity Server
 2. Then allow user to access QR Code Authenticator option 
+
+* Enroll device using `CyberArkAuthProvider` class, Param - access token
+```kotlin
+   val authResponseHandler: LiveData<ResponseHandler<EnrollmentModel>> =
+                  CyberArkAuthProvider.enroll().start(this, accessTokenData)
+```
 
 ### QR Code Authenticator
 1. Reuest for camera permission
@@ -178,6 +175,23 @@ val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
 3. Scan web page QR widget from mobile app
 4. Client SDK will make REST API call using scanned data and access token
 5. CyberArk Server will verify and authenticates the web app
+
+* Start QR Code Authenticator flow using `CyberArkQRCodeLoginActivity` class
+```kotlin
+    val intent = Intent(this, CyberArkQRCodeLoginActivity::class.java)
+    intent.putExtra("access_token", accessTokenData)
+    startForResult.launch(intent)
+```
+
+* Add callback to handle QR Code Authenticator result
+```kotlin
+    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+           if (result.resultCode == Activity.RESULT_OK) {
+             // Use key "QR_CODE_AUTH_RESULT" to receive result data
+               val data = result.data?.getStringExtra("QR_CODE_AUTH_RESULT")
+           }
+    }
+```
 
 ### Biometrics
 1. Invoke strong biometrics on app launch
