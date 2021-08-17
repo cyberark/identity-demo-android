@@ -9,47 +9,19 @@ Naming and API's are still subject to *breaking* changes.
 This sample application demonstrates the integration of `CyberArk Identity SDK` into a Kotlin Android application.
 
 # Contents
-<!-- MarkdownTOC -->
-- [Use Cases](#Use-Cases)
-- [Prerequisites](#prerequisites)
-- [SDK Integration Requirements](#SDK-Integration-Requirements)
-- [Project setup](#Project-setup)
-	- [Configure CyberArk Identity Account](#Configure-CyberArk-Identity-Account)
-	- [Update the Redirect URI Host and Scheme](#Update-the-Redirect-URI-Host-and-Scheme)
-	- [Dependencies](#dependencies)
-	- [Running the app](#Running-the-app)
-- [What is CyberArk Identity?](#What-is-CyberArk-Identity?)
-- [Issue Reporting](#Issue-Reporting)
-- [Code Maintainers](#Code-Maintainers)
-- [License](#license)
-<a id="Use-Cases"></a>
 
-## Use Cases
-
-- Login (Authenticates user)
-1. Launch authorize URL in the browser Chrome Custom Tabs using OAuth PKCE flow
-2. Open CyberArk Identity login web page
-3. Authenticates user in browser
-4. After the user authenticates, they are redirected back to the application and exchanging the received authorization code for access token and/or refresh token
-5. Save the access token and/or refresh token in device storge using Keystore encryption
-
-- Logout (Logout user)
-1. Launch end session URL in the browser Chrome Custom Tabs
-2. Clear access token from browser cookie
-3. End session
-
-- Enroll (Enroll devices using access token)  
-
-- QR Code Authenticator (Authenticates web app using QR Code Authenticator from the mobile app)
-1. Reuest for camera permission
-2. Open QR Code scanner
-3. Scan web page QR widget from mobile app
-4. Client SDK will make REST API call using scanned data and access token
-5. CyberArk Server will verify and authenticates the web app
-
-- Biometrics (Enable/disable the biometric options from the settings)
-1. Invoke strong biometrics on app launch
-2. Invoke strong biometrics when access token expires
+- [Prerequisites](#Prerequisites)
+- [Requirements](#Requirements)
+- [Project setup](#Project setup)
+	- [SDK dependency](#SDK dependency)
+	- [Permission](#Permission)
+	- [Configuration](#Configuration)
+- [Use Cases](#Use Cases)
+- [Running the app](#Running the app)
+- [What is CyberArk Identity?](#What is CyberArk Identity?)
+- [Issue Reporting](#Issue Reporting)
+- [Code Maintainers](#Code Maintainers)
+- [License](#License)
 
 ## Prerequisites
 
@@ -81,16 +53,40 @@ Permissions:
 
 **Note:** *As with any CyberArk Identity application, make sure you assign Users or Roles to the application. Otherwise, no one can use it.*
 
-## SDK Integration Requirements
+## Requirements
+The SDK requires Java 8 support for Android and Kotlin plugins. To enable, add the following to your build.gradle file
 
-Android API version 23 or later and Java 8+.
+```bash
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+```
 
 ## Project setup
 
-### Configure CyberArk Identity Account
+### SDK dependency
+
+Include CyberArk SDK dependency in `build.gradle` file:
+
+```bash
+implementation 'com.cyberark.identity:mfa-android:0.0.1' (//TODO.. need to be uploaded in Maven central repo)
+```
+
+### Permission
+Open your app's AndroidManifest.xml file and add the following permission.
 
 ```xml
+<uses-permission android:name="android.permission.INTERNET" />
+```
 
+### Configuration
+* Client must have a config to interact with CyberArk Identity provider. Create a config.xml like the following example:
+
+```xml
 <resources>
     <string name="cyberark_account_client_id">{clientId}</string>
     <string name="cyberark_account_host">{host}</string>
@@ -100,12 +96,9 @@ Android API version 23 or later and Java 8+.
     <string name="cyberark_account_redirect_uri">{scheme}://{host}/android/{applicationId}/callback</string>
     <string name="cyberark_account_scheme">{scheme}</string>
 </resources>
-
 ```
 
-### Update the Redirect URI Host and Scheme
-
-Include gradle manifest placeholder in your app's `build.gradle`
+* Include gradle manifest placeholder in your app's `build.gradle`
 
 ```bash
 manifestPlaceholders = [cyberarkIdentityHost: "@string/cyberark_account_host",
@@ -113,15 +106,50 @@ manifestPlaceholders = [cyberarkIdentityHost: "@string/cyberark_account_host",
 ```
 Make sure this is consistent with the CyberArk Identity Account Info
 
-### Dependencies
 
-Include CyberArk SDK dependency in `build.gradle` file:
+* Then create a client like the following:
 
-```bash
-implementation 'com.cyberark.identity:mfa-android:0.0.1' (//TODO.. need to be uploaded in Maven central repo)
+```kotlin
+val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
+                .clientId(getString(R.string.cyberark_account_client_id))
+                .domainURL(getString(R.string.cyberark_account_host))
+                .appId(getString(R.string.cyberark_account_app_id))
+                .responseType(getString(R.string.cyberark_account_response_type))
+                .scope(getString(R.string.cyberark_account_scope))
+                .redirectUri(getString(R.string.cyberark_account_redirect_uri))
+                .build()
 ```
 
-### Running the app
+## Use Cases
+
+- Login (Authenticates user)
+1. Launch authorize URL in the browser Chrome Custom Tabs using OAuth PKCE flow
+2. Open CyberArk Identity login web page
+3. Authenticates user in browser
+4. After the user authenticates, they are redirected back to the application and exchanging the received authorization code for access token and/or refresh token
+5. Save the access token and/or refresh token in device storge using Keystore encryption
+
+- Logout (Logout user)
+1. Launch end session URL in the browser Chrome Custom Tabs
+2. Clear access token from browser cookie
+3. End session
+
+- Enroll (Enroll devices using access token) 
+1. First Enroll device with the CyberArk Identity Server
+2. Then allow user to access QR Code Authenticator option 
+
+- QR Code Authenticator (Authenticates web app using QR Code Authenticator from the mobile app)
+1. Reuest for camera permission
+2. Open QR Code scanner
+3. Scan web page QR widget from mobile app
+4. Client SDK will make REST API call using scanned data and access token
+5. CyberArk Server will verify and authenticates the web app
+
+- Biometrics (Enable/disable the biometric options from the settings)
+1. Invoke strong biometrics on app launch
+2. Invoke strong biometrics when access token expires
+
+## Running the app
 
 Run the application using Android Studio. 
 
