@@ -129,13 +129,13 @@ Make sure this is consistent with the CyberArk Identity Account Info
                 .build()
 ```
 
-* Launch URL in browser, set-up view model and start authentication flow using `CyberArkAuthProvider` class, Param - `CyberArkAccountBuilder`instance
+* Launch URL in browser, set-up view model and start authentication flow using `CyberArkAuthProvider` class, Param - `CyberArkAccountBuilder` instance
 ```kotlin
    val authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>> =
                 CyberArkAuthProvider.login(cyberArkAccountBuilder).start(this)
 ```
 
-*  Add observer to receive authorization results
+*  Then add observer with authResponseHandler to receive authorization results
 ```kotlin
     authResponseHandler.observe(this, {
           when (it.status) {
@@ -160,7 +160,7 @@ Make sure this is consistent with the CyberArk Identity Account Info
 2. Clear access token from browser cookie
 3. End session
 
-*  End session using `CyberArkAuthProvider` class, Param - `CyberArkAccountBuilder`instance
+*  End session using `CyberArkAuthProvider` class, Param - `CyberArkAccountBuilder` instance
 ```kotlin
    CyberArkAuthProvider.endSession(cyberArkAccountBuilder).start(this)
 ```
@@ -188,7 +188,7 @@ Make sure this is consistent with the CyberArk Identity Account Info
     val status = JWTUtils.isAccessTokenExpired(accessTokenData)
 ```
 
-* Get New Access Token using Refresh Token using `CyberArkAuthProvider` class, param - `CyberArkAccountBuilder`instance
+* Receive New Access Token using Refresh Token, `CyberArkAuthProvider` class, param - `CyberArkAccountBuilder` instance
 ```kotlin
     val refreshTokenResponseHandler: LiveData<ResponseHandler<RefreshTokenModel>> =
             CyberArkAuthProvider.refreshToken(cyberArkAccountBuilder).start(this, refreshTokenData)
@@ -227,22 +227,16 @@ Make sure this is consistent with the CyberArk Identity Account Info
    private val biometricCallback = object : CyberArkBiometricCallback {
            override fun isAuthenticationSuccess(success: Boolean) {
            }
-   
            override fun passwordAuthenticationSelected() {
            }
-   
            override fun showErrorMessage(message: String) {
            }
-   
            override fun isHardwareSupported(boolean: Boolean) {
            }
-   
            override fun isSdkVersionSupported(boolean: Boolean) {
            }
-   
            override fun isBiometricEnrolled(boolean: Boolean) {
            }
-   
            override fun biometricErrorSecurityUpdateRequired() {
            }
    }
