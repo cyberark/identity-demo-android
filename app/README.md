@@ -149,6 +149,12 @@ Make sure this is consistent with the CyberArk Identity Account Info
     })
 ```
 
+*  Save access token and refresh token in device storage(SharedPreference) using keystore encryption
+```kotlin
+    KeyStoreProvider.get().saveAuthToken(it.data!!.access_token)
+    KeyStoreProvider.get().saveRefreshToken(it.data!!.refresh_token)
+```
+
 ### Logout
 1. Launch end session URL in the browser Chrome Custom Tabs
 2. Clear access token from browser cookie
@@ -159,6 +165,14 @@ Make sure this is consistent with the CyberArk Identity Account Info
    CyberArkAuthProvider.endSession(cyberArkAccountBuilder).start(this)
 ```
 
+*  Remove access token and refresh token from device storage(SharedPreference) using `CyberArkPreferenceUtil` class
+```kotlin
+    CyberArkPreferenceUtil.remove(Constants.ACCESS_TOKEN)
+    CyberArkPreferenceUtil.remove(Constants.ACCESS_TOKEN_IV)
+    CyberArkPreferenceUtil.remove(Constants.REFRESH_TOKEN)
+    CyberArkPreferenceUtil.remove(Constants.REFRESH_TOKEN_IV)
+```
+
 ### Enroll Device
 1. First Enroll device with the CyberArk Identity Server
 2. Then allow user to access QR Code Authenticator option 
@@ -167,6 +181,17 @@ Make sure this is consistent with the CyberArk Identity Account Info
 ```kotlin
    val authResponseHandler: LiveData<ResponseHandler<EnrollmentModel>> =
                   CyberArkAuthProvider.enroll().start(this, accessTokenData)
+```
+
+* Get access token expire status using `JWTUtils` class
+```kotlin
+    val status = JWTUtils.isAccessTokenExpired(accessTokenData)
+```
+
+* Get New Access Token using Refresh Token using `CyberArkAuthProvider` class, param - `CyberArkAccountBuilder`instance
+```kotlin
+    val refreshTokenResponseHandler: LiveData<ResponseHandler<RefreshTokenModel>> =
+            CyberArkAuthProvider.refreshToken(cyberArkAccountBuilder).start(this, refreshTokenData)
 ```
 
 ### QR Code Authenticator
