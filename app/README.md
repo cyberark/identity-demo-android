@@ -10,10 +10,15 @@ This sample application demonstrates the integration of `CyberArk Identity SDK` 
 
 # Contents
 - [Prerequisites](#Prerequisites)
+	- [Settings](#Settings)
+	- [General Usage](#General-Usage)
+	- [Token](#Token)
+	- [Scope](#Scope)
+	- [App Permissions](#App-Permissions)
 - [Requirements](#Requirements)
 - [Project setup](#Project-setup)
 	- [SDK dependency](#SDK-dependency)
-	- [Permission](#Permission)
+	- [Permissions](#Permissions)
 	- [Configuration](#Configuration)
 - [Use Cases](#Use-Cases)
 	- [Login with a browser](#Login-with-a-browser)
@@ -32,24 +37,24 @@ Before running this sample, you will need the following settings from the Admin 
 * Sign up for a user at https://cyberark.my.idaptive.app/ (CyberArk Developer Account)
 * Add a new OAuth Application and configured for a user/role
 
-Settings:
+### Settings
 * Application ID - Specify the name or "target" that the mobile application uses to find this application
 
-General Usage:
+### General Usage
 * Client ID Type - Select List
 * Allowed Clients - Add Client ID, e.g. add app package name as client ID
 * Allowed Redirects - Add Mobile app callback URL, e.g. {scheme}://{host}/android/{applicationId}/callback
 
-Token:
+### Token
 * Token Type - JwtRS256
 * Auth methods - Auth Code
 * Issue refresh tokens - Checked
 
-Scope:
+### Scope
 * Name - All
 * Allowed REST APIs - .*
 
-Permissions:
+### App Permissions
 * Add a User or Role
 
 **Note:** *To receive a **refresh_token**, you must checked the `Issue refresh tokens`.*
@@ -78,7 +83,7 @@ Include CyberArk SDK dependency in `build.gradle` file:
 implementation 'com.cyberark.identity:mfa-android:0.0.1' (//TODO.. need to be uploaded in Maven central repo)
 ```
 
-### Permission
+### Permissions
 Open your app's AndroidManifest.xml file and add the following permission.
 
 ```xml
@@ -131,7 +136,7 @@ val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
 4. After the user authenticates, they are redirected back to the application and exchanging the received authorization code for access token and/or refresh token
 5. Save the access token and/or refresh token in device storage using Keystore encryption
 
-* Create Account using [CyberArkAccountBuilder] class
+* Create Account using `CyberArkAccountBuilder` class
 ```kotlin
   val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
                 .clientId(getString(R.string.cyberark_account_client_id))
@@ -143,7 +148,7 @@ val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
                 .build()
 ```
 
-* Launch URL in browser, set-up view model and start authentication flow using [CyberArkAuthProvider] class
+* Launch URL in browser, set-up view model and start authentication flow using `CyberArkAuthProvider` class
 ```kotlin
    val authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>> =
                 CyberArkAuthProvider.login(cyberArkAccountBuilder).start(this)
