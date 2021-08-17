@@ -10,11 +10,6 @@ This sample application demonstrates the integration of `CyberArk Identity SDK` 
 
 # Contents
 - [Prerequisites](#Prerequisites)
-	- [Settings](#Settings)
-	- [General Usage](#General-Usage)
-	- [Token](#Token)
-	- [Scope](#Scope)
-	- [App Permissions](#App-Permissions)
 - [Requirements](#Requirements)
 - [Project setup](#Project-setup)
 	- [SDK dependency](#SDK-dependency)
@@ -37,24 +32,24 @@ Before running this sample, you will need the following settings from the Admin 
 * Sign up for a user at https://cyberark.my.idaptive.app/ (CyberArk Developer Account)
 * Add a new OAuth Application and configured for a user/role
 
-#### Settings
+**Settings:**
 * Application ID - Specify the name or "target" that the mobile application uses to find this application
 
-#### General Usage
+**General Usage:**
 * Client ID Type - Select List
 * Allowed Clients - Add Client ID, e.g. add app package name as client ID
 * Allowed Redirects - Add Mobile app callback URL, e.g. {scheme}://{host}/android/{applicationId}/callback
 
-#### Token
+**Token:**
 * Token Type - JwtRS256
 * Auth methods - Auth Code
 * Issue refresh tokens - Checked
 
-#### Scope
+**Scope:**
 * Name - All
 * Allowed REST APIs - .*
 
-#### App Permissions
+**App Permissions:**
 * Add a User or Role
 
 **Note:** *To receive a **refresh_token**, you must checked the `Issue refresh tokens`.*
