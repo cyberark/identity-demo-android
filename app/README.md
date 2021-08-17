@@ -9,22 +9,25 @@ Naming and API's are still subject to *breaking* changes.
 This sample application demonstrates the integration of `CyberArk Identity SDK` into a Kotlin Android application.
 
 # Contents
-
 - [Prerequisites](#Prerequisites)
 - [Requirements](#Requirements)
-- [Project setup](#Project setup)
-	- [SDK dependency](#SDK dependency)
+- [Project setup](#Project-setup)
+	- [SDK dependency](#SDK-dependency)
 	- [Permission](#Permission)
 	- [Configuration](#Configuration)
-- [Use Cases](#Use Cases)
-- [Running the app](#Running the app)
-- [What is CyberArk Identity?](#What is CyberArk Identity?)
-- [Issue Reporting](#Issue Reporting)
-- [Code Maintainers](#Code Maintainers)
+- [Use Cases](#Use-Cases)
+	- [Login with a browser](#Login-with-a-browser)
+	- [Logout](#Logout)
+	- [Enroll Device](#Enroll-Device)
+	- [QR Code Authenticator](#QR-Code-Authenticator)
+	- [Biometrics](#Biometrics)
+- [Running the app](#Running-the-app)
+- [What is CyberArk Identity?](#What-is-CyberArk-Identity?)
+- [Issue Reporting](#Issue-Reporting)
+- [Code Maintainers](#Code-Maintainers)
 - [License](#License)
 
 ## Prerequisites
-
 Before running this sample, you will need the following settings from the Admin dashboard
 * Sign up for a user at https://cyberark.my.idaptive.app/ (CyberArk Developer Account)
 * Add a new OAuth Application and configured for a user/role
@@ -69,7 +72,6 @@ The SDK requires Java 8 support for Android and Kotlin plugins. To enable, add t
 ## Project setup
 
 ### SDK dependency
-
 Include CyberArk SDK dependency in `build.gradle` file:
 
 ```bash
@@ -122,30 +124,62 @@ val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
 
 ## Use Cases
 
-- Login (Authenticates user)
+### Login with a browser
 1. Launch authorize URL in the browser Chrome Custom Tabs using OAuth PKCE flow
 2. Open CyberArk Identity login web page
 3. Authenticates user in browser
 4. After the user authenticates, they are redirected back to the application and exchanging the received authorization code for access token and/or refresh token
-5. Save the access token and/or refresh token in device storge using Keystore encryption
+5. Save the access token and/or refresh token in device storage using Keystore encryption
 
-- Logout (Logout user)
+* Create Account using [CyberArkAccountBuilder] class
+```kotlin
+  val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
+                .clientId(getString(R.string.cyberark_account_client_id))
+                .domainURL(getString(R.string.cyberark_account_host))
+                .appId(getString(R.string.cyberark_account_app_id))
+                .responseType(getString(R.string.cyberark_account_response_type))
+                .scope(getString(R.string.cyberark_account_scope))
+                .redirectUri(getString(R.string.cyberark_account_redirect_uri))
+                .build()
+```
+
+* Launch URL in browser, set-up view model and start authentication flow using [CyberArkAuthProvider] class
+```kotlin
+   val authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>> =
+                CyberArkAuthProvider.login(cyberArkAccountBuilder).start(this)
+```
+
+*  Add observer to receive authorization results
+```kotlin
+    authResponseHandler.observe(this, {
+                when (it.status) {
+                    ResponseStatus.SUCCESS -> {
+                    }
+                    ResponseStatus.ERROR -> {
+                    }
+                    ResponseStatus.LOADING -> {
+                    }
+                }
+            })
+```
+
+### Logout
 1. Launch end session URL in the browser Chrome Custom Tabs
 2. Clear access token from browser cookie
 3. End session
 
-- Enroll (Enroll devices using access token) 
+### Enroll Device
 1. First Enroll device with the CyberArk Identity Server
 2. Then allow user to access QR Code Authenticator option 
 
-- QR Code Authenticator (Authenticates web app using QR Code Authenticator from the mobile app)
+### QR Code Authenticator
 1. Reuest for camera permission
 2. Open QR Code scanner
 3. Scan web page QR widget from mobile app
 4. Client SDK will make REST API call using scanned data and access token
 5. CyberArk Server will verify and authenticates the web app
 
-- Biometrics (Enable/disable the biometric options from the settings)
+### Biometrics
 1. Invoke strong biometrics on app launch
 2. Invoke strong biometrics when access token expires
 
