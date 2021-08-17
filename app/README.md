@@ -138,15 +138,15 @@ Make sure this is consistent with the CyberArk Identity Account Info
 *  Add observer to receive authorization results
 ```kotlin
     authResponseHandler.observe(this, {
-                when (it.status) {
-                    ResponseStatus.SUCCESS -> {
-                    }
-                    ResponseStatus.ERROR -> {
-                    }
-                    ResponseStatus.LOADING -> {
-                    }
-                }
-            })
+          when (it.status) {
+              ResponseStatus.SUCCESS -> {
+              }
+              ResponseStatus.ERROR -> {
+              }
+              ResponseStatus.LOADING -> {
+              }
+          }
+    })
 ```
 
 ### Logout
@@ -196,6 +196,42 @@ Make sure this is consistent with the CyberArk Identity Account Info
 ### Biometrics
 1. Invoke strong biometrics on app launch
 2. Invoke strong biometrics when access token expires
+
+* Register biometrics callback using `CyberArkBiometricCallback` interface
+```kotlin
+   private val biometricCallback = object : CyberArkBiometricCallback {
+           override fun isAuthenticationSuccess(success: Boolean) {
+           }
+   
+           override fun passwordAuthenticationSelected() {
+           }
+   
+           override fun showErrorMessage(message: String) {
+           }
+   
+           override fun isHardwareSupported(boolean: Boolean) {
+           }
+   
+           override fun isSdkVersionSupported(boolean: Boolean) {
+           }
+   
+           override fun isBiometricEnrolled(boolean: Boolean) {
+           }
+   
+           override fun biometricErrorSecurityUpdateRequired() {
+           }
+   }
+```
+
+* Invoke biometric utility instance
+```kotlin
+   bioMetric = CyberArkBiometricManager().getBiometricUtility(biometricCallback)
+```
+
+* Show all strong biometrics in a prompt
+```kotlin
+   bioMetric.showBioAuthentication(this, null, "Use App Pin", false)
+```
 
 ## Running the app
 

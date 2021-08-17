@@ -29,6 +29,7 @@ import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
  * @property cyberArkAuthHelper
  * @constructor Create empty Cyberark view model factory
  */
+@Suppress("UNCHECKED_CAST")
 class CyberArkViewModelFactory(private val cyberArkAuthHelper: CyberArkAuthHelper) :
         ViewModelProvider.Factory {
 

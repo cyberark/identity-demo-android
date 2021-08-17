@@ -210,7 +210,7 @@ class MFAActivity : AppCompatActivity() {
     }
 
     /**
-     * Enroll device and receive access token and refresh token
+     * Enroll device using access token
      */
     private fun enroll() {
         val authResponseHandler: LiveData<ResponseHandler<EnrollmentModel>> =
