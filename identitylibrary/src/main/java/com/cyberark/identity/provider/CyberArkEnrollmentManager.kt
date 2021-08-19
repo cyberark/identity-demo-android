@@ -18,7 +18,7 @@ package com.cyberark.identity.provider
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.util.device.DeviceConstants
@@ -59,7 +59,7 @@ internal class CyberArkEnrollmentManager(
 
     init {
         val appContext: AppCompatActivity = context as AppCompatActivity
-        viewModel = ViewModelProviders.of(
+        viewModel = ViewModelProvider(
             appContext,
             CyberArkViewModelFactory(CyberArkAuthHelper(CyberArkAuthBuilder.CYBER_ARK_AUTH_SERVICE))
         ).get(EnrollmentViewModel::class.java)

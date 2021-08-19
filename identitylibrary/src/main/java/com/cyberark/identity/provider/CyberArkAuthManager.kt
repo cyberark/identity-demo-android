@@ -21,7 +21,7 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.cyberark.identity.CyberArkAuthActivity
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
@@ -126,7 +126,7 @@ internal class CyberArkAuthManager(
 
     init {
         val appContext: AppCompatActivity = context as AppCompatActivity
-        viewModel = ViewModelProviders.of(
+        viewModel = ViewModelProvider(
                 appContext,
                 CyberArkViewModelFactory(CyberArkAuthHelper(CyberArkAuthBuilder.CYBER_ARK_AUTH_SERVICE))
         ).get(AuthenticationViewModel::class.java)

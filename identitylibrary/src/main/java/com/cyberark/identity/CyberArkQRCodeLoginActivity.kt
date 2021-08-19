@@ -24,7 +24,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.util.*
@@ -138,10 +138,15 @@ class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Permiss
      *
      */
     private fun setupViewModel() {
-        viewModel = ViewModelProviders.of(
+        viewModel = ViewModelProvider(
             this,
             CyberArkViewModelFactory(CyberArkAuthHelper(CyberArkAuthBuilder.CYBER_ARK_AUTH_SERVICE))
         ).get(ScanQRCodeViewModel::class.java)
+
+//        viewModel = ViewModelProviders.of(
+//            this,
+//            CyberArkViewModelFactory(CyberArkAuthHelper(CyberArkAuthBuilder.CYBER_ARK_AUTH_SERVICE))
+//        ).get(ScanQRCodeViewModel::class.java)
     }
 
     /**

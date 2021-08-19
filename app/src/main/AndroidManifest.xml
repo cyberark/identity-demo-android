@@ -15,7 +15,6 @@
   ~ limitations under the License.
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.cyberark.mfa">
 
     <application
@@ -28,16 +27,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IdentitySDK">
 
-        <activity android:name=".MFAActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".MFAActivity" />
 
         <activity
-            android:name="com.cyberark.identity.CyberArkQRCodeLoginActivity"
-            android:screenOrientation="portrait"
-            tools:replace="screenOrientation" />
-        <activity
-            android:name=".HomeActivity"
-            android:screenOrientation="portrait">
+            android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
