@@ -36,6 +36,7 @@ import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 /**
  * Implementing SDK feature in HomeActivity
  * 1. OAuth 2.0 PKCE driven login flow
+ *
  */
 class HomeActivity : AppCompatActivity() {
 
@@ -63,8 +64,9 @@ class HomeActivity : AppCompatActivity() {
             startAuthentication(account)
         }
 
-        // Verify if access token is present or not
+        // Initialize CyberArk Preference Util
         CyberArkPreferenceUtil.init(this)
+        // Verify if access token is present or not
         val accessToken = KeyStoreProvider.get().getAuthToken()
         if (accessToken != null) {
             //Start MFA activity if access token is available
@@ -75,9 +77,10 @@ class HomeActivity : AppCompatActivity() {
     }
 
     /**
-     * Set-up account for OAuth 2.0 PKCE driven flow in "res/values/config.xml"
+     * Set-up account for OAuth 2.0 PKCE driven flow
+     * update account configuration in "res/values/config.xml"
      *
-     * @return CyberArk Account Builder instance
+     * @return cyberArkAccountBuilder: CyberArkAccountBuilder instance
      */
     private fun setupAccount(): CyberArkAccountBuilder {
         val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
@@ -94,9 +97,10 @@ class HomeActivity : AppCompatActivity() {
     }
 
     /**
-     * Launch URL in browser, set-up view model and start authentication flow
+     * Launch URL in browser, set-up view model, start authentication flow
+     * and handle API response using active observer
      *
-     * @param cyberArkAccountBuilder instance
+     * @param cyberArkAccountBuilder: CyberArkAccountBuilder instance
      */
     private fun startAuthentication(cyberArkAccountBuilder: CyberArkAccountBuilder) {
         val authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>> =
