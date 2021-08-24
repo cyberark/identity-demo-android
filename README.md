@@ -18,5 +18,6 @@ Below are the sample application.
 
 <a id="license"></a>
 ## License
-Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
+**Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.**
+
 This project is licensed under Apache - see [`LICENSE`](LICENSE) for more details.
