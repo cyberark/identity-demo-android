@@ -74,7 +74,7 @@ internal class CyberArkAuthManager(
      *
      * @param refreshTokenData: refresh token string
      */
-    internal fun refreshToken(refreshTokenData: String) {
+    internal fun refreshToken(refreshTokenData: String?) {
         val params = HashMap<String?, String?>()
         params[CyberArkAccountBuilder.KEY_CLIENT_ID] = account.getClientId
         params[CyberArkAccountBuilder.KEY_GRANT_TYPE] = CyberArkAccountBuilder.KEY_REFRESH_TOKEN

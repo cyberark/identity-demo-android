@@ -197,9 +197,9 @@ class CyberArkAccountBuilder(
         if (url == null) {
             return null
         }
-        val url = url.lowercase(Locale.ROOT)
-        require(!url.startsWith("http://")) { "Invalid url: '$url'." }
-        val secureURL = if (url.startsWith("https://")) url else "https://$url"
+        val validateURl = url.lowercase(Locale.ROOT)
+        require(!validateURl.startsWith("http://")) { "Invalid url: '$url'." }
+        val secureURL = if (validateURl.startsWith("https://")) validateURl else "https://$validateURl"
         return secureURL.toHttpUrlOrNull()
     }
 

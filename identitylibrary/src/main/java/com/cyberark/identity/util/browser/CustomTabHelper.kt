@@ -104,7 +104,7 @@ class CustomTabHelper {
                 intent,
                 PackageManager.GET_RESOLVED_FILTER
             )
-            if (handlers == null || handlers.size == 0) {
+            if (handlers.size == 0) {
                 return false
             }
             for (resolveInfo in handlers) {

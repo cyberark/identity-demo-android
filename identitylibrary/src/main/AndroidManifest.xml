@@ -38,10 +38,6 @@
             tools:replace="screenOrientation" />
 
         <activity
-            android:name="com.cyberark.identity.SecurityPinActivity"
-            android:autoRemoveFromRecents="true" />
-
-        <activity
             android:name="com.cyberark.identity.CyberArkAuthActivity"
             android:autoRemoveFromRecents="true"
             android:exported="false"
