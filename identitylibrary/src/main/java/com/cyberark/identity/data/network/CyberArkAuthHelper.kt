@@ -23,52 +23,51 @@ import com.cyberark.identity.data.model.RefreshTokenModel
 import okhttp3.RequestBody
 
 /**
- * Cyberark auth helper
+ * CyberArk auth helper is the base class to expose all methods to ViewModel
  *
- * @property cyberArkAuthService
- * @constructor Create empty Cyberark auth helper
+ * @property cyberArkAuthService: CyberArkAuthService instance
  */
 class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
 
     /**
-     * Qr code login
+     * QR code authenticator
      *
-     * @param dapNativeClient
-     * @param bearerToken
-     * @param url
-     * @return
+     * @param idapNativeClient: X-IDAP-NATIVE-CLIENT
+     * @param bearerToken: Authorization Bearer Token
+     * @param url: QR Code login URL
+     * @return QRCodeLoginModel
      */
-    suspend fun qrCodeLogin(dapNativeClient: Boolean,
+    suspend fun qrCodeLogin(idapNativeClient: Boolean,
                             bearerToken: String,
-                            url: String): QRCodeLoginModel = cyberArkAuthService.qrCodeLogin(dapNativeClient, bearerToken, url)
+                            url: String): QRCodeLoginModel = cyberArkAuthService.qrCodeLogin(idapNativeClient, bearerToken, url)
 
     /**
      * Get access token
      *
-     * @param params
-     * @return
+     * @param params: request body
+     * @return AuthCodeFlowModel
      */
     suspend fun getAccessToken(params: HashMap<String?,
             String?>): AuthCodeFlowModel = cyberArkAuthService.getAccessToken(params)
 
     /**
-     * Refresh token
+     * Get refresh token
      *
-     * @param params
-     * @return
+     * @param params: request body
+     * @return RefreshTokenModel
      */
     suspend fun refreshToken(params: HashMap<String?,
             String?>): RefreshTokenModel = cyberArkAuthService.refreshToken(params)
 
     /**
-     * Fast enroll v3
+     * Enroll device
      *
-     * @param centrifyNativeClient
-     * @param idapNativeClient
-     * @param acceptLang
-     * @param bearerToken
-     * @param body
-     * @return
+     * @param centrifyNativeClient: centrify native client
+     * @param idapNativeClient: idap native client
+     * @param acceptLang: accepted language
+     * @param bearerToken: authorization bearer token
+     * @param body: request body
+     * @return EnrollmentModel
      */
     suspend fun fastEnrollV3(centrifyNativeClient: Boolean,
                              idapNativeClient: Boolean,

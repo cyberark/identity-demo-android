@@ -17,9 +17,8 @@
 package com.cyberark.identity.util.endpoint
 
 /**
- * Endpoint urls
+ * All Endpoint urls
  *
- * @constructor Create empty Endpoint urls
  */
 internal object EndpointUrls {
 

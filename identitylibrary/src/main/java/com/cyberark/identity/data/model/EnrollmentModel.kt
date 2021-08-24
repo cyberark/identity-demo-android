@@ -17,18 +17,18 @@
 package com.cyberark.identity.data.model
 
 /**
- * Enrollment model
+ * Enrollment model class
  *
- * @property success
- * @property Result
- * @property Message
- * @property MessageID
- * @property Exception
- * @property ErrorID
- * @property ErrorCode
- * @property IsSoftError
- * @property InnerExceptions
- * @constructor Create empty Enrollment model
+ * @property success: enrollment response, true/false
+ * @property Result: enrollment result class
+ * @property Message: message
+ * @property MessageID: message id
+ * @property Exception: enrollment exception
+ * @property ErrorID: error ID
+ * @property ErrorCode: error code
+ * @property IsSoftError: soft error, true/false
+ * @property InnerExceptions: inner exceptions
+ *
  */
 data class EnrollmentModel(
         val success: Boolean,

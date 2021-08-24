@@ -28,17 +28,18 @@ import javax.crypto.IllegalBlockSizeException
 import javax.crypto.NoSuchPaddingException
 
 /**
- * Key store manager impl
+ * Keystore manager implementation
+ * 1. save access token and refresh token in shared preference using Android keystore encryption
+ * 2. Get access token and refresh token from shared preference using Android keystore decryption
  *
- * @constructor Create empty Key store manager impl
  */
 private class KeyStoreManagerImpl : KeyStoreManager {
 
     /**
-     * Save auth token
+     * Save auth token in shared preference
      *
-     * @param authToken
-     * @return
+     * @param authToken: access token data
+     * @return Boolean: true if the access token is encrypted successfully, else false
      */
     override fun saveAuthToken(authToken: String): Boolean {
         val returnValues = encryptText(Constants.AUTH_ALIAS, authToken)
@@ -52,28 +53,10 @@ private class KeyStoreManagerImpl : KeyStoreManager {
     }
 
     /**
-     * Get auth token
+     * Save refresh token in shared preference
      *
-     * @return
-     */
-    override fun getAuthToken(): String? {
-        return getAuthTokenKeyStore()
-    }
-
-    /**
-     * Get refresh token
-     *
-     * @return
-     */
-    override fun getRefreshToken(): String? {
-        return getRefreshTokenKeyStore()
-    }
-
-    /**
-     * Save refresh token
-     *
-     * @param refreshToken
-     * @return
+     * @param refreshToken: refresh token data
+     * @return Boolean: true if the refresh token is encrypted successfully, else false
      */
     override fun saveRefreshToken(refreshToken: String): Boolean {
         val returnValues = encryptText(Constants.REFRESH_ALIAS, refreshToken)
@@ -86,9 +69,9 @@ private class KeyStoreManagerImpl : KeyStoreManager {
     }
 
     /**
-     * Get auth token key store
+     * Get auth token from Android keystore
      *
-     * @return
+     * @return String: decrypted auth token
      */
     private fun getAuthTokenKeyStore(): String? {
         var decryptedToken: String? = null
@@ -101,9 +84,9 @@ private class KeyStoreManagerImpl : KeyStoreManager {
     }
 
     /**
-     * Get refresh token key store
+     * Get refresh token from Android keystore
      *
-     * @return
+     * @return String: decrypted refresh token
      */
     private fun getRefreshTokenKeyStore(): String? {
         var decryptedToken: String? = null
@@ -116,16 +99,33 @@ private class KeyStoreManagerImpl : KeyStoreManager {
     }
 
     /**
-     * Encrypt text
+     * Get auth token from Android keystore
      *
-     * @param alias
-     * @param toEncrpt
-     * @return
+     * @return String: decrypted auth token
+     */
+    override fun getAuthToken(): String? {
+        return getAuthTokenKeyStore()
+    }
+
+    /**
+     * Get refresh token from Android keystore
+     *
+     * @return String: decrypted refresh token
+     */
+    override fun getRefreshToken(): String? {
+        return getRefreshTokenKeyStore()
+    }
+
+    /**
+     * Encrypt data
+     *
+     * @param alias: alias string
+     * @param toEncrpt: data need to be encrypted
+     * @return Pair<ByteArray, ByteArray>
      */
     private fun encryptText(alias: String, toEncrpt: String): Pair<ByteArray, ByteArray>? {
         try {
-            val returnValues = EnCryptor().encryptText(alias, toEncrpt)
-            return returnValues
+            return EnCryptor().encryptText(alias, toEncrpt)
         } catch (e: UnrecoverableEntryException) {
             e.printStackTrace()
         } catch (e: NoSuchAlgorithmException) {
@@ -151,18 +151,16 @@ private class KeyStoreManagerImpl : KeyStoreManager {
     }
 
     /**
-     * Decrypt text
+     * Decrypt data
      *
-     * @param alias
-     * @param toDerypt
-     * @param ivKey
-     * @return
+     * @param alias: alias string
+     * @param toDerypt: data need to be decrypted
+     * @param ivKey: iv key
+     * @return String
      */
     private fun decryptText(alias: String, toDerypt: ByteArray, ivKey: ByteArray): String? {
         try {
-
             return DeCryptor().decryptData(alias, toDerypt, ivKey)
-
         } catch (e: UnrecoverableEntryException) {
             e.printStackTrace()
         } catch (e: NoSuchAlgorithmException) {
@@ -186,13 +184,11 @@ private class KeyStoreManagerImpl : KeyStoreManager {
         }
         return null
     }
-
 }
 
 /**
- * Key store provider
+ * Keystore provider singleton class
  *
- * @constructor Create empty Key store provider
  */
 object KeyStoreProvider {
     private var keyStoreManager: KeyStoreManager? = null
@@ -205,5 +201,4 @@ object KeyStoreProvider {
             return keyStoreManager!!
         }
     }
-
 }

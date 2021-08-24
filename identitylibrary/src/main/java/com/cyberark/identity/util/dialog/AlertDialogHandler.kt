@@ -21,23 +21,21 @@ import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 
 /**
- * Alert dialog button callback
+ * Alert dialog button callback interface
  *
- * @constructor Create empty Alert dialog button callback
  */
 interface AlertDialogButtonCallback {
     /**
-     * Tapped buttonwith type
+     * Tapped button type
      *
-     * @param buttonType
+     * @param buttonType: Alert Button Type
      */
-    fun tappedButtonwithType(buttonType: AlertButtonType)
+    fun tappedButtonType(buttonType: AlertButtonType)
 }
 
 /**
- * Alert button type
+ * Alert button type enums
  *
- * @constructor Create empty Alert button type
  */
 enum class AlertButtonType {
     POSITIVE,
@@ -46,12 +44,10 @@ enum class AlertButtonType {
 }
 
 /**
- * Alert button
+ * Alert button class
  *
- * @constructor
- *
- * @param title
- * @param buttonType
+ * @param title: button title
+ * @param buttonType: button type
  */
 class AlertButton(title:String, buttonType:AlertButtonType) {
     var buttonTitle = title; private set
@@ -61,22 +57,21 @@ class AlertButton(title:String, buttonType:AlertButtonType) {
 /**
  * Alert dialog handler
  *
- * @property callback
- * @constructor Create empty Alert dialog handler
+ * @property callback: AlertDialogButtonCallback
  */
 class AlertDialogHandler(private val callback: AlertDialogButtonCallback):DialogInterface.OnClickListener {
     private lateinit var alertDialog:AlertDialog
     private var cancellable:Boolean = true
 
     /**
-     * Display alert
+     * Display alert popup
      *
-     * @param activity
-     * @param title
-     * @param message
-     * @param cancellable
-     * @param pButtons
-     * @return
+     * @param activity: Activity instance
+     * @param title: button title
+     * @param message: button message
+     * @param cancellable: true/false
+     * @param pButtons: alert button list
+     * @return AlertDialog
      */
     fun displayAlert(activity:Activity, title:String, message:String, cancellable:Boolean, pButtons:List<AlertButton> ): AlertDialog {
         val alerBuilder = AlertDialog.Builder(activity)
@@ -91,49 +86,16 @@ class AlertDialogHandler(private val callback: AlertDialogButtonCallback):Dialog
                 AlertButtonType.NEUTRAL -> alerBuilder.setNeutralButton(pButton.buttonTitle,this)
             }
         }
-//        AlertButton("OK",true)
-//        for (nButton in nButtons) {
-//            if ()
-//            alerBuilder.setPositiveButton(nButton, this)
-//        }
         alertDialog = alerBuilder.create()
         alertDialog.show()
         return alertDialog
     }
 
     /**
-     * Dismiss alert
+     * Button On click actions
      *
-     */
-    fun dismissAlert() {
-        if (this.cancellable) {
-            alertDialog.dismiss()
-        }
-    }
-
-    /**
-     * Dismiss
-     *
-     */
-    fun dismiss() {
-        if (this.cancellable) {
-            alertDialog.dismiss()
-        }
-    }
-
-    /**
-     * Dismiss forcefully
-     *
-     */
-    fun dismissForcefully() {
-        alertDialog.dismiss()
-    }
-
-    /**
-     * On click
-     *
-     * @param dialog
-     * @param which
+     * @param dialog: DialogInterface
+     * @param which: Int
      */
     override fun onClick(dialog: DialogInterface?, which: Int) {
         print("Dialog button selected")
@@ -144,8 +106,7 @@ class AlertDialogHandler(private val callback: AlertDialogButtonCallback):Dialog
             AlertDialog.BUTTON_NEGATIVE->
                 buttonType = AlertButtonType.NEGATIVE
         }
-        callback.tappedButtonwithType(buttonType)
+        callback.tappedButtonType(buttonType)
     }
-
 }
 

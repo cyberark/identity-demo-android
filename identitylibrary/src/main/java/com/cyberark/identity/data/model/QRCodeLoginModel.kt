@@ -20,9 +20,9 @@ import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
 /**
- * Q r code login model
+ * QR code login model class
+ * handle QR authenticator response
  *
- * @constructor Create empty Q r code login model
  */
 @Keep
 class QRCodeLoginModel {
@@ -56,9 +56,8 @@ class QRCodeLoginModel {
     var plainResult: String? = null
 
     /**
-     * Result
+     * Result class
      *
-     * @constructor Create empty Result
      */
     inner class Result {
         @SerializedName("AuthLevel")

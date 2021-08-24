@@ -24,14 +24,13 @@ import com.cyberark.identity.viewmodel.EnrollmentViewModel
 import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
 
 /**
- * Cyberark view model factory
+ * CyberArk view model factory
  *
- * @property cyberArkAuthHelper
- * @constructor Create empty Cyberark view model factory
+ * @property cyberArkAuthHelper: CyberArkAuthHelper instance
  */
 @Suppress("UNCHECKED_CAST")
 class CyberArkViewModelFactory(private val cyberArkAuthHelper: CyberArkAuthHelper) :
-        ViewModelProvider.Factory {
+    ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AuthenticationViewModel::class.java)) {
@@ -43,6 +42,5 @@ class CyberArkViewModelFactory(private val cyberArkAuthHelper: CyberArkAuthHelpe
         }
         throw IllegalArgumentException("Unknown class name")
     }
-
 }
 

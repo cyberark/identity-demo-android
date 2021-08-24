@@ -17,16 +17,15 @@
 package com.cyberark.identity.util.biometric
 
 /**
- * Biometric manager
+ * CyberArk Biometric manager
  *
- * @constructor Create empty Biometric manager
  */
 class CyberArkBiometricManager {
     /**
      * Get biometric utility
      *
-     * @param callbackCyberArk
-     * @return
+     * @param callbackCyberArk: CyberArkBiometricCallback Interface
+     * @return CyberArkBiometricPromptUtilityImpl instance
      */
     fun getBiometricUtility(callbackCyberArk: CyberArkBiometricCallback):CyberArkBiometricPromptUtility {
         return CyberArkBiometricPromptUtilityImpl(callbackCyberArk)

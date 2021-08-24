@@ -19,17 +19,16 @@ package com.cyberark.identity.provider
 import android.content.Intent
 
 /**
- * Cyberark auth interface
+ * CyberArk auth interface is used to update result for access token
  *
- * @constructor Create empty Cyberark auth interface
  */
 internal interface CyberArkAuthInterface {
 
     /**
-     * Update result
+     * Update result for access token
      *
-     * @param intent
-     * @return
+     * @param intent: Intent object
+     * @return Boolean
      */
-    fun updateResult(intent: Intent?): Boolean
+    fun updateResultForAccessToken(intent: Intent?): Boolean
 }

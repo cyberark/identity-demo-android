@@ -19,17 +19,21 @@ package com.cyberark.identity.data.network
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * CyberArk auth builder is the base class for API call
+ *
+ */
 object CyberArkAuthBuilder {
 
     /**
-     * Base URL
+     * Default Base URL
      */
     private const val BASE_URL = "https://aaj7617.my.dev.idaptive.app/"
 
     /**
-     * Get retrofit
+     * Get retrofit builder instance for base URL
      *
-     * @return
+     * @return retrofit builder instance
      */
     private fun getRetrofit(): Retrofit {
         return Retrofit.Builder()
@@ -39,7 +43,7 @@ object CyberArkAuthBuilder {
     }
 
     /**
-     * Cyberark auth service
+     * CyberArk auth service instance
      */
     val CYBER_ARK_AUTH_SERVICE: CyberArkAuthService = getRetrofit().create(CyberArkAuthService::class.java)
 

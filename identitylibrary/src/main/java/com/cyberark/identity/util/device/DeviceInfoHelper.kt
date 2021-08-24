@@ -24,14 +24,13 @@ import android.provider.Settings
 /**
  * Device info helper
  *
- * @constructor Create empty Device info helper
  */
 class DeviceInfoHelper {
 
     /**
      * Get device name
      *
-     * @return
+     * @return: model number
      */
     fun getDeviceName(): String {
         return Build.MODEL
@@ -40,7 +39,7 @@ class DeviceInfoHelper {
     /**
      * Get device version
      *
-     * @return
+     * @return: release version
      */
     fun getDeviceVersion(): String {
         return Build.VERSION.RELEASE
@@ -49,17 +48,17 @@ class DeviceInfoHelper {
     /**
      * Get manufacture
      *
-     * @return
+     * @return: manufacture name
      */
     fun getManufacture(): String {
         return Build.MANUFACTURER
     }
 
     /**
-     * Get udid
+     * Get UDID
      *
-     * @param context
-     * @return
+     * @param context: Activity context
+     * @return Android ID
      */
     @SuppressLint("HardwareIds")
     fun getUDID(context: Context): String {

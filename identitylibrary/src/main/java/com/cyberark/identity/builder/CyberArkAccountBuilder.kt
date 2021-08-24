@@ -16,23 +16,21 @@
 
 package com.cyberark.identity.builder
 
-import android.util.Log
 import com.cyberark.identity.util.pkce.PKCEHelper
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.util.*
 
 /**
- * Cyberark account builder
+ * CyberArk account builder
  *
- * @property domainURL
- * @property clientId
- * @property appId
- * @property responseType
- * @property state
- * @property scope
- * @property redirectUri
- * @constructor Create empty Cyberark account builder
+ * @property domainURL: domain URL
+ * @property clientId: client ID
+ * @property appId: application ID
+ * @property responseType: response Type
+ * @property state: application state
+ * @property scope: application access scope
+ * @property redirectUri: client callback URI
  */
 class CyberArkAccountBuilder(
         val domainURL: String?,
@@ -47,93 +45,6 @@ class CyberArkAccountBuilder(
     private val baseURL: HttpUrl?
     private var codeVerifier: String? = null
     private var codeChallenge: String? = null
-    private val tag: String? = CyberArkAccountBuilder::class.simpleName
-
-    /**
-     * Builder
-     *
-     * @property domainURL
-     * @property clientId
-     * @property appId
-     * @property responseType
-     * @property state
-     * @property scope
-     * @property redirectUri
-     * @constructor Create empty Builder
-     */
-    data class Builder(
-            var domainURL: String? = null,
-            var clientId: String? = null,
-            var appId: String? = null,
-            var responseType: String? = null,
-            var state: String? = null,
-            var scope: String? = null,
-            var redirectUri: String? = null
-    ) {
-
-        /**
-         * Domain u r l
-         *
-         * @param domainURL
-         */
-        fun domainURL(domainURL: String) = apply { this.domainURL = domainURL }
-
-        /**
-         * Client id
-         *
-         * @param clientId
-         */
-        fun clientId(clientId: String) = apply { this.clientId = clientId }
-
-        /**
-         * App id
-         *
-         * @param appId
-         */
-        fun appId(appId: String) = apply { this.appId = appId }
-
-        /**
-         * Response type
-         *
-         * @param responseType
-         */
-        fun responseType(responseType: String) = apply { this.responseType = responseType }
-
-        /**
-         * State
-         *
-         * @param state
-         */
-        fun state(state: String) = apply { this.state = state }
-
-        /**
-         * Scope
-         *
-         * @param scope
-         */
-        fun scope(scope: String) = apply { this.scope = scope }
-
-        /**
-         * Redirect uri
-         *
-         * @param redirectUri
-         */
-        fun redirectUri(redirectUri: String) = apply { this.redirectUri = redirectUri }
-
-        /**
-         * Build
-         *
-         */
-        fun build() = CyberArkAccountBuilder(
-                domainURL,
-                clientId,
-                appId,
-                responseType,
-                state,
-                scope,
-                redirectUri
-        )
-    }
 
     companion object {
         const val KEY_RESPONSE_TYPE = "response_type"
@@ -151,6 +62,94 @@ class CyberArkAccountBuilder(
         const val AUTHORIZATION_CODE_VALUE = "authorization_code"
     }
 
+    /**
+     * Builder data class
+     *
+     * @property domainURL: domain URL
+     * @property clientId: client ID
+     * @property appId: application ID
+     * @property responseType: response Type
+     * @property state: application state
+     * @property scope: application scope
+     * @property redirectUri: client callback URI
+     */
+    data class Builder(
+            var domainURL: String? = null,
+            var clientId: String? = null,
+            var appId: String? = null,
+            var responseType: String? = null,
+            var state: String? = null,
+            var scope: String? = null,
+            var redirectUri: String? = null
+    ) {
+
+        /**
+         * Set Domain URL
+         *
+         * @param domainURL
+         */
+        fun domainURL(domainURL: String) = apply { this.domainURL = domainURL }
+
+        /**
+         * Set Client ID
+         *
+         * @param clientId
+         */
+        fun clientId(clientId: String) = apply { this.clientId = clientId }
+
+        /**
+         * Set Application ID
+         *
+         * @param appId
+         */
+        fun appId(appId: String) = apply { this.appId = appId }
+
+        /**
+         * Set Response Type
+         *
+         * @param responseType
+         */
+        fun responseType(responseType: String) = apply { this.responseType = responseType }
+
+        /**
+         * Set Application State
+         *
+         * @param state
+         */
+        fun state(state: String) = apply { this.state = state }
+
+        /**
+         * Set Application Scope
+         *
+         * @param scope
+         */
+        fun scope(scope: String) = apply { this.scope = scope }
+
+        /**
+         * Set Redirect URI
+         *
+         * @param redirectUri
+         */
+        fun redirectUri(redirectUri: String) = apply { this.redirectUri = redirectUri }
+
+        /**
+         * Create CyberArk Account Builder
+         *
+         */
+        fun build() = CyberArkAccountBuilder(
+                domainURL,
+                clientId,
+                appId,
+                responseType,
+                state,
+                scope,
+                redirectUri
+        )
+    }
+
+    /**
+     * Get OAuth base URL
+     */
     val OAuthBaseURL: String
         get() = baseURL!!.newBuilder()
                 .addPathSegment("oauth2")
@@ -165,6 +164,9 @@ class CyberArkAccountBuilder(
                 .build()
                 .toString()
 
+    /**
+     * Get OAuth end session URL
+     */
     val OAuthEndSessionURL: String
         get() = baseURL!!.newBuilder()
                 .addPathSegment("oauth2")
@@ -173,42 +175,58 @@ class CyberArkAccountBuilder(
                 .build()
                 .toString()
 
+    /**
+     * Get application callback URL
+     */
     val getRedirectURL: String
         get() = redirectUri.toString()
 
+    /**
+     * Get client ID
+     */
     val getClientId: String
         get() = clientId.toString()
 
+    /**
+     * Check valid and secure url
+     *
+     * @param url: authorize URL
+     * @return HttpUrl
+     */
     private fun checkValidUrl(url: String?): HttpUrl? {
         if (url == null) {
             return null
         }
-        val normalizedUrl = url.toLowerCase(Locale.ROOT)
-        require(!normalizedUrl.startsWith("http://")) { "Invalid domain url: '$url'." }
-        val safeUrl =
-                if (normalizedUrl.startsWith("https://")) normalizedUrl else "https://$normalizedUrl"
-        return safeUrl.toHttpUrlOrNull()
+        val url = url.lowercase(Locale.ROOT)
+        require(!url.startsWith("http://")) { "Invalid url: '$url'." }
+        val secureURL = if (url.startsWith("https://")) url else "https://$url"
+        return secureURL.toHttpUrlOrNull()
     }
 
     init {
+        // Validate base URL
         baseURL = checkValidUrl(domainURL)
-        requireNotNull(baseURL) { String.format("Invalid domain url: '%s'", domainURL) }
+        requireNotNull(baseURL) { String.format("Invalid url: '%s'", domainURL) }
 
+        // Get PKCE helper instance and generate code verifier and code challenge
         val pkceHelper = PKCEHelper()
         val codeVerifier: String = pkceHelper.generateCodeVerifier()
         val codeChallenge: String = pkceHelper.generateCodeChallenge(codeVerifier)
 
-        //TODO.. for testing only added this log and should be removed later
-        Log.i(tag, "codeVerifier :: " + codeVerifier)
-        Log.i(tag, "codeChallenge :: " + codeChallenge)
-
+        // Assign to variables
         codeVerifier.also { this.codeVerifier = it }
         codeChallenge.also { this.codeChallenge = it }
     }
 
+    /**
+     * Get code challenge
+     */
     private val getCodeChallenge: String
         get() = codeChallenge.toString()
 
+    /**
+     * Get code verifier
+     */
     val getCodeVerifier: String
         get() = codeVerifier.toString()
 }

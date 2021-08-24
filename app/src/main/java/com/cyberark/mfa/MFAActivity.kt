@@ -533,7 +533,7 @@ class MFAActivity : AppCompatActivity() {
     private fun showBiometricsEnrollmentAlert() {
 
         val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
-            override fun tappedButtonwithType(buttonType: AlertButtonType) {
+            override fun tappedButtonType(buttonType: AlertButtonType) {
                 if (buttonType == AlertButtonType.NEGATIVE) {
                     // User cancels dialog
                 } else if (buttonType == AlertButtonType.POSITIVE) {
@@ -559,7 +559,7 @@ class MFAActivity : AppCompatActivity() {
     private fun showAccessTokenExpireAlert() {
 
         val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
-            override fun tappedButtonwithType(buttonType: AlertButtonType) {
+            override fun tappedButtonType(buttonType: AlertButtonType) {
                 if (buttonType == AlertButtonType.NEGATIVE) {
                     // User cancels dialog
                 } else if (buttonType == AlertButtonType.POSITIVE) {
@@ -585,7 +585,7 @@ class MFAActivity : AppCompatActivity() {
     private fun showRefreshTokenExpireAlert() {
 
         val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
-            override fun tappedButtonwithType(buttonType: AlertButtonType) {
+            override fun tappedButtonType(buttonType: AlertButtonType) {
                 if (buttonType == AlertButtonType.NEGATIVE) {
                     // User cancels dialog
                 } else if (buttonType == AlertButtonType.POSITIVE) {

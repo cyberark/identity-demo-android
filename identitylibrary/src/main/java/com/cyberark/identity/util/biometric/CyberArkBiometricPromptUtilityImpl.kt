@@ -16,9 +16,6 @@
 
 package com.cyberark.identity.util.biometric
 
-import android.app.Activity
-import android.content.Intent
-import android.provider.Settings
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
@@ -28,41 +25,40 @@ import com.cyberark.identity.R
 import com.cyberark.identity.util.AlertDialogHandler
 
 /**
- * Biometric prompt utility impl
+ * CyberArk Biometric prompt utility implementation
  *
- * @property callbackCyberArk
- * @constructor Create empty Biometric prompt utility impl
+ * @property callbackCyberArk: CyberArkBiometricCallback Interface
  */
 internal class CyberArkBiometricPromptUtilityImpl(private val callbackCyberArk: CyberArkBiometricCallback) :
-        CyberArkBiometricPromptUtility {
-    private val TAG = "BiometricPromptUtility"
+    CyberArkBiometricPromptUtility {
+
+    private val tag = "BiometricPromptUtility"
     private var mMaxRetries = 3
     private var mFailedTries = 0
 
     private var isAutoCancelElabled = true
     private var mPrompt: BiometricPrompt? = null
     private var negitiveButtonText: String? = null
-    private val securityPin = "1234"
+
     private lateinit var enrollFingerPrintDlg: AlertDialogHandler
     private var useDevicePin: Boolean = false
 
     /**
-     * Create bio authetication
+     * Create biometrics authentication
      *
-     * @param activity
-     * @return
+     * @param activity: Activity instance
+     * @return BiometricPrompt
      */
-    private fun createBioAuthetication(
-            activity: AppCompatActivity
+    private fun createBioAuthentication(
+        activity: AppCompatActivity
     ): BiometricPrompt {
         val executor = ContextCompat.getMainExecutor(activity)
         mPrompt = getBioMetricPrompt(activity, executor, getBioMetricCallback())
-//        mPrompt = BiometricPrompt(activity, executor, getBioMetricCallback())
         return mPrompt!!
     }
 
     /**
-     * Get bio metric callback
+     * Get biometrics callback
      *
      */
     private fun getBioMetricCallback() = object : BiometricPrompt.AuthenticationCallback() {
@@ -76,7 +72,7 @@ internal class CyberArkBiometricPromptUtilityImpl(private val callbackCyberArk: 
                 this@CyberArkBiometricPromptUtilityImpl.callbackCyberArk.showErrorMessage(errString.toString())
             }
             mPrompt = null
-            Log.d(TAG, "errCode is $errCode and errString is: $errString")
+            Log.d(tag, "errCode is $errCode and errString is: $errString")
         }
 
         override fun onAuthenticationFailed() {
@@ -89,40 +85,48 @@ internal class CyberArkBiometricPromptUtilityImpl(private val callbackCyberArk: 
                     mFailedTries = 0
                     mPrompt?.cancelAuthentication()
                     this@CyberArkBiometricPromptUtilityImpl.callbackCyberArk.isAuthenticationSuccess(
-                            false
+                        false
                     )
                 }
             }
             mPrompt = null
-            Log.d(TAG, "User biometric rejected.")
+            Log.d(tag, "User biometric rejected.")
         }
 
         override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
             super.onAuthenticationSucceeded(result)
-            Log.d(TAG, "Authentication was successful")
+            Log.d(tag, "Authentication was successful")
             decryptServerTokenFromStorage(result)
             mPrompt = null
         }
     }
 
     /**
-     * Get bio metric prompt
+     * Get biometrics prompt
      *
-     * @param activity
-     * @param executor
-     * @param callback
+     * @param activity: Activity instance
+     * @param executor: Executor instance
+     * @param callback: BiometricPrompt.AuthenticationCallback instance
      */
     private fun getBioMetricPrompt(
-            activity: AppCompatActivity,
-            executor: java.util.concurrent.Executor,
-            callback: BiometricPrompt.AuthenticationCallback
+        activity: AppCompatActivity,
+        executor: java.util.concurrent.Executor,
+        callback: BiometricPrompt.AuthenticationCallback
     ) = BiometricPrompt(activity, executor, callback)
 
+    /**
+     * Show biometrics authentication
+     *
+     * @param activity: Activity instance
+     * @param retries: no of attempts
+     * @param negitiveButtonText: negative button text
+     * @param useDevicePin: use device pin flag, true/false
+     */
     override fun showBioAuthentication(
-            activity: AppCompatActivity,
-            retries: Int?,
-            negitiveButtonText: String?,
-            useDevicePin: Boolean
+        activity: AppCompatActivity,
+        retries: Int?,
+        negitiveButtonText: String?,
+        useDevicePin: Boolean
     ) {
         if (mPrompt != null) {
             return
@@ -137,33 +141,34 @@ internal class CyberArkBiometricPromptUtilityImpl(private val callbackCyberArk: 
     }
 
     /**
-     * Show biometric prompt
+     * Show biometrics prompt
      *
-     * @param activity
+     * @param activity: Activity instance
      */
     private fun showBiometricPrompt(activity: AppCompatActivity) {
         if (mPrompt != null) {
             return
         }
         val promptInfo = this.createPromptInfo(activity)
-        this.createBioAuthetication(activity)
-                .authenticate(promptInfo)
+        this.createBioAuthentication(activity)
+            .authenticate(promptInfo)
     }
 
     /**
-     * Decrypt server token from storage
+     * Decrypt server token from device storage
      *
-     * @param authResult
+     * @param authResult: BiometricPrompt.AuthenticationResult instance
      */
     private fun decryptServerTokenFromStorage(authResult: BiometricPrompt.AuthenticationResult) {
-        Log.v(TAG, "auth result :: $authResult")
+        Log.v(tag, "auth result :: $authResult")
         this@CyberArkBiometricPromptUtilityImpl.callbackCyberArk.isAuthenticationSuccess(true)
     }
 
     /**
-     * Check and authenticate
+     * Check and authenticate biometrics selection
+     * if not success, then handle error scenarios
      *
-     * @param activity
+     * @param activity: Activity instance
      */
     private fun checkAndAuthenticate(activity: AppCompatActivity) {
         val biometricManager = getBioMetric(activity)
@@ -180,9 +185,6 @@ internal class CyberArkBiometricPromptUtilityImpl(private val callbackCyberArk: 
             }
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
                 this.callbackCyberArk.isBiometricEnrolled(false)
-//                    if (activity != null) {
-//                        showFingerEnrollmentAlert(activity!!)
-//                    }
             }
             BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> {
                 this.callbackCyberArk.isHardwareSupported(false)
@@ -197,50 +199,19 @@ internal class CyberArkBiometricPromptUtilityImpl(private val callbackCyberArk: 
     }
 
     /**
-     * Get bio metric
+     * Invoke biometrics
      *
-     * @param activity
-     * @return
+     * @param activity: Activity instance
+     * @return BiometricManager
      */
     private fun getBioMetric(activity: AppCompatActivity): BiometricManager =
-            BiometricManager.from(activity)
+        BiometricManager.from(activity)
 
-//    override fun showFingerEnrollmentAlert(activity: Activity,callback: AlertDialogButtonCallback) {
-//        enrollFingerPrintDlg = AlertDialogHandler(callback)
-////        enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
-////            override fun tappedButtonwithType(buttonType: AlertButtonType) {
-////                launchBiometricSetup(activity)
-////            }
-////        })
-//        enrollFingerPrintDlg.displayAlert(
-//            activity,
-//            activity.getString(R.string.cyberArkTitle),
-//            activity.getString(R.string.biometricDescription), false,
-//            mutableListOf<AlertButton>(AlertButton("OK", AlertButtonType.POSITIVE))
-//        )
-//    }
 
     /**
-     * Dismiss finger print enroll
+     * Get device security type
      *
-     */
-    fun dismissFingerPrintEnroll() {
-        if (::enrollFingerPrintDlg.isInitialized) enrollFingerPrintDlg.dismissForcefully()
-    }
-
-    /**
-     * Launch biometric setup
-     *
-     * @param activity
-     */
-    private fun launchBiometricSetup(activity: Activity?) {
-        activity?.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
-    }
-
-    /**
-     * Get security type
-     *
-     * @return
+     * @return Int
      */
     private fun getSecurityType(): Int {
         if (useDevicePin) {
@@ -250,22 +221,21 @@ internal class CyberArkBiometricPromptUtilityImpl(private val callbackCyberArk: 
     }
 
     /**
-     * Create prompt info
+     * Create biometrics prompt info
      *
-     * @param activity
-     * @return
+     * @param activity: Activity instance
+     * @return BiometricPrompt.PromptInfo instance
      */
     private fun createPromptInfo(activity: AppCompatActivity): BiometricPrompt.PromptInfo =
-            BiometricPrompt.PromptInfo.Builder().apply {
-                setTitle(activity.getString(R.string.dialog_biometric_prompt_title))
-//            setSubtitle(activity.getString(R.string.biometricpromptTitle))
-                setDescription(activity.getString(R.string.dialog_biometric_prompt_desc))
-                setConfirmationRequired(false)
+        BiometricPrompt.PromptInfo.Builder().apply {
+            setTitle(activity.getString(R.string.dialog_biometric_prompt_title))
+            setDescription(activity.getString(R.string.dialog_biometric_prompt_desc))
+            setConfirmationRequired(false)
+            setAllowedAuthenticators(getSecurityType())
+            if (useDevicePin == false) {
                 setAllowedAuthenticators(getSecurityType())
-                if (useDevicePin == false) {
-                    setAllowedAuthenticators(getSecurityType())
-                    setNegativeButtonText(negitiveButtonText!!)
-                    negitiveButtonText = null
-                }
-            }.build()
+                setNegativeButtonText(negitiveButtonText!!)
+                negitiveButtonText = null
+            }
+        }.build()
 }

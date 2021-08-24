@@ -29,61 +29,50 @@ import kotlinx.coroutines.launch
 
 /**
  * Authentication view model
+ * 1. handle authorization code exchange for access token
+ * 2. Get new access token using refresh token
  *
- * @property cyberArkAuthHelper
- * @constructor Create empty Authentication view model
+ * @property cyberArkAuthHelper: CyberArkAuthHelper instance
  */
 internal class AuthenticationViewModel(private val cyberArkAuthHelper: CyberArkAuthHelper) : ViewModel() {
 
-    private val TAG: String? = AuthenticationViewModel::class.simpleName
+    private val tag: String? = AuthenticationViewModel::class.simpleName
     private val authResponse = MutableLiveData<ResponseHandler<AuthCodeFlowModel>>()
     private val refreshTokenResponse = MutableLiveData<ResponseHandler<RefreshTokenModel>>()
 
     init {
-        Log.i(TAG, "initialize AuthenticationViewModel")
+        Log.i(tag, "initialize AuthenticationViewModel")
     }
 
     /**
-     * Handle authorization code
+     * Handle authorization code exchange for access token
      *
-     * @param params
+     * @param params: HashMap<String?, String?>, request body
      */
     internal fun handleAuthorizationCode(params: HashMap<String?, String?>) {
         viewModelScope.launch {
             authResponse.postValue(ResponseHandler.loading(null))
             try {
                 val accessTokenCreds = cyberArkAuthHelper.getAccessToken(params)
-                //TODO.. for testing only added this log and should be removed later
-                Log.i(TAG, "accessCredentials :: " + accessTokenCreds.toString())
-                //Save Access token we recieved if it is success
-//                KeyStoreProvider.get().saveAuthToken(accessTokenCreds.access_token)
-//                KeyStoreProvider.get().saveRefreshToken(accessTokenCreds.refresh_token)
-
                 authResponse.postValue(ResponseHandler.success(accessTokenCreds))
             } catch (e: Exception) {
-                //TODO.. for testing only added this log and should be removed later
-                Log.i(TAG, "Exception :: " + e.toString())
                 authResponse.postValue(ResponseHandler.error(e.toString(), null))
             }
         }
     }
 
     /**
-     * Handle refresh token
+     * Handle refresh token API call to get new access token
      *
-     * @param params
+     * @param params: HashMap<String?, String?>, request body
      */
     internal fun handleRefreshToken(params: HashMap<String?, String?>) {
         viewModelScope.launch {
             refreshTokenResponse.postValue(ResponseHandler.loading(null))
             try {
                 val refreshTokenCreds = cyberArkAuthHelper.refreshToken(params)
-                //TODO.. for testing only added this log and should be removed later
-                Log.i(TAG, "refreshTokenCreds :: " + refreshTokenCreds.toString())
                 refreshTokenResponse.postValue(ResponseHandler.success(refreshTokenCreds))
             } catch (e: Exception) {
-                //TODO.. for testing only added this log and should be removed later
-                Log.i(TAG, "Exception :: " + e.toString())
                 refreshTokenResponse.postValue(ResponseHandler.error(e.toString(), null))
             }
         }
@@ -92,7 +81,7 @@ internal class AuthenticationViewModel(private val cyberArkAuthHelper: CyberArkA
     /**
      * Get access token
      *
-     * @return
+     * @return LiveData<ResponseHandler<AuthCodeFlowModel>>: LiveData ResponseHandler for AuthCodeFlowModel
      */
     internal fun getAccessToken(): LiveData<ResponseHandler<AuthCodeFlowModel>> {
         return authResponse
@@ -101,7 +90,7 @@ internal class AuthenticationViewModel(private val cyberArkAuthHelper: CyberArkA
     /**
      * Get refresh token
      *
-     * @return
+     * @return LiveData<ResponseHandler<RefreshTokenModel>>: LiveData ResponseHandler for RefreshTokenModel
      */
     internal fun getRefreshToken(): LiveData<ResponseHandler<RefreshTokenModel>> {
         return refreshTokenResponse

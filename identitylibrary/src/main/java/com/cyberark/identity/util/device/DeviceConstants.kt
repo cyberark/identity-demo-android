@@ -17,9 +17,8 @@
 package com.cyberark.identity.util.device
 
 /**
- * Device constants
+ * Device Key constants
  *
- * @constructor Create empty Device constants
  */
 internal object DeviceConstants {
     const val KEY_DEVICE_NAME = "name"

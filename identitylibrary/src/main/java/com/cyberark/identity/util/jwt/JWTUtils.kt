@@ -16,44 +16,41 @@
 
 package com.cyberark.identity.util.jwt
 
+import android.os.Build
 import android.util.Base64
 import android.util.Log
+import androidx.annotation.RequiresApi
 import org.json.JSONObject
 import java.io.UnsupportedEncodingException
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
 
 /**
- * JWT decoder utils
+ * JWT decoder util is used to validate access token
  *
- * @constructor Create empty JWT utils
  */
 object JWTUtils {
     private val tag: String? = JWTUtils::class.simpleName
+
+    /**
+     * Is access token expired
+     *
+     * @param JWTEncoded: access token data
+     * @return Boolean
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
     fun isAccessTokenExpired(JWTEncoded: String): Boolean {
         var result: Boolean
         try {
             val split = JWTEncoded.split(".").toTypedArray()
-            Log.d(tag, "JWT_DECODED Header: " + getJson(split[0]))
-            Log.d(tag, "JWT_DECODED Body: " + getJson(split[1]))
-
             val jsonBody = JSONObject(getJson(split[1]))
             val exp: Long = jsonBody.getLong("exp")
-            Log.d(tag, "JWT_DECODED exp: $exp")
-
-            val ldt: LocalDateTime = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                Instant.ofEpochMilli(exp * 1000L)
-                        .atZone(ZoneId.systemDefault()).toLocalDateTime()
-            } else {
-                TODO("VERSION.SDK_INT < O")
-            }
-            Log.d(tag, "LocalDateTime: $ldt")
 
             val currentTime = Instant.now().toEpochMilli()
             val expireTime = exp * 1000L
+
             Log.d(tag, "currentTime: $currentTime")
             Log.d(tag, "System currentTime: " + System.currentTimeMillis())
+
             result = currentTime <= expireTime
 
         } catch (e: UnsupportedEncodingException) {
@@ -67,10 +64,10 @@ object JWTUtils {
     }
 
     /**
-     * Get json
+     * Get Json string
      *
-     * @param strEncoded
-     * @return
+     * @param strEncoded: encoded string
+     * @return decoded string
      */
     private fun getJson(strEncoded: String): String {
         val charset = charset("UTF-8")

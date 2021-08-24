@@ -26,46 +26,28 @@ import com.cyberark.identity.data.model.EnrollmentModel
 import com.cyberark.identity.data.model.RefreshTokenModel
 import com.cyberark.identity.util.ResponseHandler
 
+/**
+ * CyberArk auth provider class is used for login, enroll, refresh token and end session functionalities
+ *
+ */
 object CyberArkAuthProvider {
 
     private val TAG: String? = CyberArkAuthProvider::class.simpleName
     internal var cyberArkAuthInterface: CyberArkAuthInterface? = null
 
-    /**
-     * Login
-     *
-     * @param account
-     * @return
-     */
+
     fun login(account: CyberArkAccountBuilder): LoginBuilder {
         return LoginBuilder(account)
     }
 
-    /**
-     * End session
-     *
-     * @param account
-     * @return
-     */
     fun endSession(account: CyberArkAccountBuilder): EndSessionBuilder {
         return EndSessionBuilder(account)
     }
 
-    /**
-     * Refresh token
-     *
-     * @param account
-     * @return
-     */
     fun refreshToken(account: CyberArkAccountBuilder): RefreshTokenBuilder {
         return RefreshTokenBuilder(account)
     }
 
-    /**
-     * Enroll
-     *
-     * @return
-     */
     fun enroll(): EnrollmentBuilder {
         return EnrollmentBuilder()
     }
@@ -73,8 +55,8 @@ object CyberArkAuthProvider {
     /**
      * Get authorize token
      *
-     * @param intent
-     * @return
+     * @param intent: Intent object
+     * @return Boolean
      */
     @JvmStatic
     fun getAuthorizeToken(intent: Intent?): Boolean {
@@ -82,14 +64,14 @@ object CyberArkAuthProvider {
             Log.i(TAG, "no previous instance present.")
             return false
         }
-        if (cyberArkAuthInterface!!.updateResult(intent)) {
+        if (cyberArkAuthInterface!!.updateResultForAccessToken(intent)) {
             cleanUp()
         }
         return true
     }
 
     /**
-     * Clean up
+     * Clean up CyberArk auth instance
      *
      */
     internal fun cleanUp() {
@@ -97,14 +79,19 @@ object CyberArkAuthProvider {
     }
 
     /**
-     * Login builder
+     * Login builder class
      *
-     * @property account
-     * @constructor Create empty Login builder
+     * @property account: CyberArkAccountBuilder instance
      */
     class LoginBuilder internal constructor(
             private val account: CyberArkAccountBuilder
     ) {
+        /**
+         * Login user
+         *
+         * @param context: Activity Context
+         * @return LiveData<ResponseHandler<AuthCodeFlowModel>>: LiveData response handler for AuthCodeFlowModel
+         */
         fun start(context: Context): LiveData<ResponseHandler<AuthCodeFlowModel>> {
             Log.i(TAG, "Invoke browser login flow")
             cleanUp()
@@ -117,14 +104,18 @@ object CyberArkAuthProvider {
     }
 
     /**
-     * End session builder
+     * End session builder class
      *
-     * @property account
-     * @constructor Create empty End session builder
+     * @property account: CyberArkAccountBuilder instance
      */
     class EndSessionBuilder internal constructor(
             private val account: CyberArkAccountBuilder
     ) {
+        /**
+         * End session
+         *
+         * @param context: Activity Context
+         */
         fun start(context: Context) {
             Log.i(TAG, "Invoke end session flow")
             cleanUp()
@@ -135,14 +126,20 @@ object CyberArkAuthProvider {
     }
 
     /**
-     * Refresh token builder
+     * Refresh token builder class
      *
-     * @property account
-     * @constructor Create empty Refresh token builder
+     * @property account: CyberArkAccountBuilder instance
      */
     class RefreshTokenBuilder internal constructor(
             private val account: CyberArkAccountBuilder
     ) {
+        /**
+         * Get access token using refresh token
+         *
+         * @param context: Activity Context
+         * @param refreshTokenData: refresh token data
+         * @return LiveData<ResponseHandler<RefreshTokenModel>>: LiveData response handler for RefreshTokenModel
+         */
         fun start(context: Context, refreshTokenData: String): LiveData<ResponseHandler<RefreshTokenModel>> {
             Log.i(TAG, "Invoke new access token using refresh token")
             val cyberarkAuthManager = CyberArkAuthManager(context, account)
@@ -153,12 +150,18 @@ object CyberArkAuthProvider {
     }
 
     /**
-     * Enrollment builder
+     * Enrollment builder class
      *
-     * @constructor Create empty Enrollment builder
      */
     class EnrollmentBuilder internal constructor(
     ) {
+        /**
+         * Enroll device
+         *
+         * @param context: Activity Context
+         * @param accessToken: access token data
+         * @return LiveData<ResponseHandler<EnrollmentModel>>: LiveData response handler for EnrollmentModel
+         */
         fun start(context: Context, accessToken: String): LiveData<ResponseHandler<EnrollmentModel>> {
             Log.i(TAG, "Start enroll")
             val cyberarkEnrollmentManager = CyberArkEnrollmentManager(context, accessToken)

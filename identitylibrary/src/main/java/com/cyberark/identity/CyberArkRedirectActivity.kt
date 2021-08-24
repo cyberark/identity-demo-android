@@ -18,28 +18,23 @@ package com.cyberark.identity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 
 /**
- * Cyberark redirect activity
+ * CyberArkRedirectActivity is used to handle chrome custom tab browser callback
+ * once the authentication is done successfully
  *
- * @constructor Create empty Cyberark redirect activity
  */
 class CyberArkRedirectActivity : AppCompatActivity() {
 
-    private val TAG: String? = CyberArkRedirectActivity::class.simpleName
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val cyberarkAuthActivityIntent = Intent(this, CyberArkAuthActivity::class.java)
-        cyberarkAuthActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        val cyberArkAuthActivityIntent = Intent(this, CyberArkAuthActivity::class.java)
+        cyberArkAuthActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         if (intent != null) {
-            cyberarkAuthActivityIntent.data = intent.data
-            //TODO.. for testing only added this log and should be removed later
-            Log.i(TAG, cyberarkAuthActivityIntent.data.toString())
+            cyberArkAuthActivityIntent.data = intent.data
         }
-        startActivity(cyberarkAuthActivityIntent)
+        startActivity(cyberArkAuthActivityIntent)
         finish()
     }
 }

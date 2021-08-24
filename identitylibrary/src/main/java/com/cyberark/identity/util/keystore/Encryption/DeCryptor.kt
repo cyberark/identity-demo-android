@@ -23,13 +23,16 @@ import javax.crypto.spec.GCMParameterSpec
 import javax.security.cert.CertificateException
 
 /**
- * De cryptor
+ * DeCryptor class is used to handle Android keystore decryption
  *
- * @constructor Create empty De cryptor
  */
 internal class DeCryptor {
     private var keyStore: KeyStore? = null
 
+    /**
+     * Initialize Android keystore
+     *
+     */
     @Throws(
         KeyStoreException::class,
         CertificateException::class,
@@ -44,10 +47,10 @@ internal class DeCryptor {
     /**
      * Decrypt data
      *
-     * @param alias
-     * @param encryptedData
-     * @param encryptionIv
-     * @return
+     * @param alias: alias String
+     * @param encryptedData: encrypted data in byte array
+     * @param encryptionIv: encrypted iv in byte array
+     * @return String
      */
     @Throws(
         UnrecoverableEntryException::class,
@@ -68,6 +71,12 @@ internal class DeCryptor {
         return String(cipher.doFinal(encryptedData), Charsets.UTF_8)
     }
 
+    /**
+     * Get the secret key from Android keystore
+     *
+     * @param alias: alias string
+     * @return SecretKey
+     */
     @Throws(
         NoSuchAlgorithmException::class,
         UnrecoverableEntryException::class,

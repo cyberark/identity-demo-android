@@ -24,9 +24,8 @@ import android.text.TextUtils
 import androidx.browser.customtabs.CustomTabsService
 
 /**
- * Custom tab helper
+ * Custom tab helper is used to verify the supported chrome browser in device
  *
- * @constructor Create empty Custom tab helper
  */
 class CustomTabHelper {
 
@@ -39,11 +38,11 @@ class CustomTabHelper {
     }
 
     /**
-     * Get package name to use
+     * Get package name
      *
-     * @param context
-     * @param url
-     * @return
+     * @param context: Activity Context
+     * @param url: authorize URL
+     * @return String
      */
     fun getPackageName(context: Context, url: String): String? {
 
@@ -94,9 +93,9 @@ class CustomTabHelper {
     /**
      * Has specialized handler intents
      *
-     * @param context
-     * @param intent
-     * @return
+     * @param context: Activity Context
+     * @param intent: Intent object
+     * @return Boolean
      */
     private fun hasSpecializedHandlerIntents(context: Context, intent: Intent): Boolean {
         try {

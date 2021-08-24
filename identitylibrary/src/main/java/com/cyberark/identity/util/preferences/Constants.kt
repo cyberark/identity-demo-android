@@ -17,9 +17,8 @@
 package com.cyberark.identity.util.preferences
 
 /**
- * Constants
+ * Shared preference Constants
  *
- * @constructor Create empty Constants
  */
 object Constants {
     const val ACCESS_TOKEN = "ACCESS_TOKEN"

@@ -27,19 +27,18 @@ import okhttp3.RequestBody
 import retrofit2.http.*
 
 /**
- * Cyberark auth service
+ * CyberArk auth service interface is used to define all endpoint urls
  *
- * @constructor Create empty Cyberark auth service
  */
 interface CyberArkAuthService {
 
     /**
      * Qr code login
      *
-     * @param idapNativeClient
-     * @param bearerToken
-     * @param url
-     * @return
+     * @param idapNativeClient: IDAP native client
+     * @param bearerToken: Authorization Bearer Token
+     * @param url: QR Code login URL
+     * @return QRCodeLoginModel
      */
     @POST
     suspend fun qrCodeLogin(@Header(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT) idapNativeClient: Boolean,
@@ -49,32 +48,32 @@ interface CyberArkAuthService {
     /**
      * Get access token
      *
-     * @param params
-     * @return
+     * @param params: request body
+     * @return AuthCodeFlowModel
      */
     @FormUrlEncoded
     @POST(URL_AUTH_CODE_FLOW)
     suspend fun getAccessToken(@FieldMap params: HashMap<String?, String?>): AuthCodeFlowModel
 
     /**
-     * Refresh token
+     * Get refresh token
      *
-     * @param params
-     * @return
+     * @param params: request body
+     * @return RefreshTokenModel
      */
     @FormUrlEncoded
     @POST(URL_AUTH_CODE_FLOW)
     suspend fun refreshToken(@FieldMap params: HashMap<String?, String?>): RefreshTokenModel
 
     /**
-     * Fast enroll v3
+     * Enroll device
      *
-     * @param centrifyNativeClient
-     * @param idapNativeClient
-     * @param acceptLang
-     * @param bearerToken
-     * @param payload
-     * @return
+     * @param centrifyNativeClient: centrify native client
+     * @param idapNativeClient: idap native client
+     * @param acceptLang: accepted language
+     * @param bearerToken: authorization bearer token
+     * @param body: request body
+     * @return EnrollmentModel
      */
     @POST(URL_FAST_ENROLL_V3)
     suspend fun fastEnrollV3(@Header(EndpointUrls.HEADER_X_CENTRIFY_NATIVE_CLIENT) centrifyNativeClient: Boolean,

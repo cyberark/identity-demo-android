@@ -29,13 +29,12 @@ import com.cyberark.identity.util.browser.CustomTabHelper
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 
 /**
- * Cyberark auth activity
- *
- * @constructor Create empty Cyberark auth activity
+ * CyberArk authentication activity
+ * 1. Handle chrome custom tab browser callback response
  */
 class CyberArkAuthActivity : AppCompatActivity() {
 
-    private val TAG: String? = CyberArkAuthActivity::class.simpleName
+    private val tag: String? = CyberArkAuthActivity::class.simpleName
 
     private var activityLaunched = false
     private var customTabHelper: CustomTabHelper = CustomTabHelper()
@@ -47,6 +46,7 @@ class CyberArkAuthActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Initialize CyberArk Preference Util and save activity launched status
         CyberArkPreferenceUtil.init(this)
         if (savedInstanceState != null) {
             activityLaunched = savedInstanceState.getBoolean(ACTIVITY_LAUNCHED, false)
@@ -62,25 +62,25 @@ class CyberArkAuthActivity : AppCompatActivity() {
         super.onResume()
         val authData = intent
         if (!activityLaunched && authData.extras == null) {
-            Log.i(TAG, "Activity intent doesn't hold the authorize uri to launch in browser")
+            Log.i(tag, "Activity intent doesn't hold the authorize uri to launch in browser")
             finish()
             return
         } else if (!activityLaunched) {
-            Log.i(TAG, "launch uri in browser successfully")
+            Log.i(tag, "launch uri in browser successfully")
             activityLaunched = true
             val extras = intent.extras
             val authorizeUri = extras!!.getParcelable<Uri>(AUTHORIZE_URI)
             launchUri(this, authorizeUri!!)
             return
         }
-        Log.i(TAG, "Get authorize token")
+        Log.i(tag, "Get authorize token")
         getAuthorizeToken(authData)
         finish()
     }
 
     internal companion object {
-        private const val AUTHORIZE_URI = "com.cyberark.identity.AUTHORIZE_URI"
-        private const val ACTIVITY_LAUNCHED = "com.cyberark.identity.ACTIVITY_LAUNCHED"
+        private const val AUTHORIZE_URI = "AUTHORIZE_URI"
+        private const val ACTIVITY_LAUNCHED = "ACTIVITY_LAUNCHED"
 
         @JvmStatic
         internal fun authenticateUsingCustomTab(
@@ -95,12 +95,12 @@ class CyberArkAuthActivity : AppCompatActivity() {
     }
 
     /**
-     * Launch uri
+     * Launch authorize URL in chrome custom tab browser
      *
-     * @param context
-     * @param uri
+     * @param context: Activity Context
+     * @param uri: authorize URL
      */
-    fun launchUri(context: Context, uri: Uri?) {
+    private fun launchUri(context: Context, uri: Uri?) {
         val builder = CustomTabsIntent.Builder()
 
         // show website title
@@ -116,11 +116,11 @@ class CyberArkAuthActivity : AppCompatActivity() {
         val packageName = customTabHelper.getPackageName(context, uri.toString())
 
         if (packageName == null) {
-            Log.i(TAG, "Chrome custom tab is not available")
+            Log.i(tag, "Chrome custom tab is not available")
             // if chrome not available open in web view
-            //TODO.. handle error scenario
+            //TODO.. handle error scenario, throw exception
         } else {
-            Log.i(TAG, "Chrome custom tab is available")
+            Log.i(tag, "Chrome custom tab is available")
             customTabsIntent.intent.setPackage(packageName)
             customTabsIntent.launchUrl(context, uri!!)
         }

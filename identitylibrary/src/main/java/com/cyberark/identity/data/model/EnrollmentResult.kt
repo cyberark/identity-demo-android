@@ -17,13 +17,13 @@
 package com.cyberark.identity.data.model
 
 /**
- * Enrollment result
+ * Enrollment result class
  *
- * @property Message
- * @property Status
- * @property ClientApiKey
- * @property ErrorCode
- * @constructor Create empty Enrollment result
+ * @property Message: message
+ * @property Status: enrollment status
+ * @property ClientApiKey: client api key
+ * @property ErrorCode: error code
+ *
  */
 data class EnrollmentResult(
     val Message: String,

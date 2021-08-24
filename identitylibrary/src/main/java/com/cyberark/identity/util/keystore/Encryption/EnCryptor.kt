@@ -19,24 +19,21 @@ package com.cyberark.identity.util.keystore.Encryption
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import java.io.IOException
-import java.nio.charset.Charset
 import java.security.*
 import javax.crypto.*
-import javax.crypto.spec.IvParameterSpec
 
 /**
- * En cryptor
+ * EnCryptor class is used to handle Android keystore encryption
  *
- * @constructor Create empty En cryptor
  */
 internal class EnCryptor {
 
     /**
-     * Encrypt text
+     * Encrypt data
      *
-     * @param alias
-     * @param textToEncrypt
-     * @return
+     * @param alias: alias string
+     * @param textToEncrypt: text need to be encrypted
+     * @return Pair<ByteArray,ByteArray>
      */
     @Throws(
         UnrecoverableEntryException::class,
@@ -59,6 +56,12 @@ internal class EnCryptor {
         return Pair(iv,encryptedData)
     }
 
+    /**
+     * Get the secret key from Android keystore
+     *
+     * @param alias: alias string
+     * @return SecretKey
+     */
     @Throws(
         NoSuchAlgorithmException::class,
         NoSuchProviderException::class,

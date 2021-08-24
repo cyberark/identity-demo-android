@@ -30,11 +30,10 @@ import com.cyberark.identity.viewmodel.AuthenticationViewModel
 import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
 
 /**
- * Cyberark auth manager
+ * CyberArk auth manager class
  *
- * @property context
- * @property account
- * @constructor Create empty Cyberark auth manager
+ * @property context: Activity context
+ * @property account: CyberArkAccountBuilder instance
  */
 internal class CyberArkAuthManager(
         private val context: Context,
@@ -45,12 +44,12 @@ internal class CyberArkAuthManager(
     private val viewModel: AuthenticationViewModel
 
     /**
-     * Update result
+     * Update result for access token
      *
-     * @param intent
-     * @return
+     * @param intent: Intent object
+     * @return Boolean
      */
-    override fun updateResult(intent: Intent?): Boolean {
+    override fun updateResultForAccessToken(intent: Intent?): Boolean {
         val code = intent?.data?.getQueryParameter(CyberArkAccountBuilder.KEY_CODE)
 
         val params = HashMap<String?, String?>()
@@ -60,23 +59,20 @@ internal class CyberArkAuthManager(
         params[CyberArkAccountBuilder.KEY_CLIENT_ID] = account.getClientId
         params[CyberArkAccountBuilder.KEY_CODE_VERIFIER] = account.getCodeVerifier
 
-        //TODO.. for testing only added this log and should be removed later
-        Log.i(TAG, "params" + params.toString())
-
         if (code != null) {
             Log.i(TAG, "Code exchange for access token")
             viewModel.handleAuthorizationCode(params)
         } else {
             Log.i(TAG, "Unable to fetch code from server to get access token")
-            // TODO.. handle error
+            // TODO.. handle error, throw exception
         }
         return true
     }
 
     /**
-     * Refresh token
+     * Refresh token API call to get new access token
      *
-     * @param refreshTokenData
+     * @param refreshTokenData: refresh token string
      */
     internal fun refreshToken(refreshTokenData: String) {
         val params = HashMap<String?, String?>()
@@ -84,20 +80,17 @@ internal class CyberArkAuthManager(
         params[CyberArkAccountBuilder.KEY_GRANT_TYPE] = CyberArkAccountBuilder.KEY_REFRESH_TOKEN
         params[CyberArkAccountBuilder.KEY_REFRESH_TOKEN] = refreshTokenData
 
-        //TODO.. for testing only added this log and should be removed later
-        Log.i(TAG, "params" + params.toString())
-
         if (refreshTokenData != null) {
             Log.i(TAG, "Get new access token using refresh token")
             viewModel.handleRefreshToken(params)
         } else {
             Log.i(TAG, "Unable to fetch access token using refresh token")
-            // TODO.. handle error
+            // TODO.. handle error, throw exception
         }
     }
 
     /**
-     * Start authentication
+     * Start authentication flow in chrome custom tab browser
      *
      */
     internal fun startAuthentication() {
@@ -108,7 +101,7 @@ internal class CyberArkAuthManager(
     }
 
     /**
-     * End session
+     * End session from the chrome custom tab browser
      *
      */
     internal fun endSession() {
@@ -119,12 +112,13 @@ internal class CyberArkAuthManager(
     }
 
     /**
-     * Get view model instance
+     * Get authentication view model instance
      */
     internal val getViewModelInstance: AuthenticationViewModel
         get() = viewModel
 
     init {
+        // Initialize authentication view model
         val appContext: AppCompatActivity = context as AppCompatActivity
         viewModel = ViewModelProvider(
                 appContext,

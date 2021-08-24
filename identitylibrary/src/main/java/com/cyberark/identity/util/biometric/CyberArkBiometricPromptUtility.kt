@@ -19,18 +19,17 @@ package com.cyberark.identity.util.biometric
 import androidx.appcompat.app.AppCompatActivity
 
 /**
- * Biometric prompt utility
+ * CyberArk Biometric prompt utility
  *
- * @constructor Create empty Biometric prompt utility
  */
 interface CyberArkBiometricPromptUtility {
     /**
-     * Show bio authentication
+     * Show biometrics authentication
      *
-     * @param activity
-     * @param retries
-     * @param negitiveButtonText
-     * @param useDevicePin
+     * @param activity: Activity instance
+     * @param retries: no of attempts
+     * @param negitiveButtonText: negative button text
+     * @param useDevicePin: user device pin flag, true/false
      */
     fun showBioAuthentication(
         activity: AppCompatActivity,

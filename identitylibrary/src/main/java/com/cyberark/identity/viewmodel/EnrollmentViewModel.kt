@@ -34,36 +34,31 @@ import org.json.JSONObject
 
 /**
  * Enrollment view model
+ * 1. Handle device enrollment
  *
- * @property cyberArkAuthHelper
- * @constructor Create empty Enrollment view model
+ * @property cyberArkAuthHelper: CyberArkAuthHelper instance
  */
 internal class EnrollmentViewModel(private val cyberArkAuthHelper: CyberArkAuthHelper) :
     ViewModel() {
 
-    private val TAG: String? = EnrollmentViewModel::class.simpleName
+    private val tag: String? = EnrollmentViewModel::class.simpleName
     private val enrolledResponse = MutableLiveData<ResponseHandler<EnrollmentModel>>()
-
     private val mediaType: MediaType? = "application/json".toMediaTypeOrNull()
 
     init {
-        Log.i(TAG, "initialize EnrollViewModel")
+        Log.i(tag, "initialize EnrollViewModel")
     }
 
     /**
-     * Handle enrollment
+     * Handle enrollment API call
      *
-     * @param headerPayload
-     * @param bodyPayload
+     * @param headerPayload: header payload
+     * @param bodyPayload: body payload
      */
     internal fun handleEnrollment(headerPayload: JSONObject, bodyPayload: JSONObject) {
         viewModelScope.launch {
             enrolledResponse.postValue(ResponseHandler.loading(null))
             try {
-                //TODO.. for testing only added logs, should be removed
-                Log.i(TAG, "headerPayload :: " + headerPayload.toString())
-                Log.i(TAG, "bodyPayload :: " + createJsonBody(bodyPayload.toString()))
-
                 val centrifyNativeClient: Boolean =
                     headerPayload.getBoolean(EndpointUrls.HEADER_X_CENTRIFY_NATIVE_CLIENT)
                 val idapNativeClient: Boolean =
@@ -72,12 +67,6 @@ internal class EnrollmentViewModel(private val cyberArkAuthHelper: CyberArkAuthH
                     headerPayload.getString(EndpointUrls.HEADER_ACCEPT_LANGUAGE)
                 val bearerToken: String = headerPayload.getString(EndpointUrls.HEADER_AUTHORIZATION)
 
-                //TODO.. for testing only added logs, should be removed
-                Log.i(TAG, "headerPayload 1:: " + centrifyNativeClient)
-                Log.i(TAG, "headerPayload 2:: " + idapNativeClient)
-                Log.i(TAG, "headerPayload 3:: " + acceptLang)
-                Log.i(TAG, "headerPayload 4:: " + bearerToken)
-
                 val enrollmentData = cyberArkAuthHelper.fastEnrollV3(
                     centrifyNativeClient,
                     idapNativeClient,
@@ -85,36 +74,27 @@ internal class EnrollmentViewModel(private val cyberArkAuthHelper: CyberArkAuthH
                     bearerToken,
                     createJsonBody(bodyPayload.toString())
                 )
-
-                //TODO.. for testing only added this log and should be removed later
-                Log.i(TAG, "enrollmentResponse :: " + enrollmentData.toString())
-                Log.i(TAG, "enrollmentResponse 11:: " + enrollmentData.success)
-//                Log.i(TAG, "enrollmentResponse 11 :: " + enrollmentResponse.execute().body().toString())
-
                 enrolledResponse.postValue(ResponseHandler.success(enrollmentData))
             } catch (e: Exception) {
-                //TODO.. for testing only added this log and should be removed later
-                Log.i(TAG, "Exception :: " + e.toString())
                 enrolledResponse.postValue(ResponseHandler.error(e.toString(), null))
             }
         }
     }
 
     /**
-     * Create json body
+     * Create Json request body
      *
-     * @param jsonStr
-     * @return
+     * @param jsonStr: JSON string
+     * @return RequestBody
      */
     private fun createJsonBody(jsonStr: String): RequestBody {
-        //TODO.. verify deprecation warning and refactor code as needed
         return jsonStr.toRequestBody(mediaType)
     }
 
     /**
      * Get enrolled data
      *
-     * @return
+     * @return: LiveData<ResponseHandler<EnrollmentModel>>, LiveData ResponseHandler for EnrollmentModel
      */
     internal fun getEnrolledData(): LiveData<ResponseHandler<EnrollmentModel>> {
         return enrolledResponse

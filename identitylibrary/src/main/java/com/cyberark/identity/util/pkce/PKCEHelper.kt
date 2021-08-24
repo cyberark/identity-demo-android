@@ -24,66 +24,70 @@ import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
 
 /**
- * PKCE helper
+ * PKCE helper class is used to generate code challenge and code verifier
  *
- * @constructor Create empty PKCE helper
  */
 class PKCEHelper {
-    private fun getBase64String(source: ByteArray): String {
+
+    /**
+     * Generate code verifier using java SecureRandom
+     *
+     * @return String: base64 encoded string
+     */
+    fun generateCodeVerifier(): String {
+        val sr = SecureRandom()
+        val code = ByteArray(32)
+        sr.nextBytes(code)
+        return getBase64(code)
+    }
+
+    /**
+     * Generate code challenge using code verifier
+     *
+     * @param codeVerifier: code verifier string
+     * @return base64 encoded string
+     */
+    fun generateCodeChallenge(codeVerifier: String): String {
+        val input = getASCII(codeVerifier)
+        val signature = getSHA256Signature(input)
+        return getBase64(signature)
+    }
+
+    /**
+     * Get base64 string
+     *
+     * @param source: Byte Array
+     * @return String: base64 encoded string
+     */
+    private fun getBase64(source: ByteArray): String {
         return Base64.encodeToString(source, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
     }
 
     /**
      * Get ASCII bytes
      *
-     * @param value
-     * @return
+     * @param value: string
+     * @return ByteArray
      */
-    fun getASCIIBytes(value: String): ByteArray {
+    private fun getASCII(value: String): ByteArray {
         return value.toByteArray(StandardCharsets.US_ASCII)
     }
 
     /**
-     * Get SHA256
+     * Get SHA256 signature
      *
-     * @param input
-     * @return
+     * @param input: Byte Array
+     * @return ByteArray: SHA256 signature in Byte Array
      */
-    fun getSHA256(input: ByteArray): ByteArray {
-        val signature: ByteArray
-        signature = try {
+    private fun getSHA256Signature(input: ByteArray): ByteArray {
+        return try {
             val md = MessageDigest.getInstance(SHA_256)
             md.update(input, 0, input.size)
             md.digest()
         } catch (e: NoSuchAlgorithmException) {
-            Log.e(TAG, "Failed to get SHA-256 signature", e)
-            throw IllegalStateException("Failed to get SHA-256 signature", e)
+            Log.e(TAG, "Unable to get SHA256 signature", e)
+            throw IllegalStateException("Unable to get SHA256 signature", e)
         }
-        return signature
-    }
-
-    /**
-     * Generate code verifier
-     *
-     * @return
-     */
-    fun generateCodeVerifier(): String {
-        val sr = SecureRandom()
-        val code = ByteArray(32)
-        sr.nextBytes(code)
-        return Base64.encodeToString(code, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
-    }
-
-    /**
-     * Generate code challenge
-     *
-     * @param codeVerifier
-     * @return
-     */
-    fun generateCodeChallenge(codeVerifier: String): String {
-        val input = getASCIIBytes(codeVerifier)
-        val signature = getSHA256(input)
-        return getBase64String(signature)
     }
 
     companion object {
