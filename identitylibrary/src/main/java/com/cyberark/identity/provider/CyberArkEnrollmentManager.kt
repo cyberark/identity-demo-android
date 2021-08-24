@@ -19,8 +19,10 @@ package com.cyberark.identity.provider
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
+import com.cyberark.identity.data.network.CyberArkAuthService
 import com.cyberark.identity.util.device.DeviceConstants
 import com.cyberark.identity.util.device.DeviceInfoHelper
 import com.cyberark.identity.util.endpoint.EndpointUrls
@@ -36,9 +38,9 @@ import org.json.JSONObject
  */
 internal class CyberArkEnrollmentManager(
     private val context: Context,
-    private val accessToken: String
+    private val accessToken: String,
+    account: CyberArkAccountBuilder
 ) {
-    private val tag: String? = CyberArkEnrollmentManager::class.simpleName
     private val viewModel: EnrollmentViewModel
 
     /**
@@ -57,9 +59,12 @@ internal class CyberArkEnrollmentManager(
     init {
         // Initialize EnrollmentViewModel
         val appContext: AppCompatActivity = context as AppCompatActivity
+        val cyberArkAuthService: CyberArkAuthService =
+            CyberArkAuthBuilder.getRetrofit(account.getBaseUrl)
+                .create(CyberArkAuthService::class.java)
         viewModel = ViewModelProvider(
             appContext,
-            CyberArkViewModelFactory(CyberArkAuthHelper(CyberArkAuthBuilder.CYBER_ARK_AUTH_SERVICE))
+            CyberArkViewModelFactory(CyberArkAuthHelper(cyberArkAuthService))
         ).get(EnrollmentViewModel::class.java)
     }
 
@@ -91,7 +96,7 @@ internal class CyberArkEnrollmentManager(
         payload.put(EndpointUrls.HEADER_X_CENTRIFY_NATIVE_CLIENT, true)
         payload.put(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT, true)
         payload.put(EndpointUrls.HEADER_ACCEPT_LANGUAGE, "en-IN")
-        payload.put(EndpointUrls.HEADER_AUTHORIZATION, "Bearer " + accessToken)
+        payload.put(EndpointUrls.HEADER_AUTHORIZATION, "Bearer $accessToken")
         return payload
     }
 }

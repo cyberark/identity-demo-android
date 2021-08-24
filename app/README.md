@@ -272,4 +272,5 @@ Please follow [SECURITY.md](../SECURITY.md)
 
 <a id="license"></a>
 ## License
+Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
 This project is licensed under Apache - see [`LICENSE`](../LICENSE) for more details.

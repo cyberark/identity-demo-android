@@ -27,7 +27,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
-import com.cyberark.identity.util.*
+import com.cyberark.identity.util.ResponseStatus
 import com.cyberark.identity.util.endpoint.EndpointUrls
 import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
 import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
@@ -38,17 +38,21 @@ import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
 /**
- * Cyberark QR code login activity
+ * CyberArk QR code login activity
  *
- * @constructor Create empty Cyberark q r code login activity
  */
 class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     // Progress indicator variable
     private lateinit var progressBar: ProgressBar
 
+    // Scan QR Code View model variable
     private lateinit var viewModel: ScanQRCodeViewModel
+
+    // Access token data variable
     private lateinit var accessTokenData: String
+
+    // QR Code result flag
     private var gotQRResult: Boolean = false
 
     companion object {
@@ -60,19 +64,22 @@ class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Permiss
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recycler_view)
 
+        // Invoke UI element
         progressBar = findViewById(R.id.progressBar)
-
+        // Initialize access token data into a variable
         if (intent.extras != null) {
             accessTokenData = intent.getStringExtra("access_token").toString()
         }
+        // Setup view model
         setupViewModel()
+        // Request for camera permission
         requestCameraPermission()
     }
 
     /**
      * Has camera permission
      *
-     * @return
+     * @return Boolean
      */
     private fun hasCameraPermission(): Boolean {
         return EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)
@@ -88,7 +95,7 @@ class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Permiss
             // Have permission, do things!
             startQRCodeScan()
         } else {
-            // Ask for one permission
+            // Ask for camera permission
             EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.permission_camera_rationale_message),
@@ -124,7 +131,7 @@ class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Permiss
     }
 
     /**
-     * Start QR code scan
+     * Start QR code scanner using IntentIntegrator class
      *
      */
     private fun startQRCodeScan() {
@@ -134,7 +141,7 @@ class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Permiss
     }
 
     /**
-     * Setup view model
+     * Setup Scan QR Code view model
      *
      */
     private fun setupViewModel() {
@@ -142,15 +149,10 @@ class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Permiss
             this,
             CyberArkViewModelFactory(CyberArkAuthHelper(CyberArkAuthBuilder.CYBER_ARK_AUTH_SERVICE))
         ).get(ScanQRCodeViewModel::class.java)
-
-//        viewModel = ViewModelProviders.of(
-//            this,
-//            CyberArkViewModelFactory(CyberArkAuthHelper(CyberArkAuthBuilder.CYBER_ARK_AUTH_SERVICE))
-//        ).get(ScanQRCodeViewModel::class.java)
     }
 
     /**
-     * Setup observer
+     * Setup observer to handle API response
      *
      */
     private fun setupObserver() {
@@ -158,35 +160,33 @@ class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Permiss
             val intent = Intent()
             when (it.status) {
                 ResponseStatus.SUCCESS -> {
-
-                    //TODO.. for testing only added logs and should be removed
-                    Log.i(TAG, ResponseStatus.SUCCESS.toString())
-                    Log.i(TAG, it.data.toString())
-                    Log.i(TAG, it.data!!.success.toString())
-                    Log.i(TAG, it.data.result?.displayName.toString())
-
+                    // Hide progress indicator
                     progressBar.visibility = View.GONE
-
+                    // Add QR Code Authentication result in intent bundle
                     intent.putExtra(
                         "QR_CODE_AUTH_RESULT",
                         "QR Code Authentication is done successfully"
                     )
+                    // Set result
                     setResult(RESULT_OK, intent)
+                    // Close QR Code Login Activity
                     finish()
                 }
                 ResponseStatus.ERROR -> {
-                    Log.i(TAG, ResponseStatus.ERROR.toString())
-
+                    // Hide progress indicator
                     progressBar.visibility = View.GONE
-
+                    // Add QR Code Authentication result in intent bundle
                     intent.putExtra(
                         "QR_CODE_AUTH_RESULT",
                         "QR Code Authentication is failed"
                     )
+                    // Set result
                     setResult(RESULT_OK, intent)
+                    // Close QR Code Login Activity
                     finish()
                 }
                 ResponseStatus.LOADING -> {
+                    // Hide progress indicator
                     progressBar.visibility = View.VISIBLE
                 }
             }
@@ -214,22 +214,21 @@ class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Permiss
                         viewModel.handleQRCodeResult(getHeaderPayload(), result.contents.toString())
                         setupObserver()
                     } else {
-                        //TODO.. handle error scenario
+                        Log.i(TAG, "Access token is not initialized")
+                        finish()
                     }
                 }
             } else {
-                //TODO.. need to verify deprecation warning and refactor code as needed
                 super.onActivityResult(requestCode, resultCode, data)
+                finish()
             }
-            //TODO.. temporarily handled for only QRCode and finish() will be called from the observer method, need to check and remove finish() call here
-//            finish()
         }
     }
 
     /**
      * Get header payload
      *
-     * @return
+     * @return JSONObject
      */
     private fun getHeaderPayload(): JSONObject {
         val payload = JSONObject()

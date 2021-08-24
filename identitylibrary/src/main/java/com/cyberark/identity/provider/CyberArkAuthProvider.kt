@@ -48,8 +48,8 @@ object CyberArkAuthProvider {
         return RefreshTokenBuilder(account)
     }
 
-    fun enroll(): EnrollmentBuilder {
-        return EnrollmentBuilder()
+    fun enroll(account: CyberArkAccountBuilder): EnrollmentBuilder {
+        return EnrollmentBuilder(account)
     }
 
     /**
@@ -154,6 +154,7 @@ object CyberArkAuthProvider {
      *
      */
     class EnrollmentBuilder internal constructor(
+        private val account: CyberArkAccountBuilder
     ) {
         /**
          * Enroll device
@@ -164,7 +165,7 @@ object CyberArkAuthProvider {
          */
         fun start(context: Context, accessToken: String): LiveData<ResponseHandler<EnrollmentModel>> {
             Log.i(TAG, "Start enroll")
-            val cyberarkEnrollmentManager = CyberArkEnrollmentManager(context, accessToken)
+            val cyberarkEnrollmentManager = CyberArkEnrollmentManager(context, accessToken, account)
             cyberarkEnrollmentManager.enroll()
 
             return cyberarkEnrollmentManager.getViewModelInstance.getEnrolledData()

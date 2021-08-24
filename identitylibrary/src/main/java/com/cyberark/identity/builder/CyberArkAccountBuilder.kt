@@ -188,6 +188,12 @@ class CyberArkAccountBuilder(
         get() = clientId.toString()
 
     /**
+     * Get Base URL
+     */
+    val getBaseUrl: String
+        get() = baseURL!!.newBuilder().toString()
+
+    /**
      * Check valid and secure url
      *
      * @param url: authorize URL

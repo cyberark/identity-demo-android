@@ -18,6 +18,7 @@ package com.cyberark.mfa
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -107,6 +108,9 @@ class MFAActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mfa)
 
+        // Setup account
+        val account = setupAccount()
+
         // Invoke UI elements
         invokeUI()
 
@@ -114,16 +118,16 @@ class MFAActivity : AppCompatActivity() {
         initializeData()
 
         // Update UI components
-        updateUI()
+        updateUI(account)
 
         // Perform enroll device
         enrollButton.setOnClickListener {
-            handleClick(it)
+            handleClick(it, account)
         }
 
         // Perform logout
         logOut.setOnClickListener {
-            handleClick(it)
+            handleClick(it, account)
         }
     }
 
@@ -158,6 +162,26 @@ class MFAActivity : AppCompatActivity() {
     }
 
     /**
+     * Set-up account for OAuth 2.0 PKCE driven flow
+     * update account configuration in "res/values/config.xml"
+     *
+     * @return cyberArkAccountBuilder: CyberArkAccountBuilder instance
+     */
+    private fun setupAccount(): CyberArkAccountBuilder {
+        val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
+            .clientId(getString(R.string.cyberark_account_client_id))
+            .domainURL(getString(R.string.cyberark_account_host))
+            .appId(getString(R.string.cyberark_account_app_id))
+            .responseType(getString(R.string.cyberark_account_response_type))
+            .scope(getString(R.string.cyberark_account_scope))
+            .redirectUri(getString(R.string.cyberark_account_redirect_uri))
+            .build()
+        // Print authorize URL
+        Log.i(tag, cyberArkAccountBuilder.OAuthBaseURL)
+        return cyberArkAccountBuilder
+    }
+
+    /**
      * Invoke all UI elements and initialize into variables
      *
      */
@@ -188,7 +212,7 @@ class MFAActivity : AppCompatActivity() {
      * Get the shared preference status and handle device biometrics when access token expires
      *
      */
-    private fun updateUI() {
+    private fun updateUI(cyberArkAccountBuilder: CyberArkAccountBuilder) {
         // Verify enrollment status and update button text
         if (::accessTokenData.isInitialized) {
             logOut.isEnabled = true
@@ -202,13 +226,13 @@ class MFAActivity : AppCompatActivity() {
             CyberArkPreferenceUtil.getBoolean(getString(R.string.pref_key_is_biometric_req), false)
         launchWithBio.isChecked = isAuthenticationReq
         launchWithBio.setOnClickListener {
-            handleClick(it)
+            handleClick(it, cyberArkAccountBuilder)
         }
         // Get the shared preference status and handle device biometrics when access token expires
         biometricReqOnRefresh.isChecked =
             CyberArkPreferenceUtil.getBoolean(getString(R.string.pref_key_refresh_bio_req), false)
         biometricReqOnRefresh.setOnClickListener {
-            handleClick(it)
+            handleClick(it, cyberArkAccountBuilder)
         }
         // Get the shared preference status and update the biometrics selection
         if (!CyberArkPreferenceUtil.contains(getString(R.string.pref_key_is_biometric_req))) {
@@ -222,9 +246,9 @@ class MFAActivity : AppCompatActivity() {
      * and handle API response using active observer
      *
      */
-    private fun enroll() {
+    private fun enroll(cyberArkAccountBuilder: CyberArkAccountBuilder) {
         val authResponseHandler: LiveData<ResponseHandler<EnrollmentModel>> =
-            CyberArkAuthProvider.enroll().start(this, accessTokenData)
+            CyberArkAuthProvider.enroll(cyberArkAccountBuilder).start(this, accessTokenData)
 
         // Verify if there is any active observer, if not then add observer to get API response
         if (!authResponseHandler.hasActiveObservers()) {
@@ -267,26 +291,6 @@ class MFAActivity : AppCompatActivity() {
                 }
             })
         }
-    }
-
-    /**
-     * Set-up account for OAuth 2.0 PKCE driven flow
-     * update account configuration in "res/values/config.xml"
-     *
-     * @return cyberArkAccountBuilder: CyberArkAccountBuilder instance
-     */
-    private fun setupAccount(): CyberArkAccountBuilder {
-        val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
-            .clientId(getString(R.string.cyberark_account_client_id))
-            .domainURL(getString(R.string.cyberark_account_host))
-            .appId(getString(R.string.cyberark_account_app_id))
-            .responseType(getString(R.string.cyberark_account_response_type))
-            .scope(getString(R.string.cyberark_account_scope))
-            .redirectUri(getString(R.string.cyberark_account_redirect_uri))
-            .build()
-        // Print authorize URL
-        Log.i(tag, cyberArkAccountBuilder.OAuthBaseURL)
-        return cyberArkAccountBuilder
     }
 
     /**
@@ -355,7 +359,7 @@ class MFAActivity : AppCompatActivity() {
      *
      * @param view
      */
-    private fun handleClick(view: View) {
+    private fun handleClick(view: View, cyberArkAccountBuilder: CyberArkAccountBuilder) {
         if (!isAuthenticated && isAuthenticationReq) {
             // Show biometrics prompt
             showBiometric()
@@ -364,7 +368,12 @@ class MFAActivity : AppCompatActivity() {
         if (view.id == R.id.button_enroll) {
             if (::accessTokenData.isInitialized) {
                 // Get the access token expire status
-                val status = JWTUtils.isAccessTokenExpired(accessTokenData)
+                var status = false
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    status = JWTUtils.isAccessTokenExpired(accessTokenData)
+                } else {
+                    Log.i(tag, "Not supported VERSION.SDK_INT < O")
+                }
                 // Print access token status
                 Log.i(tag, "Access Token Status $status")
 
@@ -375,7 +384,7 @@ class MFAActivity : AppCompatActivity() {
                         showAccessTokenExpireAlert()
                     } else {
                         // Start enrollment flow
-                        enroll()
+                        enroll(cyberArkAccountBuilder)
                     }
                 } else {
                     // Handle QR Code Authenticator flow based on access token expire status
@@ -390,13 +399,11 @@ class MFAActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                //TODO.. handle error scenario
                 Log.i(tag, "Access Token is not initialized")
             }
         } else if (view.id == R.id.button_end_session) {
             // Start end session
-            val account = setupAccount()
-            endSession(account)
+            endSession(cyberArkAccountBuilder)
         } else if (view.id == R.id.biometricReqOnRefresh) {
             // Save biometrics request status (when access token expires) in shared preference
             saveRefreshBio(biometricReqOnRefresh.isChecked)
@@ -461,8 +468,13 @@ class MFAActivity : AppCompatActivity() {
             biometricReqOnRefresh.isEnabled = true
             launchWithBio.isEnabled = true
 
-            // Verify if access token is expired or not
-            val status = JWTUtils.isAccessTokenExpired(accessTokenData)
+           // Verify if access token is expired or not
+            var status = false
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                status = JWTUtils.isAccessTokenExpired(accessTokenData)
+            } else {
+                Log.i(tag, "Not supported VERSION.SDK_INT < O")
+            }
             // Print access token expire status
             Log.i(tag, "Access Token Status $status")
             if (!status) {

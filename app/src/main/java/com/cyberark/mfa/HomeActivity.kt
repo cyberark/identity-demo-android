@@ -55,7 +55,7 @@ class HomeActivity : AppCompatActivity() {
         // Invoke UI element
         progressBar = findViewById(R.id.progressBar_home_activity)
 
-        // OAuth Authorization Code Flow + PKCE
+        // Setup account
         val account = setupAccount()
 
         // Perform login

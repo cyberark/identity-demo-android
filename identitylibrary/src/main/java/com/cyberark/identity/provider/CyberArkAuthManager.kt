@@ -26,6 +26,7 @@ import com.cyberark.identity.CyberArkAuthActivity
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
+import com.cyberark.identity.data.network.CyberArkAuthService
 import com.cyberark.identity.viewmodel.AuthenticationViewModel
 import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
 
@@ -36,8 +37,8 @@ import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
  * @property account: CyberArkAccountBuilder instance
  */
 internal class CyberArkAuthManager(
-        private val context: Context,
-        private val account: CyberArkAccountBuilder
+    private val context: Context,
+    private val account: CyberArkAccountBuilder
 ) : CyberArkAuthInterface {
 
     private val TAG: String? = CyberArkAuthManager::class.simpleName
@@ -53,7 +54,8 @@ internal class CyberArkAuthManager(
         val code = intent?.data?.getQueryParameter(CyberArkAccountBuilder.KEY_CODE)
 
         val params = HashMap<String?, String?>()
-        params[CyberArkAccountBuilder.KEY_GRANT_TYPE] = CyberArkAccountBuilder.AUTHORIZATION_CODE_VALUE
+        params[CyberArkAccountBuilder.KEY_GRANT_TYPE] =
+            CyberArkAccountBuilder.AUTHORIZATION_CODE_VALUE
         params[CyberArkAccountBuilder.KEY_CODE] = code.toString()
         params[CyberArkAccountBuilder.KEY_REDIRECT_URI] = account.getRedirectURL
         params[CyberArkAccountBuilder.KEY_CLIENT_ID] = account.getClientId
@@ -95,8 +97,8 @@ internal class CyberArkAuthManager(
      */
     internal fun startAuthentication() {
         CyberArkAuthActivity.authenticateUsingCustomTab(
-                context,
-                Uri.parse(account.OAuthBaseURL)
+            context,
+            Uri.parse(account.OAuthBaseURL)
         )
     }
 
@@ -106,8 +108,8 @@ internal class CyberArkAuthManager(
      */
     internal fun endSession() {
         CyberArkAuthActivity.authenticateUsingCustomTab(
-                context,
-                Uri.parse(account.OAuthEndSessionURL)
+            context,
+            Uri.parse(account.OAuthEndSessionURL)
         )
     }
 
@@ -120,9 +122,12 @@ internal class CyberArkAuthManager(
     init {
         // Initialize authentication view model
         val appContext: AppCompatActivity = context as AppCompatActivity
+        val cyberArkAuthService: CyberArkAuthService =
+            CyberArkAuthBuilder.getRetrofit(account.getBaseUrl)
+                .create(CyberArkAuthService::class.java)
         viewModel = ViewModelProvider(
-                appContext,
-                CyberArkViewModelFactory(CyberArkAuthHelper(CyberArkAuthBuilder.CYBER_ARK_AUTH_SERVICE))
+            appContext,
+            CyberArkViewModelFactory(CyberArkAuthHelper(cyberArkAuthService))
         ).get(AuthenticationViewModel::class.java)
     }
 

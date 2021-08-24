@@ -1,4 +1,4 @@
-# CyberArk Identity SDK Sample Application - Kotlin Android
+# CyberArk Identity SDK Sample Application
 **Status**: Community
 
 This sample application demonstrates the integration of `CyberArk Identity SDK` into a Kotlin Android application.
@@ -10,10 +10,13 @@ Below are the sample application.
 | Sample | Description |
 |--------|-------------|
 | [CyberArk Identity SDK](./app) | This example shows you how to use the `CyberArk Identity SDK` to authenticate a user |
+| Language | Kotlin |
+| Platform | Android |
 
 ## Code Maintainers
 [CyberArk Identity Team](https://www.cyberark.com)
 
 <a id="license"></a>
 ## License
+Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
 This project is licensed under Apache - see [`LICENSE`](LICENSE) for more details.

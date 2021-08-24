@@ -28,7 +28,7 @@ object CyberArkAuthBuilder {
     /**
      * Default Base URL
      */
-    private const val BASE_URL = "https://aaj7617.my.dev.idaptive.app/"
+    private const val BASE_URL = "https://pod0.idaptive.app/"
 
     /**
      * Get retrofit builder instance for base URL
@@ -40,6 +40,19 @@ object CyberArkAuthBuilder {
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
+    }
+
+    /**
+     * Get retrofit builder instance for tenant URL
+     *
+     * @param tenantUrl: tenant URL
+     * @return Retrofit
+     */
+    fun getRetrofit(tenantUrl: String): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(tenantUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 
     /**
