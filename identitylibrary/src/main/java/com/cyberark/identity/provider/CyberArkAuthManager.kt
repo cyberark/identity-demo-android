@@ -53,19 +53,19 @@ internal class CyberArkAuthManager(
      */
     override fun updateResultForAccessToken(intent: Intent?): Boolean {
         val sanitizer = UrlQuerySanitizer()
-        sanitizer.setAllowUnregisteredParamaters(true)
+        sanitizer.allowUnregisteredParamaters = true
         sanitizer.parseUrl(intent?.data?.toString())
         val code = sanitizer.getValue(CyberArkAccountBuilder.KEY_CODE)
 
-        val params = HashMap<String?, String?>()
-        params[CyberArkAccountBuilder.KEY_GRANT_TYPE] =
-            CyberArkAccountBuilder.AUTHORIZATION_CODE_VALUE
-        params[CyberArkAccountBuilder.KEY_CODE] = code.toString()
-        params[CyberArkAccountBuilder.KEY_REDIRECT_URI] = account.getRedirectURL
-        params[CyberArkAccountBuilder.KEY_CLIENT_ID] = account.getClientId
-        params[CyberArkAccountBuilder.KEY_CODE_VERIFIER] = account.getCodeVerifier
-
         if (code != null) {
+            val params = HashMap<String?, String?>()
+            params[CyberArkAccountBuilder.KEY_GRANT_TYPE] =
+                CyberArkAccountBuilder.AUTHORIZATION_CODE_VALUE
+            params[CyberArkAccountBuilder.KEY_CODE] = code.toString()
+            params[CyberArkAccountBuilder.KEY_REDIRECT_URI] = account.getRedirectURL
+            params[CyberArkAccountBuilder.KEY_CLIENT_ID] = account.getClientId
+            params[CyberArkAccountBuilder.KEY_CODE_VERIFIER] = account.getCodeVerifier
+
             Log.i(TAG, "Code exchange for access token")
             viewModel.handleAuthorizationCode(params, account.getOAuthTokenURL)
         } else {
