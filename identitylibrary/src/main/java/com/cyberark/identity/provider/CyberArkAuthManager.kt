@@ -19,6 +19,7 @@ package com.cyberark.identity.provider
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.net.UrlQuerySanitizer
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -51,7 +52,10 @@ internal class CyberArkAuthManager(
      * @return Boolean
      */
     override fun updateResultForAccessToken(intent: Intent?): Boolean {
-        val code = intent?.data?.getQueryParameter(CyberArkAccountBuilder.KEY_CODE)
+        val sanitizer = UrlQuerySanitizer()
+        sanitizer.setAllowUnregisteredParamaters(true)
+        sanitizer.parseUrl(intent?.data?.toString())
+        val code = sanitizer.getValue(CyberArkAccountBuilder.KEY_CODE)
 
         val params = HashMap<String?, String?>()
         params[CyberArkAccountBuilder.KEY_GRANT_TYPE] =
