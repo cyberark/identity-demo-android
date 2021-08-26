@@ -49,7 +49,7 @@ enum class AlertButtonType {
  * @param title: button title
  * @param buttonType: button type
  */
-class AlertButton(title:String, buttonType:AlertButtonType) {
+class AlertButton(title: String, buttonType: AlertButtonType) {
     var buttonTitle = title; private set
     var buttonType = buttonType; private set
 }
@@ -59,9 +59,10 @@ class AlertButton(title:String, buttonType:AlertButtonType) {
  *
  * @property callback: AlertDialogButtonCallback
  */
-class AlertDialogHandler(private val callback: AlertDialogButtonCallback):DialogInterface.OnClickListener {
-    private lateinit var alertDialog:AlertDialog
-    private var cancellable:Boolean = true
+class AlertDialogHandler(private val callback: AlertDialogButtonCallback) :
+    DialogInterface.OnClickListener {
+    private lateinit var alertDialog: AlertDialog
+    private var cancellable: Boolean = true
 
     /**
      * Display alert popup
@@ -73,17 +74,23 @@ class AlertDialogHandler(private val callback: AlertDialogButtonCallback):Dialog
      * @param pButtons: alert button list
      * @return AlertDialog
      */
-    fun displayAlert(activity:Activity, title:String, message:String, cancellable:Boolean, pButtons:List<AlertButton> ): AlertDialog {
+    fun displayAlert(
+        activity: Activity,
+        title: String,
+        message: String,
+        cancellable: Boolean,
+        pButtons: List<AlertButton>
+    ): AlertDialog {
         val alerBuilder = AlertDialog.Builder(activity)
         alerBuilder.setTitle(title)
         alerBuilder.setMessage(message)
         this.cancellable = cancellable
         alerBuilder.setCancelable(this.cancellable)
         for (pButton in pButtons) {
-            when(pButton.buttonType) {
-                AlertButtonType.POSITIVE -> alerBuilder.setPositiveButton(pButton.buttonTitle,this)
-                AlertButtonType.NEGATIVE -> alerBuilder.setNegativeButton(pButton.buttonTitle,this)
-                AlertButtonType.NEUTRAL -> alerBuilder.setNeutralButton(pButton.buttonTitle,this)
+            when (pButton.buttonType) {
+                AlertButtonType.POSITIVE -> alerBuilder.setPositiveButton(pButton.buttonTitle, this)
+                AlertButtonType.NEGATIVE -> alerBuilder.setNegativeButton(pButton.buttonTitle, this)
+                AlertButtonType.NEUTRAL -> alerBuilder.setNeutralButton(pButton.buttonTitle, this)
             }
         }
         alertDialog = alerBuilder.create()
@@ -99,11 +106,11 @@ class AlertDialogHandler(private val callback: AlertDialogButtonCallback):Dialog
      */
     override fun onClick(dialog: DialogInterface?, which: Int) {
         print("Dialog button selected")
-        var buttonType:AlertButtonType = AlertButtonType.NEUTRAL
-        when(which) {
-            AlertDialog.BUTTON_POSITIVE->
+        var buttonType: AlertButtonType = AlertButtonType.NEUTRAL
+        when (which) {
+            AlertDialog.BUTTON_POSITIVE ->
                 buttonType = AlertButtonType.POSITIVE
-            AlertDialog.BUTTON_NEGATIVE->
+            AlertDialog.BUTTON_NEGATIVE ->
                 buttonType = AlertButtonType.NEGATIVE
         }
         callback.tappedButtonType(buttonType)

@@ -48,12 +48,12 @@ internal class EnCryptor {
         BadPaddingException::class,
         IllegalBlockSizeException::class
     )
-    fun encryptText(alias: String, textToEncrypt: String): Pair<ByteArray,ByteArray> {
+    fun encryptText(alias: String, textToEncrypt: String): Pair<ByteArray, ByteArray> {
         val cipher: Cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(alias))
         val iv = cipher.iv
         val encryptedData = cipher.doFinal(textToEncrypt.toByteArray(Charsets.UTF_8))
-        return Pair(iv,encryptedData)
+        return Pair(iv, encryptedData)
     }
 
     /**

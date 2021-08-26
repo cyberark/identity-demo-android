@@ -17,13 +17,13 @@
 package com.cyberark.mfa
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.model.AuthCodeFlowModel
@@ -92,7 +92,7 @@ class HomeActivity : AppCompatActivity() {
                 .redirectUri(getString(R.string.cyberark_account_redirect_uri))
                 .build()
         // Print authorize URL
-        Log.i(tag, cyberArkAccountBuilder.OAuthBaseURL)
+        Log.i(tag, cyberArkAccountBuilder.getOAuthBaseURL)
         return cyberArkAccountBuilder
     }
 

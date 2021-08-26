@@ -37,9 +37,9 @@ object CyberArkAuthBuilder {
      */
     private fun getRetrofit(): Retrofit {
         return Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 
     /**
@@ -58,6 +58,7 @@ object CyberArkAuthBuilder {
     /**
      * CyberArk auth service instance
      */
-    val CYBER_ARK_AUTH_SERVICE: CyberArkAuthService = getRetrofit().create(CyberArkAuthService::class.java)
+    val CYBER_ARK_AUTH_SERVICE: CyberArkAuthService =
+        getRetrofit().create(CyberArkAuthService::class.java)
 
 }

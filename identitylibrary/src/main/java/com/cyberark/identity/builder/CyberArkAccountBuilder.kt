@@ -33,13 +33,13 @@ import java.util.*
  * @property redirectUri: client callback URI
  */
 class CyberArkAccountBuilder(
-        val domainURL: String?,
-        val clientId: String?,
-        val appId: String?,
-        val responseType: String?,
-        val state: String?,
-        val scope: String?,
-        val redirectUri: String?
+    val domainURL: String?,
+    val clientId: String?,
+    val appId: String?,
+    val responseType: String?,
+    val state: String?,
+    val scope: String?,
+    val redirectUri: String?
 ) {
 
     private val baseURL: HttpUrl?
@@ -74,13 +74,13 @@ class CyberArkAccountBuilder(
      * @property redirectUri: client callback URI
      */
     data class Builder(
-            var domainURL: String? = null,
-            var clientId: String? = null,
-            var appId: String? = null,
-            var responseType: String? = null,
-            var state: String? = null,
-            var scope: String? = null,
-            var redirectUri: String? = null
+        var domainURL: String? = null,
+        var clientId: String? = null,
+        var appId: String? = null,
+        var responseType: String? = null,
+        var state: String? = null,
+        var scope: String? = null,
+        var redirectUri: String? = null
     ) {
 
         /**
@@ -137,43 +137,54 @@ class CyberArkAccountBuilder(
          *
          */
         fun build() = CyberArkAccountBuilder(
-                domainURL,
-                clientId,
-                appId,
-                responseType,
-                state,
-                scope,
-                redirectUri
+            domainURL,
+            clientId,
+            appId,
+            responseType,
+            state,
+            scope,
+            redirectUri
         )
     }
 
     /**
      * Get OAuth base URL
      */
-    val OAuthBaseURL: String
+    val getOAuthBaseURL: String
         get() = baseURL!!.newBuilder()
-                .addPathSegment("oauth2")
-                .addPathSegment("authorize")
-                .addPathSegment(appId.toString())
-                .addQueryParameter(KEY_RESPONSE_TYPE, responseType.toString())
-                .addQueryParameter(KEY_CLIENT_ID, clientId.toString())
-                .addQueryParameter(KEY_SCOPE, scope.toString())
-                .addQueryParameter(KEY_CODE_CHALLENGE, getCodeChallenge)
-                .addQueryParameter(KEY_CODE_CHALLENGE_METHOD, CODE_CHALLENGE_METHOD_VALUE)
-                .addEncodedQueryParameter(KEY_REDIRECT_URI, redirectUri.toString())
-                .build()
-                .toString()
+            .addPathSegment("oauth2")
+            .addPathSegment("authorize")
+            .addPathSegment(appId.toString())
+            .addQueryParameter(KEY_RESPONSE_TYPE, responseType.toString())
+            .addQueryParameter(KEY_CLIENT_ID, clientId.toString())
+            .addQueryParameter(KEY_SCOPE, scope.toString())
+            .addQueryParameter(KEY_CODE_CHALLENGE, getCodeChallenge)
+            .addQueryParameter(KEY_CODE_CHALLENGE_METHOD, CODE_CHALLENGE_METHOD_VALUE)
+            .addEncodedQueryParameter(KEY_REDIRECT_URI, redirectUri.toString())
+            .build()
+            .toString()
 
     /**
      * Get OAuth end session URL
      */
-    val OAuthEndSessionURL: String
+    val getOAuthEndSessionURL: String
         get() = baseURL!!.newBuilder()
-                .addPathSegment("oauth2")
-                .addPathSegment("endsession")
-                .addEncodedQueryParameter(KEY_POST_LOGOUT_REDIRECT_URI, redirectUri.toString())
-                .build()
-                .toString()
+            .addPathSegment("oauth2")
+            .addPathSegment("endsession")
+            .addEncodedQueryParameter(KEY_POST_LOGOUT_REDIRECT_URI, redirectUri.toString())
+            .build()
+            .toString()
+
+    /**
+     * Get OAuth Token URL
+     */
+    val getOAuthTokenURL: String
+        get() = baseURL!!.newBuilder()
+            .addPathSegment("oauth2")
+            .addPathSegment("Token")
+            .addPathSegment(appId.toString())
+            .build()
+            .toString()
 
     /**
      * Get application callback URL
@@ -194,6 +205,18 @@ class CyberArkAccountBuilder(
         get() = baseURL!!.newBuilder().toString()
 
     /**
+     * Get code challenge
+     */
+    private val getCodeChallenge: String
+        get() = codeChallenge.toString()
+
+    /**
+     * Get code verifier
+     */
+    val getCodeVerifier: String
+        get() = codeVerifier.toString()
+
+    /**
      * Check valid and secure url
      *
      * @param url: authorize URL
@@ -205,7 +228,8 @@ class CyberArkAccountBuilder(
         }
         val validateURl = url.lowercase(Locale.ROOT)
         require(!validateURl.startsWith("http://")) { "Invalid url: '$url'." }
-        val secureURL = if (validateURl.startsWith("https://")) validateURl else "https://$validateURl"
+        val secureURL =
+            if (validateURl.startsWith("https://")) validateURl else "https://$validateURl"
         return secureURL.toHttpUrlOrNull()
     }
 
@@ -223,16 +247,4 @@ class CyberArkAccountBuilder(
         codeVerifier.also { this.codeVerifier = it }
         codeChallenge.also { this.codeChallenge = it }
     }
-
-    /**
-     * Get code challenge
-     */
-    private val getCodeChallenge: String
-        get() = codeChallenge.toString()
-
-    /**
-     * Get code verifier
-     */
-    val getCodeVerifier: String
-        get() = codeVerifier.toString()
 }

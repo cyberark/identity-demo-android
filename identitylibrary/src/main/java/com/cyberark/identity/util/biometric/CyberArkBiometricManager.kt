@@ -27,7 +27,7 @@ class CyberArkBiometricManager {
      * @param callbackCyberArk: CyberArkBiometricCallback Interface
      * @return CyberArkBiometricPromptUtilityImpl instance
      */
-    fun getBiometricUtility(callbackCyberArk: CyberArkBiometricCallback):CyberArkBiometricPromptUtility {
+    fun getBiometricUtility(callbackCyberArk: CyberArkBiometricCallback): CyberArkBiometricPromptUtility {
         return CyberArkBiometricPromptUtilityImpl(callbackCyberArk)
     }
 }

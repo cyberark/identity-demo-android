@@ -84,7 +84,7 @@ object CyberArkAuthProvider {
      * @property account: CyberArkAccountBuilder instance
      */
     class LoginBuilder internal constructor(
-            private val account: CyberArkAccountBuilder
+        private val account: CyberArkAccountBuilder
     ) {
         /**
          * Login user
@@ -109,7 +109,7 @@ object CyberArkAuthProvider {
      * @property account: CyberArkAccountBuilder instance
      */
     class EndSessionBuilder internal constructor(
-            private val account: CyberArkAccountBuilder
+        private val account: CyberArkAccountBuilder
     ) {
         /**
          * End session
@@ -131,7 +131,7 @@ object CyberArkAuthProvider {
      * @property account: CyberArkAccountBuilder instance
      */
     class RefreshTokenBuilder internal constructor(
-            private val account: CyberArkAccountBuilder
+        private val account: CyberArkAccountBuilder
     ) {
         /**
          * Get access token using refresh token
@@ -140,7 +140,10 @@ object CyberArkAuthProvider {
          * @param refreshTokenData: refresh token data
          * @return LiveData<ResponseHandler<RefreshTokenModel>>: LiveData response handler for RefreshTokenModel
          */
-        fun start(context: Context, refreshTokenData: String): LiveData<ResponseHandler<RefreshTokenModel>> {
+        fun start(
+            context: Context,
+            refreshTokenData: String
+        ): LiveData<ResponseHandler<RefreshTokenModel>> {
             Log.i(TAG, "Invoke new access token using refresh token")
             val cyberarkAuthManager = CyberArkAuthManager(context, account)
             cyberarkAuthManager.refreshToken(refreshTokenData)
@@ -163,7 +166,10 @@ object CyberArkAuthProvider {
          * @param accessToken: access token data
          * @return LiveData<ResponseHandler<EnrollmentModel>>: LiveData response handler for EnrollmentModel
          */
-        fun start(context: Context, accessToken: String): LiveData<ResponseHandler<EnrollmentModel>> {
+        fun start(
+            context: Context,
+            accessToken: String
+        ): LiveData<ResponseHandler<EnrollmentModel>> {
             Log.i(TAG, "Start enroll")
             val cyberarkEnrollmentManager = CyberArkEnrollmentManager(context, accessToken, account)
             cyberarkEnrollmentManager.enroll()

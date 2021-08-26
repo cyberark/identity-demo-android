@@ -34,7 +34,8 @@ import org.json.JSONObject
  *
  * @property cyberArkAuthHelper: CyberArkAuthHelper instance
  */
-internal class ScanQRCodeViewModel(private val cyberArkAuthHelper: CyberArkAuthHelper) : ViewModel() {
+internal class ScanQRCodeViewModel(private val cyberArkAuthHelper: CyberArkAuthHelper) :
+    ViewModel() {
 
     private val tag: String? = ScanQRCodeViewModel::class.simpleName
     private val qrCodeResponse = MutableLiveData<ResponseHandler<QRCodeLoginModel>>()
@@ -54,10 +55,12 @@ internal class ScanQRCodeViewModel(private val cyberArkAuthHelper: CyberArkAuthH
             qrCodeResponse.postValue(ResponseHandler.loading(null))
             try {
 
-                val idapNativeClient: Boolean = headerPayload.getBoolean(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT)
+                val idapNativeClient: Boolean =
+                    headerPayload.getBoolean(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT)
                 val bearerToken: String = headerPayload.getString(EndpointUrls.HEADER_AUTHORIZATION)
 
-                val usersFromApi = cyberArkAuthHelper.qrCodeLogin(idapNativeClient, bearerToken, qrCodeUrl)
+                val usersFromApi =
+                    cyberArkAuthHelper.qrCodeLogin(idapNativeClient, bearerToken, qrCodeUrl)
                 qrCodeResponse.postValue(ResponseHandler.success(usersFromApi))
             } catch (e: Exception) {
                 qrCodeResponse.postValue(ResponseHandler.error(e.toString(), null))

@@ -34,7 +34,8 @@ import kotlinx.coroutines.launch
  *
  * @property cyberArkAuthHelper: CyberArkAuthHelper instance
  */
-internal class AuthenticationViewModel(private val cyberArkAuthHelper: CyberArkAuthHelper) : ViewModel() {
+internal class AuthenticationViewModel(private val cyberArkAuthHelper: CyberArkAuthHelper) :
+    ViewModel() {
 
     private val tag: String? = AuthenticationViewModel::class.simpleName
     private val authResponse = MutableLiveData<ResponseHandler<AuthCodeFlowModel>>()
@@ -49,11 +50,11 @@ internal class AuthenticationViewModel(private val cyberArkAuthHelper: CyberArkA
      *
      * @param params: HashMap<String?, String?>, request body
      */
-    internal fun handleAuthorizationCode(params: HashMap<String?, String?>) {
+    internal fun handleAuthorizationCode(params: HashMap<String?, String?>, url: String) {
         viewModelScope.launch {
             authResponse.postValue(ResponseHandler.loading(null))
             try {
-                val accessTokenCreds = cyberArkAuthHelper.getAccessToken(params)
+                val accessTokenCreds = cyberArkAuthHelper.getAccessToken(params, url)
                 authResponse.postValue(ResponseHandler.success(accessTokenCreds))
             } catch (e: Exception) {
                 authResponse.postValue(ResponseHandler.error(e.toString(), null))
@@ -66,11 +67,11 @@ internal class AuthenticationViewModel(private val cyberArkAuthHelper: CyberArkA
      *
      * @param params: HashMap<String?, String?>, request body
      */
-    internal fun handleRefreshToken(params: HashMap<String?, String?>) {
+    internal fun handleRefreshToken(params: HashMap<String?, String?>, url: String) {
         viewModelScope.launch {
             refreshTokenResponse.postValue(ResponseHandler.loading(null))
             try {
-                val refreshTokenCreds = cyberArkAuthHelper.refreshToken(params)
+                val refreshTokenCreds = cyberArkAuthHelper.refreshToken(params, url)
                 refreshTokenResponse.postValue(ResponseHandler.success(refreshTokenCreds))
             } catch (e: Exception) {
                 refreshTokenResponse.postValue(ResponseHandler.error(e.toString(), null))

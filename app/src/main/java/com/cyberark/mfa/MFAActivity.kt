@@ -177,7 +177,7 @@ class MFAActivity : AppCompatActivity() {
             .redirectUri(getString(R.string.cyberark_account_redirect_uri))
             .build()
         // Print authorize URL
-        Log.i(tag, cyberArkAccountBuilder.OAuthBaseURL)
+        Log.i(tag, cyberArkAccountBuilder.getOAuthBaseURL)
         return cyberArkAccountBuilder
     }
 

@@ -44,9 +44,25 @@ private class KeyStoreManagerImpl : KeyStoreManager {
     override fun saveAuthToken(authToken: String): Boolean {
         val returnValues = encryptText(Constants.AUTH_ALIAS, authToken)
         if (returnValues != null) {
-            CyberArkPreferenceUtil.putString(Constants.ACCESS_TOKEN_IV, Base64.encodeToString(returnValues.first, Base64.DEFAULT))
-            CyberArkPreferenceUtil.putString(Constants.ACCESS_TOKEN, Base64.encodeToString(returnValues.second, Base64.DEFAULT))
-            DeCryptor().decryptData(Constants.AUTH_ALIAS, Base64.decode(CyberArkPreferenceUtil.getString(Constants.ACCESS_TOKEN, ""), Base64.DEFAULT), Base64.decode(CyberArkPreferenceUtil.getString(Constants.ACCESS_TOKEN_IV, ""), Base64.DEFAULT))
+            CyberArkPreferenceUtil.putString(
+                Constants.ACCESS_TOKEN_IV,
+                Base64.encodeToString(returnValues.first, Base64.DEFAULT)
+            )
+            CyberArkPreferenceUtil.putString(
+                Constants.ACCESS_TOKEN,
+                Base64.encodeToString(returnValues.second, Base64.DEFAULT)
+            )
+            DeCryptor().decryptData(
+                Constants.AUTH_ALIAS,
+                Base64.decode(
+                    CyberArkPreferenceUtil.getString(Constants.ACCESS_TOKEN, ""),
+                    Base64.DEFAULT
+                ),
+                Base64.decode(
+                    CyberArkPreferenceUtil.getString(Constants.ACCESS_TOKEN_IV, ""),
+                    Base64.DEFAULT
+                )
+            )
             return true
         }
         return false
@@ -61,8 +77,14 @@ private class KeyStoreManagerImpl : KeyStoreManager {
     override fun saveRefreshToken(refreshToken: String): Boolean {
         val returnValues = encryptText(Constants.REFRESH_ALIAS, refreshToken)
         if (returnValues != null) {
-            CyberArkPreferenceUtil.putString(Constants.REFRESH_TOKEN_IV, Base64.encodeToString(returnValues.first, Base64.DEFAULT))
-            CyberArkPreferenceUtil.putString(Constants.REFRESH_TOKEN, Base64.encodeToString(returnValues.second, Base64.DEFAULT))
+            CyberArkPreferenceUtil.putString(
+                Constants.REFRESH_TOKEN_IV,
+                Base64.encodeToString(returnValues.first, Base64.DEFAULT)
+            )
+            CyberArkPreferenceUtil.putString(
+                Constants.REFRESH_TOKEN,
+                Base64.encodeToString(returnValues.second, Base64.DEFAULT)
+            )
             return true
         }
         return false
@@ -78,7 +100,11 @@ private class KeyStoreManagerImpl : KeyStoreManager {
         val accessTokenIV = CyberArkPreferenceUtil.getString(Constants.ACCESS_TOKEN_IV, null)
         val accessToken = CyberArkPreferenceUtil.getString(Constants.ACCESS_TOKEN, null)
         if (accessTokenIV != null || accessToken != null) {
-            decryptedToken = decryptText(Constants.AUTH_ALIAS, Base64.decode(accessToken!!, Base64.DEFAULT), Base64.decode(accessTokenIV!!, Base64.DEFAULT))
+            decryptedToken = decryptText(
+                Constants.AUTH_ALIAS,
+                Base64.decode(accessToken!!, Base64.DEFAULT),
+                Base64.decode(accessTokenIV!!, Base64.DEFAULT)
+            )
         }
         return decryptedToken
     }
@@ -93,7 +119,11 @@ private class KeyStoreManagerImpl : KeyStoreManager {
         val refreshTokenIV = CyberArkPreferenceUtil.getString(Constants.REFRESH_TOKEN_IV, null)
         val refreshToken = CyberArkPreferenceUtil.getString(Constants.REFRESH_TOKEN, null)
         if (refreshTokenIV != null || refreshToken != null) {
-            decryptedToken = decryptText(Constants.REFRESH_ALIAS, Base64.decode(refreshToken!!, Base64.DEFAULT), Base64.decode(refreshTokenIV!!, Base64.DEFAULT))
+            decryptedToken = decryptText(
+                Constants.REFRESH_ALIAS,
+                Base64.decode(refreshToken!!, Base64.DEFAULT),
+                Base64.decode(refreshTokenIV!!, Base64.DEFAULT)
+            )
         }
         return decryptedToken
     }

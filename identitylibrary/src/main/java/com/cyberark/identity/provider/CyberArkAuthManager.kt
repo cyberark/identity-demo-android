@@ -63,7 +63,7 @@ internal class CyberArkAuthManager(
 
         if (code != null) {
             Log.i(TAG, "Code exchange for access token")
-            viewModel.handleAuthorizationCode(params)
+            viewModel.handleAuthorizationCode(params, account.getOAuthTokenURL)
         } else {
             Log.i(TAG, "Unable to fetch code from server to get access token")
             // TODO.. handle error, throw exception
@@ -84,7 +84,7 @@ internal class CyberArkAuthManager(
 
         if (refreshTokenData != null) {
             Log.i(TAG, "Get new access token using refresh token")
-            viewModel.handleRefreshToken(params)
+            viewModel.handleRefreshToken(params, account.getOAuthTokenURL)
         } else {
             Log.i(TAG, "Unable to fetch access token using refresh token")
             // TODO.. handle error, throw exception
@@ -98,7 +98,7 @@ internal class CyberArkAuthManager(
     internal fun startAuthentication() {
         CyberArkAuthActivity.authenticateUsingCustomTab(
             context,
-            Uri.parse(account.OAuthBaseURL)
+            Uri.parse(account.getOAuthBaseURL)
         )
     }
 
@@ -109,7 +109,7 @@ internal class CyberArkAuthManager(
     internal fun endSession() {
         CyberArkAuthActivity.authenticateUsingCustomTab(
             context,
-            Uri.parse(account.OAuthEndSessionURL)
+            Uri.parse(account.getOAuthEndSessionURL)
         )
     }
 

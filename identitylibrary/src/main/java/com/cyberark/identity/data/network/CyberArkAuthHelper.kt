@@ -37,27 +37,35 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
      * @param url: QR Code login URL
      * @return QRCodeLoginModel
      */
-    suspend fun qrCodeLogin(idapNativeClient: Boolean,
-                            bearerToken: String,
-                            url: String): QRCodeLoginModel = cyberArkAuthService.qrCodeLogin(idapNativeClient, bearerToken, url)
+    suspend fun qrCodeLogin(
+        idapNativeClient: Boolean,
+        bearerToken: String,
+        url: String
+    ): QRCodeLoginModel = cyberArkAuthService.qrCodeLogin(idapNativeClient, bearerToken, url)
 
     /**
      * Get access token
      *
      * @param params: request body
+     * @param url: token Url
      * @return AuthCodeFlowModel
      */
-    suspend fun getAccessToken(params: HashMap<String?,
-            String?>): AuthCodeFlowModel = cyberArkAuthService.getAccessToken(params)
+    suspend fun getAccessToken(
+        params: HashMap<String?,
+                String?>, url: String
+    ): AuthCodeFlowModel = cyberArkAuthService.getAccessToken(params, url)
 
     /**
      * Get refresh token
      *
      * @param params: request body
+     * @param url: token Url
      * @return RefreshTokenModel
      */
-    suspend fun refreshToken(params: HashMap<String?,
-            String?>): RefreshTokenModel = cyberArkAuthService.refreshToken(params)
+    suspend fun refreshToken(
+        params: HashMap<String?,
+                String?>, url: String
+    ): RefreshTokenModel = cyberArkAuthService.refreshToken(params, url)
 
     /**
      * Enroll device
@@ -69,10 +77,18 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
      * @param body: request body
      * @return EnrollmentModel
      */
-    suspend fun fastEnrollV3(centrifyNativeClient: Boolean,
-                             idapNativeClient: Boolean,
-                             acceptLang: String,
-                             bearerToken: String,
-                             body: RequestBody): EnrollmentModel = cyberArkAuthService.fastEnrollV3(centrifyNativeClient, idapNativeClient, acceptLang, bearerToken, body)
+    suspend fun fastEnrollV3(
+        centrifyNativeClient: Boolean,
+        idapNativeClient: Boolean,
+        acceptLang: String,
+        bearerToken: String,
+        body: RequestBody
+    ): EnrollmentModel = cyberArkAuthService.fastEnrollV3(
+        centrifyNativeClient,
+        idapNativeClient,
+        acceptLang,
+        bearerToken,
+        body
+    )
 
 }
