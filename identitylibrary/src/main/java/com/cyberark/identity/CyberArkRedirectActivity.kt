@@ -22,14 +22,18 @@ import androidx.appcompat.app.AppCompatActivity
 
 /**
  * CyberArkRedirectActivity is used to handle chrome custom tab browser callback
- * once the authentication is done successfully
+ * once the authentication done successfully
  *
  */
 class CyberArkRedirectActivity : AppCompatActivity() {
 
+    private val CYBERARK_REDIRECT_ACTION: String = (CyberArkRedirectActivity::class.java.getCanonicalName()
+            + ".CYBERARK_REDIRECT_ACTION")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val cyberArkAuthActivityIntent = Intent(this, CyberArkAuthActivity::class.java)
+        cyberArkAuthActivityIntent.action = CYBERARK_REDIRECT_ACTION
         cyberArkAuthActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         if (intent != null) {
             cyberArkAuthActivityIntent.data = intent.data
