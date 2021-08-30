@@ -24,6 +24,7 @@ import java.util.*
 /**
  * CyberArk account builder
  *
+ * @property systemURL: system URL
  * @property domainURL: domain URL
  * @property clientId: client ID
  * @property appId: application ID
@@ -33,15 +34,17 @@ import java.util.*
  * @property redirectUri: client callback URI
  */
 class CyberArkAccountBuilder(
-    val domainURL: String?,
-    val clientId: String?,
-    val appId: String?,
-    val responseType: String?,
-    val state: String?,
-    val scope: String?,
-    val redirectUri: String?
+    private val systemURL: String?,
+    private val domainURL: String?,
+    private val clientId: String?,
+    private val appId: String?,
+    private val responseType: String?,
+    private val state: String?,
+    private val scope: String?,
+    private val redirectUri: String?
 ) {
 
+    private val baseSystemURL: HttpUrl?
     private val baseURL: HttpUrl?
     private var codeVerifier: String? = null
     private var codeChallenge: String? = null
@@ -65,6 +68,7 @@ class CyberArkAccountBuilder(
     /**
      * Builder data class
      *
+     * @property systemURL: system URL
      * @property domainURL: domain URL
      * @property clientId: client ID
      * @property appId: application ID
@@ -74,6 +78,7 @@ class CyberArkAccountBuilder(
      * @property redirectUri: client callback URI
      */
     data class Builder(
+        var systemURL: String? = null,
         var domainURL: String? = null,
         var clientId: String? = null,
         var appId: String? = null,
@@ -82,6 +87,13 @@ class CyberArkAccountBuilder(
         var scope: String? = null,
         var redirectUri: String? = null
     ) {
+
+        /**
+         * Set System URL
+         *
+         * @param systemURL
+         */
+        fun systemURL(systemURL: String) = apply { this.systemURL = systemURL }
 
         /**
          * Set Domain URL
@@ -137,6 +149,7 @@ class CyberArkAccountBuilder(
          *
          */
         fun build() = CyberArkAccountBuilder(
+            systemURL,
             domainURL,
             clientId,
             appId,
@@ -205,6 +218,12 @@ class CyberArkAccountBuilder(
         get() = baseURL!!.newBuilder().toString()
 
     /**
+     * Get Base system URL
+     */
+    val getBaseSystemUrl: String
+        get() = baseSystemURL!!.newBuilder().toString()
+
+    /**
      * Get code challenge
      */
     private val getCodeChallenge: String
@@ -234,6 +253,10 @@ class CyberArkAccountBuilder(
     }
 
     init {
+        // Validate system URL
+        baseSystemURL = checkValidUrl(systemURL)
+        requireNotNull(baseSystemURL) { String.format("Invalid url: '%s'", systemURL) }
+
         // Validate base URL
         baseURL = checkValidUrl(domainURL)
         requireNotNull(baseURL) { String.format("Invalid url: '%s'", domainURL) }

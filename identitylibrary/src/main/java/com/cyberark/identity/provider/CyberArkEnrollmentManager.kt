@@ -60,7 +60,7 @@ internal class CyberArkEnrollmentManager(
         // Initialize EnrollmentViewModel
         val appContext: AppCompatActivity = context as AppCompatActivity
         val cyberArkAuthService: CyberArkAuthService =
-            CyberArkAuthBuilder.getRetrofit(account.getBaseUrl)
+            CyberArkAuthBuilder.getRetrofit(account.getBaseSystemUrl)
                 .create(CyberArkAuthService::class.java)
         viewModel = ViewModelProvider(
             appContext,

@@ -84,13 +84,14 @@ class HomeActivity : AppCompatActivity() {
      */
     private fun setupAccount(): CyberArkAccountBuilder {
         val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
-                .clientId(getString(R.string.cyberark_account_client_id))
-                .domainURL(getString(R.string.cyberark_account_host))
-                .appId(getString(R.string.cyberark_account_app_id))
-                .responseType(getString(R.string.cyberark_account_response_type))
-                .scope(getString(R.string.cyberark_account_scope))
-                .redirectUri(getString(R.string.cyberark_account_redirect_uri))
-                .build()
+            .systemURL(getString(R.string.cyberark_account_system_url))
+            .domainURL(getString(R.string.cyberark_account_host))
+            .clientId(getString(R.string.cyberark_account_client_id))
+            .appId(getString(R.string.cyberark_account_app_id))
+            .responseType(getString(R.string.cyberark_account_response_type))
+            .scope(getString(R.string.cyberark_account_scope))
+            .redirectUri(getString(R.string.cyberark_account_redirect_uri))
+            .build()
         // Print authorize URL
         Log.i(tag, cyberArkAccountBuilder.getOAuthBaseURL)
         return cyberArkAccountBuilder
@@ -104,7 +105,7 @@ class HomeActivity : AppCompatActivity() {
      */
     private fun startAuthentication(cyberArkAccountBuilder: CyberArkAccountBuilder) {
         val authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>> =
-                CyberArkAuthProvider.login(cyberArkAccountBuilder).start(this)
+            CyberArkAuthProvider.login(cyberArkAccountBuilder).start(this)
 
         // Verify if there is any active observer, if not then add observer to get API response
         if (!authResponseHandler.hasActiveObservers()) {
@@ -115,9 +116,9 @@ class HomeActivity : AppCompatActivity() {
                         Log.i(tag, ResponseStatus.SUCCESS.toString())
                         // Show authentication success message using Toast
                         Toast.makeText(
-                                this,
-                                "Received Access Token & Refresh Token" + ResponseStatus.SUCCESS.toString(),
-                                Toast.LENGTH_SHORT
+                            this,
+                            "Received Access Token & Refresh Token" + ResponseStatus.SUCCESS.toString(),
+                            Toast.LENGTH_SHORT
                         ).show()
                         // Save access token and refresh token in SharedPref using keystore encryption
                         KeyStoreProvider.get().saveAuthToken(it.data!!.access_token)
@@ -136,9 +137,9 @@ class HomeActivity : AppCompatActivity() {
                         Log.i(tag, ResponseStatus.ERROR.toString())
                         // Show authentication error message using Toast
                         Toast.makeText(
-                                this,
-                                "Error: Unable to fetch Access Token & Refresh Token",
-                                Toast.LENGTH_SHORT
+                            this,
+                            "Error: Unable to fetch Access Token & Refresh Token",
+                            Toast.LENGTH_SHORT
                         ).show()
                     }
                     ResponseStatus.LOADING -> {

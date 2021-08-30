@@ -30,8 +30,7 @@
         <activity android:name=".MFAActivity" />
 
         <activity
-            android:name=".HomeActivity"
-            android:exported="false">
+            android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
