@@ -40,7 +40,9 @@ class CyberArkAuthActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        setIntent(intent)
+        if (CyberArkRedirectActivity.CYBERARK_REDIRECT_ACTION == intent!!.action) {
+            setIntent(intent)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -27,8 +27,10 @@ import androidx.appcompat.app.AppCompatActivity
  */
 class CyberArkRedirectActivity : AppCompatActivity() {
 
-    private val CYBERARK_REDIRECT_ACTION: String = (CyberArkRedirectActivity::class.java.getCanonicalName()
-            + ".CYBERARK_REDIRECT_ACTION")
+    companion object {
+        val CYBERARK_REDIRECT_ACTION =
+            CyberArkRedirectActivity::class.java.canonicalName + ".CYBERARK_REDIRECT_ACTION"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +40,14 @@ class CyberArkRedirectActivity : AppCompatActivity() {
         if (intent != null) {
             cyberArkAuthActivityIntent.data = intent.data
         }
-        startActivity(cyberArkAuthActivityIntent)
+        // Get the flags
+        val flags: Int = intent.flags
+        // Check that the nested intent does not grant URI permissions
+        if (flags and Intent.FLAG_GRANT_READ_URI_PERMISSION == 0 &&
+            flags and Intent.FLAG_GRANT_WRITE_URI_PERMISSION == 0
+        ) {
+            startActivity(cyberArkAuthActivityIntent)
+        }
         finish()
     }
 }
