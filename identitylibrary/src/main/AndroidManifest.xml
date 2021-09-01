@@ -37,15 +37,15 @@
             tools:replace="screenOrientation" />
 
         <activity
-            android:name="com.cyberark.identity.CyberArkAuthActivity"
+            android:name="com.cyberark.identity.activity.CyberArkAuthActivity"
             android:autoRemoveFromRecents="true"
             android:exported="false"
             android:launchMode="singleTask" />
 
-        <activity android:name="com.cyberark.identity.CyberArkQRCodeLoginActivity" />
+        <activity android:name="com.cyberark.identity.activity.CyberArkQRCodeLoginActivity" />
 
         <activity
-            android:name="com.cyberark.identity.CyberArkRedirectActivity"
+            android:name="com.cyberark.identity.activity.CyberArkRedirectActivity"
             android:autoRemoveFromRecents="true"
             android:exported="true">
             <intent-filter

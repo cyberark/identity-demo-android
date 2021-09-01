@@ -56,7 +56,7 @@ class AuthenticationViewModelTest : TestCase() {
     fun testHandleAuthorizationCode() {
         val params = HashMap<String?, String?>()
         authenticationViewModel.getAccessToken().observeForever(authObserver)
-        authenticationViewModel.handleAuthorizationCode(params)
+        authenticationViewModel.handleAuthorizationCode(params,"")
         verify(authObserver, atLeastOnce()).onChanged(any())
     }
 
@@ -64,7 +64,7 @@ class AuthenticationViewModelTest : TestCase() {
     fun testHandleRefreshToken() {
         val params = HashMap<String?, String?>()
         authenticationViewModel.getRefreshToken().observeForever(refreshObserver)
-        authenticationViewModel.handleRefreshToken(params)
+        authenticationViewModel.handleRefreshToken(params,"")
         verify(refreshObserver, atLeastOnce()).onChanged(any())
     }
 }

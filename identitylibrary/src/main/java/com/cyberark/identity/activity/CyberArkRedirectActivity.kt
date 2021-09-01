@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.identity
+package com.cyberark.identity.activity
 
 import android.content.Intent
 import android.os.Bundle

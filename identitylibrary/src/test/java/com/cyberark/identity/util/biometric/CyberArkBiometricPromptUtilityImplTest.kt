@@ -116,6 +116,7 @@ class CyberArkBiometricPromptUtilityImplTest {
 
         val mockBiometricPrompt = getBioMetricPrompt()
         registerBiometricPrompt(mockBiometricPrompt, biometricPromptUtility)
+        Whitebox.setInternalState(biometricPromptUtility,"negitiveButtonText","UseAppPin")
         Whitebox.invokeMethod<Null>(biometricPromptUtility, "checkAndAuthenticate", mockActivity)
 
         PowerMockito.doReturn(BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE).`when`(
@@ -187,7 +188,7 @@ class CyberArkBiometricPromptUtilityImplTest {
         val biometricPromptUtility = PowerMockito.spy(CyberArkBiometricPromptUtilityImpl(callback))
         val mockBiometricPrompt = getBioMetricPrompt()
         registerBiometricPrompt(mockBiometricPrompt, biometricPromptUtility)
-
+        Whitebox.setInternalState(biometricPromptUtility,"negitiveButtonText","UseAppPin")
         Whitebox.invokeMethod<CyberArkBiometricPromptUtilityImpl>(
             biometricPromptUtility,
             "showBiometricPrompt",
@@ -245,13 +246,6 @@ class CyberArkBiometricPromptUtilityImplTest {
         Whitebox.setInternalState(biometricPromptUtility, "isAutoCancelElabled", true)
         callback.onAuthenticationSucceeded(PowerMockito.mock(BiometricPrompt.AuthenticationResult::class.java))
         assertNull(Whitebox.getInternalState<BiometricPrompt>(biometricPromptUtility,"mPrompt"))
-    }
-
-    @Test
-    fun testLaunchBiometricSetup() {
-        val biometricPromptUtility = PowerMockito.spy(CyberArkBiometricPromptUtilityImpl(callback))
-        Whitebox.invokeMethod<Null>(biometricPromptUtility, "launchBiometricSetup", mockActivity)
-        verify(mockActivity, atMostOnce()).startActivity(any())
     }
 
 

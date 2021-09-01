@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.identity
+package com.cyberark.identity.activity
 
 import android.Manifest
 import android.content.Intent
@@ -25,6 +25,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.cyberark.identity.R
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.util.ResponseStatus
@@ -193,7 +194,7 @@ class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Permiss
         })
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
             // Do something after user returned from app settings screen, like showing a Toast.
             Toast.makeText(

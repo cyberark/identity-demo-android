@@ -23,7 +23,7 @@ import android.net.UrlQuerySanitizer
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.cyberark.identity.CyberArkAuthActivity
+import com.cyberark.identity.activity.CyberArkAuthActivity
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
