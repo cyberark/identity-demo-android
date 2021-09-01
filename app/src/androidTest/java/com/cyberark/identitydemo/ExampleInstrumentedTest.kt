@@ -1,4 +1,4 @@
-package com.cyberark.mfa
+package com.cyberark.identitydemo
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

@@ -15,7 +15,7 @@
   ~ limitations under the License.
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cyberark.mfa">
+    package="com.cyberark.identitydemo">
 
     <application
         android:allowBackup="false"
@@ -27,10 +27,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IdentitySDK">
 
-        <activity android:name=".MFAActivity" />
+        <activity android:name="com.cyberark.identitydemo.MFAActivity" />
 
         <activity
-            android:name=".HomeActivity">
+            android:name="com.cyberark.identitydemo.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
