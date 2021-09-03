@@ -60,11 +60,11 @@ dependencies {
     testImplementation 'org.powermock:powermock-classloading-xstream:2.0.9'
     testImplementation 'org.powermock:powermock-api-mockito2:2.0.9'
     testImplementation 'org.robolectric:robolectric:4.6.1'
-    testImplementation "net.bytebuddy:byte-buddy:1.11.13"
+    testImplementation 'net.bytebuddy:byte-buddy:1.11.15'
     testImplementation "org.json:json:20210307"
     testImplementation "org.mockito.kotlin:mockito-kotlin:3.2.0"
     //mockito should be at 3.2.4 for java 11
-    testImplementation 'org.mockito:mockito-core:3.2.4'
+    testImplementation 'org.mockito:mockito-core:3.9.0'
 
     //"powermock-classloading-xstream" lib is dependent on "com.thoughtworks.xstream" lib to handle Snyk scan issues
     implementation 'com.thoughtworks.xstream:xstream:1.4.18'
