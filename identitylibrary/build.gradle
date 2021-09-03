@@ -37,38 +37,49 @@ android {
 
 dependencies {
 
-    implementation "androidx.biometric:biometric:1.2.0-alpha03"
     implementation 'androidx.core:core-ktx:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation "androidx.preference:preference-ktx:1.1.1"
 
-    //In-build test framework libs
+    //In-build unit test framework libs
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'androidx.test:core:1.4.0'
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "com.android.support.test:monitor:1.0.2"
+
+    //In-build android test framework libs
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation('androidx.test.espresso:espresso-intents:3.4.0')
-    //mockito should be at 3.2.4 for java 11
-    testImplementation 'org.mockito:mockito-core:3.2.4'
-    testImplementation 'androidx.test:core:1.4.0'
+
+    //External test framework libs
     testImplementation 'org.powermock:powermock-module-junit4:2.0.9'
     testImplementation 'org.powermock:powermock-module-junit4-rule:2.0.9'
     testImplementation 'org.powermock:powermock-classloading-xstream:2.0.9'
     testImplementation 'org.powermock:powermock-api-mockito2:2.0.9'
-    testImplementation "androidx.arch.core:core-testing:2.1.0"
-    testImplementation "org.robolectric:robolectric:4.4"
+    testImplementation 'org.robolectric:robolectric:4.6.1'
     testImplementation "net.bytebuddy:byte-buddy:1.11.13"
-    testImplementation "com.android.support.test:monitor:1.0.2"
-    testImplementation "org.mockito.kotlin:mockito-kotlin:3.2.0"
     testImplementation "org.json:json:20210307"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:3.2.0"
+    //mockito should be at 3.2.4 for java 11
+    testImplementation 'org.mockito:mockito-core:3.2.4'
+
+    //"powermock-classloading-xstream" lib is dependent on "com.thoughtworks.xstream" lib to handle Snyk scan issues
+    implementation 'com.thoughtworks.xstream:xstream:1.4.18'
+    //"org.robolectric:robolectric" lib is dependent on "com.google.guava:guava" lib to handle Snyk scan issues
+    implementation 'com.google.guava:guava:30.1.1-android'
 
     //LifeCycle libs
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
 
-    // custom tab support browser plugin
+    //Custom tab support browser plugin
     implementation "androidx.browser:browser:1.3.0"
+
+    //Biometrics support libs
+    implementation "androidx.biometric:biometric:1.2.0-alpha03"
 
     //Retrofit network libs
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
