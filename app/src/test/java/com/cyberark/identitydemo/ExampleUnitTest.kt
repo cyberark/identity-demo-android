@@ -1,4 +1,4 @@
-package com.cyberark.mfa
+package com.cyberark.identitydemo
 
 import org.junit.Test
 

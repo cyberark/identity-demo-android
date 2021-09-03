@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa
+package com.cyberark.identitydemo
 
 import android.app.Activity
 import android.content.Intent
