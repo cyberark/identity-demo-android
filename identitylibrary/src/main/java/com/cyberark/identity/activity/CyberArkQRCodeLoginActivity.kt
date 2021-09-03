@@ -42,7 +42,7 @@ import pub.devrel.easypermissions.EasyPermissions
  * CyberArk QR code login activity
  *
  */
-class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
+open class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     // Progress indicator variable
     private lateinit var progressBar: ProgressBar

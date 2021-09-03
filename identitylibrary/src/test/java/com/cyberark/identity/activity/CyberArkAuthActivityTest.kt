@@ -3,6 +3,7 @@ package com.cyberark.identity.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import com.cyberark.identity.Utility.Constants
 import com.cyberark.identity.Utility.RobolectricBase
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.provider.CyberArkAuthManager
@@ -24,7 +25,7 @@ import org.robolectric.android.controller.ActivityController
 )
 class CyberArkAuthActivityTest: RobolectricBase() {
 
-    private val ACTIVITY_LAUNCHED = "com.cyberark.identity.ACTIVITY_LAUNCHED"
+    private val ACTIVITY_LAUNCHED = "ACTIVITY_LAUNCHED"
 
     @Test
     public fun testOnCreate() {
@@ -70,8 +71,9 @@ class CyberArkAuthActivityTest: RobolectricBase() {
 
     private fun createIntent(): Intent {
         val intent = Intent()
-        val AUTHORIZE_URI = "com.cyberark.identity.AUTHORIZE_URI"
-        intent.putExtra(AUTHORIZE_URI, Uri.parse(setupAccount().getOAuthBaseURL))
+        val AUTHORIZE_URI = "AUTHORIZE_URI"
+
+        intent.putExtra(AUTHORIZE_URI, Uri.parse(Constants.systemURL))
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         return intent
     }
