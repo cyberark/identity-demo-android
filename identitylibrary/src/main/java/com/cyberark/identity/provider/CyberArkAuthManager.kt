@@ -42,7 +42,7 @@ internal class CyberArkAuthManager(
     private val account: CyberArkAccountBuilder
 ) : CyberArkAuthInterface {
 
-    private val TAG: String? = CyberArkAuthManager::class.simpleName
+    private val tag: String? = CyberArkAuthManager::class.simpleName
     private val viewModel: AuthenticationViewModel
 
     /**
@@ -52,25 +52,29 @@ internal class CyberArkAuthManager(
      * @return Boolean
      */
     override fun updateResultForAccessToken(intent: Intent?): Boolean {
-        val sanitizer = UrlQuerySanitizer()
-        sanitizer.allowUnregisteredParamaters = true
-        sanitizer.parseUrl(intent?.data?.toString())
-        val code = sanitizer.getValue(CyberArkAccountBuilder.KEY_CODE)
+        if(intent?.data != null) {
+            val sanitizer = UrlQuerySanitizer()
+            sanitizer.allowUnregisteredParamaters = true
+            sanitizer.parseUrl(intent?.data?.toString())
+            val code = sanitizer.getValue(CyberArkAccountBuilder.KEY_CODE)
 
-        if (code != null) {
-            val params = HashMap<String?, String?>()
-            params[CyberArkAccountBuilder.KEY_GRANT_TYPE] =
-                CyberArkAccountBuilder.AUTHORIZATION_CODE_VALUE
-            params[CyberArkAccountBuilder.KEY_CODE] = code.toString()
-            params[CyberArkAccountBuilder.KEY_REDIRECT_URI] = account.getRedirectURL
-            params[CyberArkAccountBuilder.KEY_CLIENT_ID] = account.getClientId
-            params[CyberArkAccountBuilder.KEY_CODE_VERIFIER] = account.getCodeVerifier
+            if (code != null) {
+                val params = HashMap<String?, String?>()
+                params[CyberArkAccountBuilder.KEY_GRANT_TYPE] =
+                    CyberArkAccountBuilder.AUTHORIZATION_CODE_VALUE
+                params[CyberArkAccountBuilder.KEY_CODE] = code.toString()
+                params[CyberArkAccountBuilder.KEY_REDIRECT_URI] = account.getRedirectURL
+                params[CyberArkAccountBuilder.KEY_CLIENT_ID] = account.getClientId
+                params[CyberArkAccountBuilder.KEY_CODE_VERIFIER] = account.getCodeVerifier
 
-            Log.i(TAG, "Code exchange for access token")
-            viewModel.handleAuthorizationCode(params, account.getOAuthTokenURL)
+                Log.i(tag, "Code exchange for access token")
+                viewModel.handleAuthorizationCode(params, account.getOAuthTokenURL)
+            } else {
+                Log.i(tag, "Unable to fetch code from server to get access token")
+                // TODO.. handle error, throw exception
+            }
         } else {
-            Log.i(TAG, "Unable to fetch code from server to get access token")
-            // TODO.. handle error, throw exception
+            Log.i(tag, "Intent data is null")
         }
         return true
     }
@@ -87,10 +91,10 @@ internal class CyberArkAuthManager(
         params[CyberArkAccountBuilder.KEY_REFRESH_TOKEN] = refreshTokenData
 
         if (refreshTokenData != null) {
-            Log.i(TAG, "Get new access token using refresh token")
+            Log.i(tag, "Get new access token using refresh token")
             viewModel.handleRefreshToken(params, account.getOAuthTokenURL)
         } else {
-            Log.i(TAG, "Unable to fetch access token using refresh token")
+            Log.i(tag, "Unable to fetch access token using refresh token")
             // TODO.. handle error, throw exception
         }
     }
