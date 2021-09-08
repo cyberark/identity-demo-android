@@ -15,12 +15,12 @@
   ~ limitations under the License.
   -->
 <resources>
-    <string name="cyberark_account_system_url">aaj7617.my.dev.idaptive.app</string>
-    <string name="cyberark_account_host">acme2.my.dev.idaptive.app</string>
+    <string name="cyberark_account_system_url">aam5988.my.idaptive.qa</string>
+    <string name="cyberark_account_host">acme.my.idaptive.qa</string>
     <string name="cyberark_account_client_id">axis</string>
-    <string name="cyberark_account_app_id">testoauth10</string>
+    <string name="cyberark_account_app_id">oauthtest1</string>
     <string name="cyberark_account_response_type">code</string>
     <string name="cyberark_account_scope">All</string>
-    <string name="cyberark_account_redirect_uri">demo://acme2.my.dev.idaptive.app/android/com.cyberark.mfa/callback</string>
+    <string name="cyberark_account_redirect_uri">demo://acme.my.idaptive.qa/android/com.cyberark.mfa/callback</string>
     <string name="cyberark_account_scheme">demo</string>
 </resources>
