@@ -18,7 +18,6 @@ package com.cyberark.mfa
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -40,7 +39,6 @@ import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
  */
 class HomeActivity : AppCompatActivity() {
 
-    private val tag: String? = HomeActivity::class.simpleName
 
     // Progress indicator variable
     private lateinit var progressBar: ProgressBar
@@ -92,8 +90,6 @@ class HomeActivity : AppCompatActivity() {
             .scope(getString(R.string.cyberark_account_scope))
             .redirectUri(getString(R.string.cyberark_account_redirect_uri))
             .build()
-        // Print authorize URL
-        Log.i(tag, cyberArkAccountBuilder.getOAuthBaseURL)
         return cyberArkAccountBuilder
     }
 
@@ -112,8 +108,6 @@ class HomeActivity : AppCompatActivity() {
             authResponseHandler.observe(this, {
                 when (it.status) {
                     ResponseStatus.SUCCESS -> {
-                        // Print authentication success message in log
-                        Log.i(tag, ResponseStatus.SUCCESS.toString())
                         // Show authentication success message using Toast
                         Toast.makeText(
                             this,
@@ -133,8 +127,6 @@ class HomeActivity : AppCompatActivity() {
                     ResponseStatus.ERROR -> {
                         // Hide progress indicator
                         progressBar.visibility = View.GONE
-                        // Print authentication error message in log
-                        Log.i(tag, ResponseStatus.ERROR.toString())
                         // Show authentication error message using Toast
                         Toast.makeText(
                             this,

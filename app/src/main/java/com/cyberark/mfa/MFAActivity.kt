@@ -93,8 +93,6 @@ class MFAActivity : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 // Use key "QR_CODE_AUTH_RESULT" to receive result data
                 val data = result.data?.getStringExtra("QR_CODE_AUTH_RESULT")
-                // Print QR Code Authenticator result
-                Log.i(tag, "data :: " + data.toString())
                 // Show QR Code Authenticator result using Toast
                 Toast.makeText(
                     this,
@@ -177,8 +175,6 @@ class MFAActivity : AppCompatActivity() {
             .scope(getString(R.string.cyberark_account_scope))
             .redirectUri(getString(R.string.cyberark_account_redirect_uri))
             .build()
-        // Print authorize URL
-        Log.i(tag, cyberArkAccountBuilder.getOAuthBaseURL)
         return cyberArkAccountBuilder
     }
 
@@ -256,8 +252,6 @@ class MFAActivity : AppCompatActivity() {
             authResponseHandler.observe(this, {
                 when (it.status) {
                     ResponseStatus.SUCCESS -> {
-                        // Print enrollment success message
-                        Log.i(tag, ResponseStatus.SUCCESS.toString())
                         // Show enrollment success message using Toast
                         Toast.makeText(
                             this,
@@ -274,8 +268,6 @@ class MFAActivity : AppCompatActivity() {
                         progressBar.visibility = View.GONE
                     }
                     ResponseStatus.ERROR -> {
-                        // Print enrollment error message
-                        Log.i(tag, ResponseStatus.ERROR.toString())
                         // Show enrollment error message using Toast
                         Toast.makeText(
                             this,
@@ -318,8 +310,6 @@ class MFAActivity : AppCompatActivity() {
             refreshTokenResponseHandler.observe(this, {
                 when (it.status) {
                     ResponseStatus.SUCCESS -> {
-                        // Print success message when the new access token is received
-                        Log.i(tag, ResponseStatus.SUCCESS.toString())
                         // Save access token in local variable
                         accessTokenData = it.data!!.access_token
                         // Save access token in shared preference using keystore encryption
@@ -334,8 +324,6 @@ class MFAActivity : AppCompatActivity() {
                         progressBar.visibility = View.GONE
                     }
                     ResponseStatus.ERROR -> {
-                        // Print error message when the new access token is not received
-                        Log.i(tag, ResponseStatus.ERROR.toString())
                         progressBar.visibility = View.GONE
                         // Show error message using Toast
                         Toast.makeText(
@@ -375,8 +363,6 @@ class MFAActivity : AppCompatActivity() {
                 } else {
                     Log.i(tag, "Not supported VERSION.SDK_INT < O")
                 }
-                // Print access token status
-                Log.i(tag, "Access Token Status $status")
 
                 if (!isEnrolled) {
                     // Handle enrollment flow based on access token expire status
@@ -476,8 +462,6 @@ class MFAActivity : AppCompatActivity() {
             } else {
                 Log.i(tag, "Not supported VERSION.SDK_INT < O")
             }
-            // Print access token expire status
-            Log.i(tag, "Access Token Status $status")
             if (!status) {
                 // Invoke API to get access token using refresh token
                 val account = setupAccount()
