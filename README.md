@@ -9,9 +9,11 @@ Below are the sample application.
 
 | Sample | Description |
 |--------|-------------|
-| [CyberArk Identity Android SDK](./app) | This example shows you how to use the `CyberArk Identity Android SDK` to authenticate a user |
+| [CyberArk Identity Android SDK](https://identity-developer.cyberark.com/docs/cyberark-identity-android-sdk) | This example shows you how to use the `CyberArk Identity Android SDK` to authenticate a user |
 | Language | Kotlin |
 | Platform | Android |
+
+To learn how to integrate CyberArk Identity in Android applications using the Identity SDK, refer to  [CyberArk Identity Team](https://identity-developer.cyberark.com/docs/cyberark-identity-android-sdk).
 
 ## Code Maintainers
 [CyberArk Identity Team](https://www.cyberark.com)
