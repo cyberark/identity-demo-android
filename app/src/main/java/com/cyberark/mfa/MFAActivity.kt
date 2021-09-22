@@ -44,6 +44,7 @@ import com.cyberark.identity.util.jwt.JWTUtils
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
+import com.cyberark.mfa.util.PreferenceConstants
 import java.util.*
 
 /**
@@ -148,7 +149,7 @@ class MFAActivity : AppCompatActivity() {
                 CyberArkPreferenceUtil.remove(Constants.REFRESH_TOKEN_IV)
 
                 // Remove ENROLLMENT_STATUS flag from device storage
-                CyberArkPreferenceUtil.remove("ENROLLMENT_STATUS")
+                CyberArkPreferenceUtil.remove(PreferenceConstants.ENROLLMENT_STATUS)
                 CyberArkPreferenceUtil.clear()
 
                 // Start HomeActivity
@@ -213,7 +214,7 @@ class MFAActivity : AppCompatActivity() {
         // Verify enrollment status and update button text
         if (::accessTokenData.isInitialized) {
             logOut.isEnabled = true
-            if (CyberArkPreferenceUtil.getBoolean("ENROLLMENT_STATUS", false)) {
+            if (CyberArkPreferenceUtil.getBoolean(PreferenceConstants.ENROLLMENT_STATUS, false)) {
                 isEnrolled = true
                 enrollButton.setText(R.string.tv_qr_authenticator)
             }
@@ -259,7 +260,7 @@ class MFAActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                         // Save enrollment status
-                        CyberArkPreferenceUtil.putBoolean("ENROLLMENT_STATUS", true)
+                        CyberArkPreferenceUtil.putBoolean(PreferenceConstants.ENROLLMENT_STATUS, true)
                         // Update UI status
                         logOut.isEnabled = true
                         isEnrolled = true

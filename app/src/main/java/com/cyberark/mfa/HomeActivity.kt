@@ -18,6 +18,7 @@ package com.cyberark.mfa
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -38,7 +39,6 @@ import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
  *
  */
 class HomeActivity : AppCompatActivity() {
-
 
     // Progress indicator variable
     private lateinit var progressBar: ProgressBar
@@ -62,8 +62,6 @@ class HomeActivity : AppCompatActivity() {
             startAuthentication(account)
         }
 
-        // Initialize CyberArk Preference Util
-        CyberArkPreferenceUtil.init(this)
         // Verify if access token is present or not
         val accessToken = KeyStoreProvider.get().getAuthToken()
         if (accessToken != null) {
@@ -114,6 +112,7 @@ class HomeActivity : AppCompatActivity() {
                             "Received Access Token & Refresh Token" + ResponseStatus.SUCCESS.toString(),
                             Toast.LENGTH_SHORT
                         ).show()
+                        Log.i("Access Token", it.data!!.access_token)
                         // Save access token and refresh token in SharedPref using keystore encryption
                         KeyStoreProvider.get().saveAuthToken(it.data!!.access_token)
                         KeyStoreProvider.get().saveRefreshToken(it.data!!.refresh_token)
