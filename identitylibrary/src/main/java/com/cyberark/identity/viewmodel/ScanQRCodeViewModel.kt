@@ -54,7 +54,6 @@ internal class ScanQRCodeViewModel(private val cyberArkAuthHelper: CyberArkAuthH
         viewModelScope.launch {
             qrCodeResponse.postValue(ResponseHandler.loading(null))
             try {
-
                 val idapNativeClient: Boolean =
                     headerPayload.getBoolean(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT)
                 val bearerToken: String = headerPayload.getString(EndpointUrls.HEADER_AUTHORIZATION)

@@ -164,10 +164,19 @@ open class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Pe
                     // Hide progress indicator
                     progressBar.visibility = View.GONE
                     // Add QR Code Authentication result in intent bundle
-                    intent.putExtra(
-                        "QR_CODE_AUTH_RESULT",
-                        "QR Code Authentication is done successfully"
-                    )
+
+                    if(it.data?.success == true) {
+                        intent.putExtra(
+                            "QR_CODE_AUTH_RESULT",
+                            "QR Code Authentication is done successfully"
+                        )
+                    } else {
+                        intent.putExtra(
+                            "QR_CODE_AUTH_RESULT",
+                            "QR Code Authentication is failed"
+                        )
+                    }
+
                     // Set result
                     setResult(RESULT_OK, intent)
                     // Close QR Code Login Activity
