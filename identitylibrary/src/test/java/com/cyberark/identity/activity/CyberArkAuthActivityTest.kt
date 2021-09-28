@@ -59,7 +59,7 @@ class CyberArkAuthActivityTest: RobolectricBase() {
     private fun setupAccount(): CyberArkAccountBuilder {
         val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
             .clientId("Axis")
-            .domainURL("aaj7617.my.dev.idaptive.app")
+            .hostURL("aaj7617.my.dev.idaptive.app")
             .appId("testoauth4")
             .responseType("code")
             .scope("All")

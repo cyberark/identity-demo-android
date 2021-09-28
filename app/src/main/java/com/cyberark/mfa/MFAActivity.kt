@@ -169,7 +169,7 @@ class MFAActivity : AppCompatActivity() {
     private fun setupAccount(): CyberArkAccountBuilder {
         val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
             .systemURL(getString(R.string.cyberark_account_system_url))
-            .domainURL(getString(R.string.cyberark_account_host))
+            .hostURL(getString(R.string.cyberark_account_host_url))
             .clientId(getString(R.string.cyberark_account_client_id))
             .appId(getString(R.string.cyberark_account_app_id))
             .responseType(getString(R.string.cyberark_account_response_type))

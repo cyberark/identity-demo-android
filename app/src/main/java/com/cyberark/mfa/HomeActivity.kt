@@ -31,7 +31,6 @@ import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.ResponseHandler
 import com.cyberark.identity.util.ResponseStatus
 import com.cyberark.identity.util.keystore.KeyStoreProvider
-import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 
 /**
  * Implementing SDK feature in HomeActivity
@@ -81,7 +80,7 @@ class HomeActivity : AppCompatActivity() {
     private fun setupAccount(): CyberArkAccountBuilder {
         val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
             .systemURL(getString(R.string.cyberark_account_system_url))
-            .domainURL(getString(R.string.cyberark_account_host))
+            .hostURL(getString(R.string.cyberark_account_host_url))
             .clientId(getString(R.string.cyberark_account_client_id))
             .appId(getString(R.string.cyberark_account_app_id))
             .responseType(getString(R.string.cyberark_account_response_type))

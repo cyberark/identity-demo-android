@@ -17,7 +17,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders = [cyberarkIdentityHost: "@string/cyberark_account_host",
+        manifestPlaceholders = [cyberarkIdentityHost: "@string/cyberark_account_host_url",
                                 cyberarkIdentityScheme: "@string/cyberark_account_scheme"]
     }
 

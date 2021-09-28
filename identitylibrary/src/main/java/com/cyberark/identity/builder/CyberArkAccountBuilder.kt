@@ -25,7 +25,7 @@ import java.util.*
  * CyberArk account builder
  *
  * @property systemURL: system URL
- * @property domainURL: domain URL
+ * @property hostURL: host URL
  * @property clientId: client ID
  * @property appId: application ID
  * @property responseType: response Type
@@ -35,7 +35,7 @@ import java.util.*
  */
 class CyberArkAccountBuilder(
     private val systemURL: String?,
-    private val domainURL: String?,
+    private val hostURL: String?,
     private val clientId: String?,
     private val appId: String?,
     private val responseType: String?,
@@ -57,6 +57,7 @@ class CyberArkAccountBuilder(
         const val KEY_POST_LOGOUT_REDIRECT_URI = "post_logout_redirect_uri"
         const val KEY_CLIENT_ID = "client_id"
         const val KEY_SCOPE = "scope"
+        const val KEY_NO_ZSO = "nozso"
         const val KEY_REFRESH_TOKEN = "refresh_token"
         const val KEY_CODE_VERIFIER = "code_verifier"
         const val KEY_CODE_CHALLENGE = "code_challenge"
@@ -69,7 +70,7 @@ class CyberArkAccountBuilder(
      * Builder data class
      *
      * @property systemURL: system URL
-     * @property domainURL: domain URL
+     * @property hostURL: host URL
      * @property clientId: client ID
      * @property appId: application ID
      * @property responseType: response Type
@@ -79,7 +80,7 @@ class CyberArkAccountBuilder(
      */
     data class Builder(
         var systemURL: String? = null,
-        var domainURL: String? = null,
+        var hostURL: String? = null,
         var clientId: String? = null,
         var appId: String? = null,
         var responseType: String? = null,
@@ -96,11 +97,11 @@ class CyberArkAccountBuilder(
         fun systemURL(systemURL: String) = apply { this.systemURL = systemURL }
 
         /**
-         * Set Domain URL
+         * Set host URL
          *
-         * @param domainURL
+         * @param hostURL
          */
-        fun domainURL(domainURL: String) = apply { this.domainURL = domainURL }
+        fun hostURL(hostURL: String) = apply { this.hostURL = hostURL }
 
         /**
          * Set Client ID
@@ -150,7 +151,7 @@ class CyberArkAccountBuilder(
          */
         fun build() = CyberArkAccountBuilder(
             systemURL,
-            domainURL,
+            hostURL,
             clientId,
             appId,
             responseType,
@@ -171,6 +172,7 @@ class CyberArkAccountBuilder(
             .addQueryParameter(KEY_RESPONSE_TYPE, responseType.toString())
             .addQueryParameter(KEY_CLIENT_ID, clientId.toString())
             .addQueryParameter(KEY_SCOPE, scope.toString())
+            .addQueryParameter(KEY_NO_ZSO, "true")
             .addQueryParameter(KEY_CODE_CHALLENGE, getCodeChallenge)
             .addQueryParameter(KEY_CODE_CHALLENGE_METHOD, CODE_CHALLENGE_METHOD_VALUE)
             .addEncodedQueryParameter(KEY_REDIRECT_URI, redirectUri.toString())
@@ -258,8 +260,8 @@ class CyberArkAccountBuilder(
         requireNotNull(baseSystemURL) { String.format("Invalid url: '%s'", systemURL) }
 
         // Validate base URL
-        baseURL = checkValidUrl(domainURL)
-        requireNotNull(baseURL) { String.format("Invalid url: '%s'", domainURL) }
+        baseURL = checkValidUrl(hostURL)
+        requireNotNull(baseURL) { String.format("Invalid url: '%s'", hostURL) }
 
         // Get PKCE helper instance and generate code verifier and code challenge
         val pkceHelper = PKCEHelper()
