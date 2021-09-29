@@ -13,7 +13,7 @@ Below are the sample application.
 | Language | Kotlin |
 | Platform | Android |
 
-To learn how to integrate CyberArk Identity in Android applications using the Identity SDK, refer to  [CyberArk Identity Team](https://identity-developer.cyberark.com/docs/cyberark-identity-android-sdk).
+To learn how to integrate CyberArk Identity in Android applications using the Identity SDK, refer to  [CyberArk Identity Android SDK](https://identity-developer.cyberark.com/docs/cyberark-identity-android-sdk).
 
 ## Code Maintainers
 [CyberArk Identity Team](https://www.cyberark.com)
