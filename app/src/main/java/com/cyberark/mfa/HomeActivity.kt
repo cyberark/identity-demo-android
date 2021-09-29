@@ -56,9 +56,9 @@ class HomeActivity : AppCompatActivity() {
         val account = setupAccount()
 
         // Perform login
-        logInButton = findViewById(R.id.button_log_in)
+        logInButton = findViewById(R.id.button_login)
         logInButton.setOnClickListener {
-            startAuthentication(account)
+            login(account)
         }
 
         // Verify if access token is present or not
@@ -96,7 +96,7 @@ class HomeActivity : AppCompatActivity() {
      *
      * @param cyberArkAccountBuilder: CyberArkAccountBuilder instance
      */
-    private fun startAuthentication(cyberArkAccountBuilder: CyberArkAccountBuilder) {
+    private fun login(cyberArkAccountBuilder: CyberArkAccountBuilder) {
         val authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>> =
             CyberArkAuthProvider.login(cyberArkAccountBuilder).start(this)
 

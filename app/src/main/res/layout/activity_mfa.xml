@@ -23,7 +23,7 @@
     tools:context=".MFAActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/image_view"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:background="@drawable/ic_launcher_identity_foreground"
@@ -53,7 +53,7 @@
 
 
     <Button
-        android:id="@+id/button_end_session"
+        android:id="@+id/button_logout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -79,22 +79,22 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
-        android:id="@+id/biometricReq"
+        android:id="@+id/biometrics_on_app_launch_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:enabled="false"
-        android:text="@string/checkbox_biometric_req"
-        app:layout_constraintBottom_toTopOf="@id/biometricReqOnRefresh"
-        app:layout_constraintLeft_toLeftOf="@id/biometricReqOnRefresh" />
+        android:text="@string/invoke_biometrics_on_app_launch"
+        app:layout_constraintBottom_toTopOf="@id/biometrics_on_refresh_token_checkbox"
+        app:layout_constraintLeft_toLeftOf="@id/biometrics_on_refresh_token_checkbox" />
 
     <CheckBox
-        android:id="@+id/biometricReqOnRefresh"
+        android:id="@+id/biometrics_on_refresh_token_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:enabled="false"
-        android:text="@string/checkbox_biometric_req_on_refresh"
+        android:text="@string/invoke_biometrics_when_access_token_expires"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

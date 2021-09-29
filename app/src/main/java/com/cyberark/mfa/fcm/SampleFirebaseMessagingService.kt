@@ -19,7 +19,7 @@ package com.cyberark.mfa.fcm
 import android.util.Log
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
-import com.cyberark.mfa.util.PreferenceConstants
+import com.cyberark.mfa.utils.PreferenceConstants
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 

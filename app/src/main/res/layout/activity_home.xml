@@ -22,7 +22,7 @@
     tools:context=".HomeActivity">
 
     <Button
-        android:id="@+id/button_log_in"
+        android:id="@+id/button_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/button_log_in"
@@ -37,11 +37,11 @@
 
     <ImageView
         android:visibility="visible"
-        android:id="@+id/imageView"
+        android:id="@+id/image_view"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_log_in"
+        app:layout_constraintBottom_toTopOf="@+id/button_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

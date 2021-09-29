@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa.util
+package com.cyberark.mfa.utils
 
 /**
  * Sample app shared preference Constants

@@ -28,12 +28,12 @@
     <string name="tv_qr_authenticator">QR Authenticator</string>
 
     <!-- MFAActivity Checkbox -->
-    <string name="checkbox_biometric_req">Invoke biometrics on app launch</string>
-    <string name="checkbox_biometric_req_on_refresh">Invoke biometrics when access token expires</string>
+    <string name="invoke_biometrics_on_app_launch">Invoke biometrics on app launch</string>
+    <string name="invoke_biometrics_when_access_token_expires">Invoke biometrics when access token expires</string>
 
     <!-- MFAActivity PREF Key -->
-    <string name="pref_key_is_biometric_req">isbiometricReq</string>
-    <string name="pref_key_refresh_bio_req">refreshBioReq</string>
+    <string name="pref_key_invoke_biometrics_on_app_launch">isBiometricReqestOnAppLaunch</string>
+    <string name="pref_key_invoke_biometrics_when_access_token_expires">isBiometricReqestOnRefreshToken</string>
 
     <!-- MFAActivity Dialog -->
     <string name="dialog_header_text">ACME</string>
