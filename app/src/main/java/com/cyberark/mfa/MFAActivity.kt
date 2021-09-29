@@ -544,7 +544,7 @@ class MFAActivity : AppCompatActivity() {
         override fun isAuthenticationSuccess(success: Boolean) {
             // Show Authentication success message using Toast
             Toast.makeText(
-                this,
+                this@MFAActivity,
                 "Authentication success",
                 Toast.LENGTH_LONG
             ).show()
