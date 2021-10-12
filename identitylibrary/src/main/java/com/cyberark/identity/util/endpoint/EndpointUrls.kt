@@ -23,6 +23,7 @@ package com.cyberark.identity.util.endpoint
 internal object EndpointUrls {
 
     const val URL_FAST_ENROLL_V3 = "/Device/EnrollAndroidDevice"
+    const val URL_UPDATE_DEV_SETTINGS = "/IosAppRest/UpdateDevSettings"
 
     const val HEADER_X_CENTRIFY_NATIVE_CLIENT = "X-CENTRIFY-NATIVE-CLIENT"
     const val HEADER_X_IDAP_NATIVE_CLIENT = "X-IDAP-NATIVE-CLIENT"

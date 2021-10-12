@@ -16,12 +16,10 @@
 
 package com.cyberark.identity.data.network
 
-import com.cyberark.identity.data.model.AuthCodeFlowModel
-import com.cyberark.identity.data.model.EnrollmentModel
-import com.cyberark.identity.data.model.QRCodeLoginModel
-import com.cyberark.identity.data.model.RefreshTokenModel
+import com.cyberark.identity.data.model.*
 import com.cyberark.identity.util.endpoint.EndpointUrls
 import com.cyberark.identity.util.endpoint.EndpointUrls.URL_FAST_ENROLL_V3
+import com.cyberark.identity.util.endpoint.EndpointUrls.URL_UPDATE_DEV_SETTINGS
 import okhttp3.RequestBody
 import retrofit2.http.*
 
@@ -81,7 +79,7 @@ interface CyberArkAuthService {
      * @param idapNativeClient: idap native client
      * @param acceptLang: accepted language
      * @param bearerToken: authorization bearer token
-     * @param body: request body
+     * @param payload: request body
      * @return EnrollmentModel
      */
     @POST(URL_FAST_ENROLL_V3)
@@ -92,5 +90,20 @@ interface CyberArkAuthService {
         @Header(EndpointUrls.HEADER_AUTHORIZATION) bearerToken: String,
         @Body payload: RequestBody
     ): EnrollmentModel
+
+    /**
+     * Send FCM token
+     *
+     * @param centrifyNativeClient: centrify native client
+     * @param bearerToken: authorization bearer token
+     * @param payload: request body
+     * @return SendFCMTokenModel
+     */
+    @POST(URL_UPDATE_DEV_SETTINGS)
+    suspend fun sendFCMToken(
+        @Header(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT) centrifyNativeClient: Boolean,
+        @Header(EndpointUrls.HEADER_AUTHORIZATION) bearerToken: String,
+        @Body payload: RequestBody
+    ): SendFCMTokenModel
 
 }

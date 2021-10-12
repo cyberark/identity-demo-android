@@ -24,6 +24,7 @@ import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.model.AuthCodeFlowModel
 import com.cyberark.identity.data.model.EnrollmentModel
 import com.cyberark.identity.data.model.RefreshTokenModel
+import com.cyberark.identity.data.model.SendFCMTokenModel
 import com.cyberark.identity.util.ResponseHandler
 
 /**
@@ -50,6 +51,10 @@ object CyberArkAuthProvider {
 
     fun enroll(account: CyberArkAccountBuilder): EnrollmentBuilder {
         return EnrollmentBuilder(account)
+    }
+
+    fun sendFCMToken(account: CyberArkAccountBuilder): SendFCMTokenBuilder {
+        return SendFCMTokenBuilder(account)
     }
 
     /**
@@ -175,6 +180,33 @@ object CyberArkAuthProvider {
             cyberarkEnrollmentManager.enroll()
 
             return cyberarkEnrollmentManager.getViewModelInstance.getEnrolledData()
+        }
+    }
+
+    /**
+     * Send FCM Token builder class
+     *
+     */
+    class SendFCMTokenBuilder internal constructor(
+        private val account: CyberArkAccountBuilder
+    ) {
+        /**
+         * Upload FCM token to CyberArk Server
+         *
+         * @param context: Application / Activity Context
+         * @param fcmToken: FCM Token data
+         * @param accessToken: access token data
+         * @return SendFCMTokenModel
+         */
+        suspend fun start(
+            context: Context,
+            fcmToken: String,
+            accessToken: String
+        ): SendFCMTokenModel? {
+            Log.i(TAG, "Upload FCM token")
+            val cyberArkFCMTokenManager = CyberArkFCMTokenManager(context, fcmToken, accessToken, account)
+
+            return cyberArkFCMTokenManager.uploadFCMToken()
         }
     }
 }

@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package com.cyberark.identity.util.device
+package com.cyberark.identity.data.model
 
 /**
- * Device Key constants
+ * Upload FCM token model class
+ *
+ * @property Status: send token to app server status, true/false
  *
  */
-internal object DeviceConstants {
-    const val KEY_DEVICE_NAME = "name"
-    const val KEY_DEVICE_SIMPLE_NAME = "simpleName"
-    const val KEY_DEVICE_VERSION = "version"
-    const val KEY_DEVICE_UDID = "udid"
-    const val KEY_DEVICE_MANUFACTURER = "Manufacturer"
-    const val KEY_DEVICE_TYPE = "devicetype"
-    const val KEY_DEVICE_OS = "os"
-    const val KEY_DEVICE_ID = "DeviceID"
-    const val KEY_FCM_TOKEN = "Token"
-}
+data class SendFCMTokenModel(
+    val Status: Boolean
+)

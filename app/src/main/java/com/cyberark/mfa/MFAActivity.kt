@@ -31,10 +31,12 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.lifecycleScope
 import com.cyberark.identity.activity.CyberArkQRCodeLoginActivity
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.model.EnrollmentModel
 import com.cyberark.identity.data.model.RefreshTokenModel
+import com.cyberark.identity.data.model.SendFCMTokenModel
 import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.*
 import com.cyberark.identity.util.biometric.CyberArkBiometricCallback
@@ -44,7 +46,11 @@ import com.cyberark.identity.util.jwt.JWTUtils
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
+import com.cyberark.mfa.fcm.FCMTokenInterface
+import com.cyberark.mfa.fcm.FCMTokenUtil
 import com.cyberark.mfa.utils.PreferenceConstants
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.*
 
 /**
@@ -56,9 +62,11 @@ import java.util.*
  * 5. Invoke biometrics when access token expires
  *
  */
-class MFAActivity : AppCompatActivity() {
+class MFAActivity : AppCompatActivity(), FCMTokenInterface {
 
-    private val tag: String? = MFAActivity::class.simpleName
+    companion object {
+        private val TAG = MFAActivity::class.simpleName
+    }
 
     // Progress indicator variable
     private lateinit var progressBar: ProgressBar
@@ -179,7 +187,7 @@ class MFAActivity : AppCompatActivity() {
      * @return cyberArkAccountBuilder: CyberArkAccountBuilder instance
      */
     private fun setupAccount(): CyberArkAccountBuilder {
-        val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
+        return CyberArkAccountBuilder.Builder()
             .systemURL(getString(R.string.cyberark_account_system_url))
             .hostURL(getString(R.string.cyberark_account_host_url))
             .clientId(getString(R.string.cyberark_account_client_id))
@@ -188,7 +196,6 @@ class MFAActivity : AppCompatActivity() {
             .scope(getString(R.string.cyberark_account_scope))
             .redirectUri(getString(R.string.cyberark_account_redirect_uri))
             .build()
-        return cyberArkAccountBuilder
     }
 
     /**
@@ -248,7 +255,7 @@ class MFAActivity : AppCompatActivity() {
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     status = JWTUtils.isAccessTokenExpired(accessTokenData)
                 } else {
-                    Log.i(tag, "Not supported VERSION.SDK_INT < O")
+                    Log.i(TAG, "Not supported VERSION.SDK_INT < O")
                 }
 
                 if (!isEnrolled) {
@@ -271,7 +278,7 @@ class MFAActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                Log.i(tag, "Access Token is not initialized")
+                Log.i(TAG, "Access Token is not initialized")
             }
         } else if (view.id == R.id.button_logout) {
             // Start end session
@@ -304,6 +311,8 @@ class MFAActivity : AppCompatActivity() {
             authResponseHandler.observe(this, {
                 when (it.status) {
                     ResponseStatus.SUCCESS -> {
+                        // Obtain FCM token and upload to server
+                        obtainFCMToken()
                         // Show enrollment success message using Toast
                         Toast.makeText(
                             this,
@@ -559,7 +568,7 @@ class MFAActivity : AppCompatActivity() {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 status = JWTUtils.isAccessTokenExpired(accessTokenData)
             } else {
-                Log.i(tag, "Not supported VERSION.SDK_INT < O")
+                Log.i(TAG, "Not supported VERSION.SDK_INT < O")
             }
             if (!status) {
                 // Invoke API to get access token using refresh token
@@ -649,4 +658,71 @@ class MFAActivity : AppCompatActivity() {
         this.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
     }
     // ************************ Handle biometrics End ******************************** //
+
+
+
+
+    // ******************* Handle FCM Token upload to server Start *************************** //
+    /**
+     * Obtain FCM token immediately after the successful enrollment
+     */
+    private fun obtainFCMToken() {
+        val fcmTokenUtil = FCMTokenUtil()
+        fcmTokenUtil.getFCMToken(this)
+    }
+
+    override fun onFcmTokenReceived(fcmToken: String) {
+        uploadFCMTokenToCyberArkServer(fcmToken)
+    }
+
+    override fun onFcmTokenFailure(exception: Throwable?) {
+        Log.e(TAG, "Error obtaining FCM token", exception)
+    }
+
+    /**
+     * Upload FCM token to CyberArk server
+     *
+     * @param token: FCM token
+     */
+    private fun uploadFCMTokenToCyberArkServer(token: String) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val accessTokenData = KeyStoreProvider.get().getAuthToken()
+            if (accessTokenData != null) {
+                val sendFCMTokenModel: SendFCMTokenModel? =
+                    CyberArkAuthProvider.sendFCMToken(setupFCMUrl())
+                        .start(this@MFAActivity, token, accessTokenData)
+                handleUploadFCMTokenResponse(sendFCMTokenModel)
+            } else {
+                Log.i(TAG, "Access Token is not initialized")
+            }
+        }
+    }
+
+    /**
+     * Handle upload FCM token response
+     *
+     * @param sendFCMTokenModel: SendFCMTokenModel model class instance
+     */
+    private fun handleUploadFCMTokenResponse(sendFCMTokenModel: SendFCMTokenModel?) {
+        if (sendFCMTokenModel == null) {
+            Log.i(TAG, "Unable to get response from server")
+        } else if (!sendFCMTokenModel.Status) {
+            Log.i(TAG, "Unable to upload FCM Token to Server")
+        } else {
+            Log.i(TAG, "Uploaded FCM Token to Server successfully")
+        }
+    }
+
+    /**
+     * Setup System URL and host URL in CyberArkAccountBuilder to upload FCM token
+     *
+     * @return CyberArkAccountBuilder instance
+     */
+    private fun setupFCMUrl(): CyberArkAccountBuilder {
+        return CyberArkAccountBuilder.Builder()
+            .systemURL(getString(R.string.cyberark_account_system_url))
+            .hostURL(getString(R.string.cyberark_account_host_url))
+            .build()
+    }
+    // ******************* Handle FCM Token upload to server End *************************** //
 }

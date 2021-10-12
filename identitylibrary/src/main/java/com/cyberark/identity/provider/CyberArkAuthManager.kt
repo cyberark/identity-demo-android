@@ -55,7 +55,7 @@ internal class CyberArkAuthManager(
         if(intent?.data != null) {
             val sanitizer = UrlQuerySanitizer()
             sanitizer.allowUnregisteredParamaters = true
-            sanitizer.parseUrl(intent?.data?.toString())
+            sanitizer.parseUrl(intent.data?.toString())
             val code = sanitizer.getValue(CyberArkAccountBuilder.KEY_CODE)
 
             if (code != null) {

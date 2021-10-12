@@ -78,7 +78,7 @@ class HomeActivity : AppCompatActivity() {
      * @return cyberArkAccountBuilder: CyberArkAccountBuilder instance
      */
     private fun setupAccount(): CyberArkAccountBuilder {
-        val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
+        return CyberArkAccountBuilder.Builder()
             .systemURL(getString(R.string.cyberark_account_system_url))
             .hostURL(getString(R.string.cyberark_account_host_url))
             .clientId(getString(R.string.cyberark_account_client_id))
@@ -87,7 +87,6 @@ class HomeActivity : AppCompatActivity() {
             .scope(getString(R.string.cyberark_account_scope))
             .redirectUri(getString(R.string.cyberark_account_redirect_uri))
             .build()
-        return cyberArkAccountBuilder
     }
 
     /**

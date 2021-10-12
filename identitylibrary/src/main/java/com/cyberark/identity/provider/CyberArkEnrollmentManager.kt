@@ -17,6 +17,7 @@
 package com.cyberark.identity.provider
 
 import android.content.Context
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.cyberark.identity.builder.CyberArkAccountBuilder
@@ -35,11 +36,12 @@ import org.json.JSONObject
  *
  * @property context: Activity Context
  * @property accessToken: access token data
+ * @property account: CyberArkAccountBuilder
  */
 internal class CyberArkEnrollmentManager(
     private val context: Context,
     private val accessToken: String,
-    account: CyberArkAccountBuilder
+    private val account: CyberArkAccountBuilder
 ) {
     private val viewModel: EnrollmentViewModel
 
@@ -83,6 +85,7 @@ internal class CyberArkEnrollmentManager(
         payload.put(DeviceConstants.KEY_DEVICE_MANUFACTURER, deviceInfoHelper.getManufacture())
         payload.put(DeviceConstants.KEY_DEVICE_TYPE, "A")
         payload.put(DeviceConstants.KEY_DEVICE_OS, "Android")
+        Log.i("Device ID", deviceInfoHelper.getUDID(context))
         return payload
     }
 

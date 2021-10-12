@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
-package com.cyberark.identity.util.device
+package com.cyberark.mfa.fcm
 
 /**
- * Device Key constants
+ * FCM token interface
  *
  */
-internal object DeviceConstants {
-    const val KEY_DEVICE_NAME = "name"
-    const val KEY_DEVICE_SIMPLE_NAME = "simpleName"
-    const val KEY_DEVICE_VERSION = "version"
-    const val KEY_DEVICE_UDID = "udid"
-    const val KEY_DEVICE_MANUFACTURER = "Manufacturer"
-    const val KEY_DEVICE_TYPE = "devicetype"
-    const val KEY_DEVICE_OS = "os"
-    const val KEY_DEVICE_ID = "DeviceID"
-    const val KEY_FCM_TOKEN = "Token"
+interface FCMTokenInterface {
+
+    /**
+     * Execute on FCM token received
+     *
+     * @param fcmToken: FCM token string
+     */
+    fun onFcmTokenReceived(fcmToken: String)
+
+    /**
+     * Execute on FCM token failure
+     *
+     * @param exception: exception message
+     */
+    fun onFcmTokenFailure(exception: Throwable?)
 }

@@ -16,10 +16,7 @@
 
 package com.cyberark.identity.data.network
 
-import com.cyberark.identity.data.model.AuthCodeFlowModel
-import com.cyberark.identity.data.model.EnrollmentModel
-import com.cyberark.identity.data.model.QRCodeLoginModel
-import com.cyberark.identity.data.model.RefreshTokenModel
+import com.cyberark.identity.data.model.*
 import okhttp3.RequestBody
 
 /**
@@ -87,6 +84,24 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
         centrifyNativeClient,
         idapNativeClient,
         acceptLang,
+        bearerToken,
+        body
+    )
+
+    /**
+     * Send FCM token
+     *
+     * @param centrifyNativeClient: centrify native client
+     * @param bearerToken: authorization bearer token
+     * @param body: request body
+     * @return SendFCMTokenModel
+     */
+    suspend fun sendFCMToken(
+        centrifyNativeClient: Boolean,
+        bearerToken: String,
+        body: RequestBody
+    ): SendFCMTokenModel = cyberArkAuthService.sendFCMToken(
+        centrifyNativeClient,
         bearerToken,
         body
     )

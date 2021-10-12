@@ -33,14 +33,18 @@ class CyberArkViewModelFactory(private val cyberArkAuthHelper: CyberArkAuthHelpe
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AuthenticationViewModel::class.java)) {
-            return AuthenticationViewModel(cyberArkAuthHelper) as T
-        } else if (modelClass.isAssignableFrom(ScanQRCodeViewModel::class.java)) {
-            return ScanQRCodeViewModel(cyberArkAuthHelper) as T
-        } else if (modelClass.isAssignableFrom(EnrollmentViewModel::class.java)) {
-            return EnrollmentViewModel(cyberArkAuthHelper) as T
+        return when {
+            modelClass.isAssignableFrom(AuthenticationViewModel::class.java) -> {
+                AuthenticationViewModel(cyberArkAuthHelper) as T
+            }
+            modelClass.isAssignableFrom(ScanQRCodeViewModel::class.java) -> {
+                ScanQRCodeViewModel(cyberArkAuthHelper) as T
+            }
+            modelClass.isAssignableFrom(EnrollmentViewModel::class.java) -> {
+                EnrollmentViewModel(cyberArkAuthHelper) as T
+            }
+            else -> throw IllegalArgumentException("Unknown class name")
         }
-        throw IllegalArgumentException("Unknown class name")
     }
 }
 
