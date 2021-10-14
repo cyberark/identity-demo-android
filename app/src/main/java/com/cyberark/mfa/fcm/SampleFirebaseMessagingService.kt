@@ -23,10 +23,13 @@ import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
+import com.cyberark.mfa.utils.AppUtils
 import com.cyberark.mfa.utils.PreferenceConstants
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class SampleFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -47,6 +50,18 @@ class SampleFirebaseMessagingService : FirebaseMessagingService() {
         val data1: Map<String, String> = remoteMessage.data
         Log.i("FCM 5", data1.toString())
         Log.i("FCM 6", remoteMessage.notification?.body.toString())
+
+        /**
+         * if application is in foreground process the push in activity
+         */
+        if(AppUtils.isAppOnForeground()) {
+            Log.i(TAG, "App in foreground from FCM AppUtils ")
+        } else {
+            /**
+             * if the application is in the background build and show Notification
+             */
+            Log.i(TAG, "App in background from FCM AppUtils ")
+        }
     }
 
     /**

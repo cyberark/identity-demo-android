@@ -17,13 +17,38 @@
 package com.cyberark.mfa
 
 import android.app.Application
+import android.util.Log
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
+import com.cyberark.mfa.utils.AppUtils
 
-class SampleApplication : Application() {
+class SampleApplication : Application(), LifecycleObserver {
+
+    companion object {
+        private val TAG = SampleApplication::class.simpleName
+    }
 
     override fun onCreate() {
         super.onCreate()
         // Initialize CyberArk Preference Util
         CyberArkPreferenceUtil.init(this)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun onAppBackground() {
+        Log.i(TAG, "App in background")
+        // App in background
+        AppUtils.setAppOnForeground(false)
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun onAppForeground() {
+        Log.i(TAG, "App in foreground")
+        // App in foreground
+        AppUtils.setAppOnForeground(true)
     }
 }

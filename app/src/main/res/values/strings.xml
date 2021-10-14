@@ -38,6 +38,6 @@
     <!-- MFAActivity Dialog -->
     <string name="dialog_header_text">ACME</string>
     <string name="dialog_biometric_desc">Required to enroll biometric in the device</string>
-    <string name="dialog_access_token_expire_desc">Access token is expired. Would you like get new Access Token using refresh token?</string>
+    <string name="dialog_access_token_expire_desc">Access token is expired. Would you like to get new Access Token using refresh token?</string>
     <string name="dialog_refresh_token_expire_desc">Refresh token is expired. You need to login again</string>
 </resources>
