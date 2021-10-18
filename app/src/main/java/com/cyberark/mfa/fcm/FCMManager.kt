@@ -12,7 +12,13 @@ import com.cyberark.identity.data.model.NotificationDataModel
 import com.cyberark.mfa.HomeActivity
 import com.cyberark.mfa.R
 
-class SampleNotificationsManager(private val context: Context) {
+class FCMManager(private val context: Context) {
+
+    companion object {
+        private const val TAG = "SampleNotificationsManager"
+        private const val POSITIVE = 1
+        private const val NEGATIVE = 2
+    }
 
     /**
      * Create and show a simple notification containing the received FCM message.
@@ -26,8 +32,8 @@ class SampleNotificationsManager(private val context: Context) {
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(notificationDataModel.Title)
             .setContentText(notificationDataModel.Message)
-            .addAction(createDenyAction())
-            .addAction(createApproveAction())
+            .addAction(createDenyAction(notificationDataModel))
+            .addAction(createApproveAction(notificationDataModel))
             .setAutoCancel(true)
             .setContentIntent(createOnTapPendingIntent())
             .setSound(defaultSoundUri)
@@ -42,22 +48,23 @@ class SampleNotificationsManager(private val context: Context) {
             channel.description = context.getString(R.string.notification_channel_description)
             notificationManager.createNotificationChannel(channel)
         }
-        notificationManager.notify(SampleNotificationsActionsReceiver.NOTIFICATION_ID_SAMPLE_APP, notificationBuilder.build())
+        notificationManager.notify(notificationDataModel.CommandUuid.hashCode(), notificationBuilder.build())
     }
 
     /*
      * create an action that sends approve intent to the broadcast receiver
      */
-    private fun createApproveAction(): NotificationCompat.Action {
-        val approveIntent = Intent(context, SampleNotificationsActionsReceiver::class.java)
-        approveIntent.action = SampleNotificationsActionsReceiver.ACTION_APPROVE
+    private fun createApproveAction(notificationDataModel: NotificationDataModel): NotificationCompat.Action {
+        val approveIntent = Intent(context, FCMReceiver::class.java)
+        approveIntent.action = FCMReceiver.ACTION_APPROVE
+        approveIntent.putExtra(FCMReceiver.NOTIFICATION_DATA, notificationDataModel)
         /*
          * Very important to set request code and flag, so the PendingIntent
          * will be unique within the system and the bundle containing data will not be lost
          */
         val approvePendingIntent: PendingIntent = PendingIntent.getBroadcast(
             context,
-            SampleNotificationsActionsReceiver.POSITIVE,
+            POSITIVE,
             approveIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -71,16 +78,17 @@ class SampleNotificationsManager(private val context: Context) {
     /*
      * create an action that sends deny intent to the broadcast receiver
      */
-    private fun createDenyAction(): NotificationCompat.Action {
-        val denyIntent = Intent(context, SampleNotificationsActionsReceiver::class.java)
-        denyIntent.action = SampleNotificationsActionsReceiver.ACTION_DENY
+    private fun createDenyAction(notificationDataModel: NotificationDataModel): NotificationCompat.Action {
+        val denyIntent = Intent(context, FCMReceiver::class.java)
+        denyIntent.action = FCMReceiver.ACTION_DENY
+        denyIntent.putExtra(FCMReceiver.NOTIFICATION_DATA, notificationDataModel)
         /*
          * Very important to set request code and flag, so the PendingIntent
          * will be unique within the system and the bundle containing data will not be lost
          */
         val denyPendingIntent: PendingIntent = PendingIntent.getBroadcast(
             context,
-            SampleNotificationsActionsReceiver.NEGATIVE,
+            NEGATIVE,
             denyIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )

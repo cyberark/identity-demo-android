@@ -21,10 +21,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.cyberark.identity.builder.CyberArkAccountBuilder
-import com.cyberark.identity.data.model.AuthCodeFlowModel
-import com.cyberark.identity.data.model.EnrollmentModel
-import com.cyberark.identity.data.model.RefreshTokenModel
-import com.cyberark.identity.data.model.SendFCMTokenModel
+import com.cyberark.identity.data.model.*
 import com.cyberark.identity.util.ResponseHandler
 
 /**
@@ -55,6 +52,10 @@ object CyberArkAuthProvider {
 
     fun sendFCMToken(account: CyberArkAccountBuilder): SendFCMTokenBuilder {
         return SendFCMTokenBuilder(account)
+    }
+
+    fun parseRemoteNotification(remoteMessageData: Map<String, String>): ParseRemoteNotificationBuilder {
+        return ParseRemoteNotificationBuilder(remoteMessageData)
     }
 
     /**
@@ -207,6 +208,19 @@ object CyberArkAuthProvider {
             val cyberArkFCMTokenManager = CyberArkFCMTokenManager(context, fcmToken, accessToken, account)
 
             return cyberArkFCMTokenManager.uploadFCMToken()
+        }
+    }
+
+
+    class ParseRemoteNotificationBuilder internal constructor(
+        private val remoteMessageData: Map<String, String>
+    ) {
+
+        fun start(): NotificationDataModel {
+            Log.i(TAG, "Parse Remote Notification")
+            val cyberArkProcessNotification = CyberArkProcessNotification()
+
+            return cyberArkProcessNotification.parseRemoteNotification(remoteMessageData)
         }
     }
 }
