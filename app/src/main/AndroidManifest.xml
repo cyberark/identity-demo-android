@@ -50,6 +50,8 @@
             </intent-filter>
         </service>
 
+        <receiver android:name=".fcm.SampleNotificationsActionsReceiver"/>
+
     </application>
 
 </manifest>
