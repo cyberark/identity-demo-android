@@ -47,4 +47,8 @@
     <string name="notification_channel_id" translatable="false">CyberArk SDK Channel ID</string>
     <string name="notification_channel_name">CyberArk SDK Channel Name</string>
     <string name="notification_channel_description">CyberArk SDK Channel Description</string>
+    <string name="cyberark_identity_login_request_received">CyberArk Identity login request received, do you want to grant access for user?</string>
+    <string name="approve">Approve</string>
+    <string name="deny">Deny</string>
+    <string name="product_icon">product_icon</string>
 </resources>

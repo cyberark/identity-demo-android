@@ -15,7 +15,7 @@ import com.cyberark.mfa.R
 class FCMManager(private val context: Context) {
 
     companion object {
-        private const val TAG = "SampleNotificationsManager"
+        private val TAG = FCMManager::class.simpleName
         private const val POSITIVE = 1
         private const val NEGATIVE = 2
     }
@@ -23,13 +23,13 @@ class FCMManager(private val context: Context) {
     /**
      * Create and show a simple notification containing the received FCM message.
      *
-     * @param messageBody FCM message body received.
+     * @param notificationDataModel FCM message body received.
      */
-   fun sendNotification(notificationDataModel: NotificationDataModel) {
+    fun sendNotification(notificationDataModel: NotificationDataModel) {
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val channelId = context.getString(R.string.notification_channel_id)
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_launcher_identity_foreground)
             .setContentTitle(notificationDataModel.Title)
             .setContentText(notificationDataModel.Message)
             .addAction(createDenyAction(notificationDataModel))
@@ -37,18 +37,27 @@ class FCMManager(private val context: Context) {
             .setAutoCancel(true)
             .setContentIntent(createOnTapPendingIntent())
             .setSound(defaultSoundUri)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(notificationDataModel.Message))
 
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Since android Oreo notification channel is needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId,
+            val channel = NotificationChannel(
+                channelId,
                 context.getString(R.string.notification_channel_name),
-                NotificationManager.IMPORTANCE_DEFAULT)
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
             channel.description = context.getString(R.string.notification_channel_description)
             notificationManager.createNotificationChannel(channel)
         }
-        notificationManager.notify(notificationDataModel.CommandUuid.hashCode(), notificationBuilder.build())
+        notificationManager.notify(
+            notificationDataModel.CommandUuid.hashCode(),
+            notificationBuilder.build()
+        )
     }
 
     /*
@@ -69,7 +78,7 @@ class FCMManager(private val context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
         return NotificationCompat.Action.Builder(
-            0,
+            android.R.drawable.btn_star,
             context.getString(R.string.notification_action_approve),
             approvePendingIntent
         ).build()
@@ -102,7 +111,9 @@ class FCMManager(private val context: Context) {
     private fun createOnTapPendingIntent(): PendingIntent {
         val intent = Intent(context, HomeActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        return PendingIntent.getActivity(context,  (System.currentTimeMillis() and 0xfffffff).toInt(), intent,
-            PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getActivity(
+            context, (System.currentTimeMillis() and 0xfffffff).toInt(), intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
     }
 }

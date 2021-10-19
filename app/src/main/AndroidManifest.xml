@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~ http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cyberark.mfa">
+    package="com.cyberark.mfa" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -28,13 +13,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.IdentitySDK">
-
-        <activity android:name="com.cyberark.mfa.MFAActivity" />
-
+        android:theme="@style/Theme.IdentitySDK" >
         <activity
-            android:name="com.cyberark.mfa.HomeActivity"
-            android:exported="true">
+            android:name=".NotificationActivity"
+            android:exported="true" />
+        <activity android:name=".MFAActivity" />
+        <activity
+            android:name=".HomeActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,14 +30,13 @@
 
         <service
             android:name=".fcm.FCMService"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <receiver android:name=".fcm.FCMReceiver"/>
-
+        <receiver android:name=".fcm.FCMReceiver" />
     </application>
 
 </manifest>

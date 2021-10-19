@@ -16,12 +16,15 @@
 
 package com.cyberark.mfa.fcm
 
+import android.content.Intent
 import android.util.Log
 import com.cyberark.identity.builder.CyberArkAccountBuilder
+import com.cyberark.identity.data.model.NotificationDataModel
 import com.cyberark.identity.data.model.SendFCMTokenModel
 import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
+import com.cyberark.mfa.NotificationActivity
 import com.cyberark.mfa.R
 import com.cyberark.mfa.utils.AppUtils
 import com.cyberark.mfa.utils.PreferenceConstants
@@ -43,17 +46,25 @@ class FCMService : FirebaseMessagingService() {
      * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
      */
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
+
+        val notificationDataModel: NotificationDataModel =
+            CyberArkAuthProvider.parseRemoteNotification(remoteMessage.data).start()
+
         /**
          * if application is in foreground process the push in activity
          */
         if (AppUtils.isAppOnForeground()) {
             Log.i(TAG, "App in foreground from FCM AppUtils ")
+            val intent = Intent(this, NotificationActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra(FCMReceiver.NOTIFICATION_DATA, notificationDataModel)
+            startActivity(intent)
         } else {
             /**
              * if the application is in the background build and show Notification
              */
             Log.i(TAG, "App in background from FCM AppUtils ")
-            var notificationDataModel = CyberArkAuthProvider.parseRemoteNotification(remoteMessage.data).start()
             FCMManager(this).sendNotification(notificationDataModel)
         }
     }

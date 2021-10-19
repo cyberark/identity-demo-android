@@ -9,6 +9,13 @@ import com.cyberark.identity.data.model.NotificationDataModel
 
 class FCMReceiver : BroadcastReceiver() {
 
+    companion object {
+        private val TAG = FCMReceiver::class.simpleName
+        const val ACTION_APPROVE = "sample_action_approve"
+        const val ACTION_DENY = "sample_action_deny"
+        const val NOTIFICATION_DATA = "NotificationData"
+    }
+
     override fun onReceive(context: Context, intent: Intent) {
         val notificationData = intent.getParcelableExtra<NotificationDataModel>(NOTIFICATION_DATA)
         when {
@@ -21,12 +28,5 @@ class FCMReceiver : BroadcastReceiver() {
         }
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.cancel(notificationData?.CommandUuid.hashCode())
-    }
-
-    companion object {
-        private const val TAG = "NotificationReceiver"
-        const val ACTION_APPROVE = "sample_action_approve"
-        const val ACTION_DENY = "sample_action_deny"
-        const val NOTIFICATION_DATA = "NotificationData"
     }
 }
