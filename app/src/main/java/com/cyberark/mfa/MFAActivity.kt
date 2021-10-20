@@ -35,6 +35,7 @@ import androidx.lifecycle.lifecycleScope
 import com.cyberark.identity.activity.CyberArkQRCodeLoginActivity
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.model.EnrollmentModel
+import com.cyberark.identity.data.model.OTPEnrollModel
 import com.cyberark.identity.data.model.RefreshTokenModel
 import com.cyberark.identity.data.model.SendFCMTokenModel
 import com.cyberark.identity.provider.CyberArkAuthProvider
@@ -46,10 +47,12 @@ import com.cyberark.identity.util.jwt.JWTUtils
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
+import com.cyberark.mfa.fcm.FCMService
 import com.cyberark.mfa.fcm.FCMTokenInterface
 import com.cyberark.mfa.fcm.FCMTokenUtil
 import com.cyberark.mfa.utils.PreferenceConstants
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -710,6 +713,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
             Log.i(TAG, "Unable to upload FCM Token to Server")
         } else {
             Log.i(TAG, "Uploaded FCM Token to Server successfully")
+            otpEnroll()
         }
     }
 
@@ -723,6 +727,26 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
             .systemURL(getString(R.string.cyberark_account_system_url))
             .hostURL(getString(R.string.cyberark_account_host_url))
             .build()
+    }
+
+
+    private fun otpEnroll() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val accessTokenData = KeyStoreProvider.get().getAuthToken()
+            if (accessTokenData != null) {
+                val sendFCMTokenModel: OTPEnrollModel =
+                    CyberArkAuthProvider.otpEnroll(setupFCMUrl())
+                        .start(applicationContext, accessTokenData)
+                Log.i(TAG, "sendFCMTokenModel :: " + sendFCMTokenModel.success)
+                Log.i(TAG, "sendFCMTokenModel :: " + sendFCMTokenModel.Result.SecretKey)
+                Log.i(TAG, "sendFCMTokenModel :: " + sendFCMTokenModel.Result.OTPKey)
+                Log.i(TAG, "sendFCMTokenModel :: " + sendFCMTokenModel.Result.Status)
+                Log.i(TAG, "sendFCMTokenModel :: " + sendFCMTokenModel.Result.OathProfileUuid)
+                Log.i(TAG, "sendFCMTokenModel :: " + sendFCMTokenModel.Result.Period)
+            } else {
+                Log.i(TAG, "Access Token is not initialized")
+            }
+        }
     }
     // ******************* Handle FCM Token upload to server End *************************** //
 }

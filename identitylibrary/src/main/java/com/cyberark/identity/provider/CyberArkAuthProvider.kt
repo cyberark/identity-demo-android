@@ -58,6 +58,10 @@ object CyberArkAuthProvider {
         return ParseRemoteNotificationBuilder(remoteMessageData)
     }
 
+    fun otpEnroll(account: CyberArkAccountBuilder): OTPEnrollBuilder {
+        return OTPEnrollBuilder(account)
+    }
+
     /**
      * Get authorize token
      *
@@ -211,7 +215,6 @@ object CyberArkAuthProvider {
         }
     }
 
-
     class ParseRemoteNotificationBuilder internal constructor(
         private val remoteMessageData: Map<String, String>
     ) {
@@ -221,6 +224,21 @@ object CyberArkAuthProvider {
             val cyberArkProcessNotification = CyberArkProcessNotification()
 
             return cyberArkProcessNotification.parseRemoteNotification(remoteMessageData)
+        }
+    }
+
+    class OTPEnrollBuilder internal constructor(
+        private val account: CyberArkAccountBuilder
+    ) {
+
+        suspend fun start(
+            context: Context,
+            accessToken: String
+        ): OTPEnrollModel {
+            Log.i(TAG, "OTP Enroll")
+            val cyberArkOTPEnrollManager = CyberArkOTPEnrollManager(context, accessToken, account)
+
+            return cyberArkOTPEnrollManager.otpEnroll()
         }
     }
 }

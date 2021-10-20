@@ -38,7 +38,11 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
         idapNativeClient: Boolean,
         bearerToken: String,
         url: String
-    ): QRCodeLoginModel = cyberArkAuthService.qrCodeLogin(idapNativeClient, bearerToken, url)
+    ): QRCodeLoginModel = cyberArkAuthService.qrCodeLogin(
+        idapNativeClient,
+        bearerToken,
+        url
+    )
 
     /**
      * Get access token
@@ -50,7 +54,10 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
     suspend fun getAccessToken(
         params: HashMap<String?,
                 String?>, url: String
-    ): AuthCodeFlowModel = cyberArkAuthService.getAccessToken(params, url)
+    ): AuthCodeFlowModel = cyberArkAuthService.getAccessToken(
+        params,
+        url
+    )
 
     /**
      * Get refresh token
@@ -106,4 +113,18 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
         body
     )
 
+    /**
+     * OTP enroll
+     *
+     * @param bearerToken: authorization bearer token
+     * @param url: OTP enroll URL
+     * @return OTPEnrollModel
+     */
+    suspend fun otpEnroll(
+        bearerToken: String,
+        url: String
+    ): OTPEnrollModel = cyberArkAuthService.otpEnroll(
+        bearerToken,
+        url
+    )
 }

@@ -106,4 +106,16 @@ interface CyberArkAuthService {
         @Body payload: RequestBody
     ): SendFCMTokenModel
 
+    /**
+     * OTP enroll
+     *
+     * @param bearerToken: authorization bearer token
+     * @param url: OTP enroll URL
+     * @return OTPEnrollModel
+     */
+    @POST
+    suspend fun otpEnroll(
+        @Header(EndpointUrls.HEADER_AUTHORIZATION) bearerToken: String,
+        @Url url: String
+    ): OTPEnrollModel
 }

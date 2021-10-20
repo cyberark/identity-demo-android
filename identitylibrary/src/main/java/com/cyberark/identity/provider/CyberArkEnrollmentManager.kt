@@ -17,7 +17,6 @@
 package com.cyberark.identity.provider
 
 import android.content.Context
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.cyberark.identity.builder.CyberArkAccountBuilder
@@ -85,7 +84,6 @@ internal class CyberArkEnrollmentManager(
         payload.put(DeviceConstants.KEY_DEVICE_MANUFACTURER, deviceInfoHelper.getManufacture())
         payload.put(DeviceConstants.KEY_DEVICE_TYPE, "A")
         payload.put(DeviceConstants.KEY_DEVICE_OS, "Android")
-        Log.i("Device ID", deviceInfoHelper.getUDID(context))
         return payload
     }
 
