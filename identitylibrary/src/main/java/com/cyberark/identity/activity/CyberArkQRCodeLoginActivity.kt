@@ -117,11 +117,11 @@ open class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Pe
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size)
+        Log.d(TAG, "onPermissionsGranted:" + requestCode )
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size)
+        Log.d(TAG, "onPermissionsDenied:" + requestCode)
         // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
         // This will display a dialog directing them to enable the permission in app settings.
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {

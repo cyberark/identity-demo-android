@@ -110,7 +110,6 @@ class HomeActivity : AppCompatActivity() {
                             "Received Access Token & Refresh Token" + ResponseStatus.SUCCESS.toString(),
                             Toast.LENGTH_SHORT
                         ).show()
-                        Log.i("Access Token", it.data!!.access_token)
                         // Save access token and refresh token in SharedPref using keystore encryption
                         KeyStoreProvider.get().saveAuthToken(it.data!!.access_token)
                         KeyStoreProvider.get().saveRefreshToken(it.data!!.refresh_token)

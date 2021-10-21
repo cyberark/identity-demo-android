@@ -66,8 +66,6 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
 
     /**
      * Enroll device
-     *
-     * @param centrifyNativeClient: centrify native client
      * @param idapNativeClient: idap native client
      * @param acceptLang: accepted language
      * @param bearerToken: authorization bearer token
@@ -75,13 +73,11 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
      * @return EnrollmentModel
      */
     suspend fun fastEnrollV3(
-        centrifyNativeClient: Boolean,
         idapNativeClient: Boolean,
         acceptLang: String,
         bearerToken: String,
         body: RequestBody
     ): EnrollmentModel = cyberArkAuthService.fastEnrollV3(
-        centrifyNativeClient,
         idapNativeClient,
         acceptLang,
         bearerToken,
@@ -91,17 +87,17 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
     /**
      * Send FCM token
      *
-     * @param centrifyNativeClient: centrify native client
+     * @param idapNativeClient: idaptive native client
      * @param bearerToken: authorization bearer token
      * @param body: request body
      * @return SendFCMTokenModel
      */
     suspend fun sendFCMToken(
-        centrifyNativeClient: Boolean,
+        idapNativeClient: Boolean,
         bearerToken: String,
         body: RequestBody
     ): SendFCMTokenModel = cyberArkAuthService.sendFCMToken(
-        centrifyNativeClient,
+        idapNativeClient,
         bearerToken,
         body
     )

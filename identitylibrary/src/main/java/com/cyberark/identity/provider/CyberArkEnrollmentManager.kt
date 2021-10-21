@@ -83,9 +83,7 @@ internal class CyberArkEnrollmentManager(
         payload.put(DeviceConstants.KEY_DEVICE_VERSION, deviceInfoHelper.getDeviceVersion())
         payload.put(DeviceConstants.KEY_DEVICE_UDID, deviceInfoHelper.getUDID(context))
         payload.put(DeviceConstants.KEY_DEVICE_MANUFACTURER, deviceInfoHelper.getManufacture())
-        payload.put(DeviceConstants.KEY_DEVICE_TYPE, "A")
         payload.put(DeviceConstants.KEY_DEVICE_OS, "Android")
-        Log.i("Device ID", deviceInfoHelper.getUDID(context))
         return payload
     }
 
@@ -96,7 +94,6 @@ internal class CyberArkEnrollmentManager(
      */
     private fun getHeaderPayload(): JSONObject {
         val payload = JSONObject()
-        payload.put(EndpointUrls.HEADER_X_CENTRIFY_NATIVE_CLIENT, true)
         payload.put(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT, true)
         payload.put(EndpointUrls.HEADER_ACCEPT_LANGUAGE, "en-IN")
         payload.put(EndpointUrls.HEADER_AUTHORIZATION, "Bearer $accessToken")
