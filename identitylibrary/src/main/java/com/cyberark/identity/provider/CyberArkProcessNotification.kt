@@ -23,6 +23,10 @@ import com.google.gson.Gson
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 
+/**
+ * Process FCM notification data
+ *
+ */
 internal class CyberArkProcessNotification {
 
     companion object {
@@ -36,6 +40,12 @@ internal class CyberArkProcessNotification {
         Log.i(TAG, "initialize CyberArkProcessNotification")
     }
 
+    /**
+     * Parse remote notification
+     *
+     * @param remoteMessageData: remote message data
+     * @return NotificationDataModel
+     */
     fun parseRemoteNotification(remoteMessageData: Map<String, String>): NotificationDataModel {
         val bundle = Bundle()
         bundle.putString(DATA_KEY, remoteMessageData[DATA_KEY])
@@ -50,6 +60,12 @@ internal class CyberArkProcessNotification {
         return Gson().fromJson(value.toString(), NotificationDataModel::class.java)
     }
 
+    /**
+     * Decode and return bundle object
+     *
+     * @param input: bundle object
+     * @return: Bundle
+     */
     private fun urlDecodeDataValue(input: Bundle): Bundle {
         val out = Bundle(input)
         var value = out.getString(DATA_VALUE)

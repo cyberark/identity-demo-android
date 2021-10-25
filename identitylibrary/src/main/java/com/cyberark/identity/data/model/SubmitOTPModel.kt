@@ -16,27 +16,23 @@
 
 package com.cyberark.identity.data.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-
 /**
- * OTP enroll model class
+ * Submit OTP model class
  *
- * @property success: OTP enroll status true/false
- * @property Result: OTP enroll result
+ * @property success: Submit OTP status true/false
+ * @property Result: Submit OTP result
  * @property Message: message
  * @property MessageID: message ID
- * @property Exception: OTP enroll exception
+ * @property Exception: Submit OTP exception
  * @property ErrorID: error ID
  * @property ErrorCode: error code
  * @property IsSoftError: soft error, true/false
  * @property InnerExceptions: inner exceptions
  *
  */
-@Parcelize
-data class OTPEnrollModel(
+data class SubmitOTPModel(
     val success: Boolean,
-    val Result: OTPEnrollResult,
+    val Result: String,
     val Message: String,
     val MessageID: String,
     val Exception: String,
@@ -44,4 +40,4 @@ data class OTPEnrollModel(
     val ErrorCode: String,
     val IsSoftError: Boolean,
     val InnerExceptions: String
-) : Parcelable
+)

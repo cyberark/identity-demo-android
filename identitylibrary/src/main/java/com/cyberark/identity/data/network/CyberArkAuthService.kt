@@ -19,6 +19,7 @@ package com.cyberark.identity.data.network
 import com.cyberark.identity.data.model.*
 import com.cyberark.identity.util.endpoint.EndpointUrls
 import com.cyberark.identity.util.endpoint.EndpointUrls.URL_FAST_ENROLL_V3
+import com.cyberark.identity.util.endpoint.EndpointUrls.URL_SUBMIT_OTP_CODE
 import com.cyberark.identity.util.endpoint.EndpointUrls.URL_UPDATE_DEV_SETTINGS
 import okhttp3.RequestBody
 import retrofit2.http.*
@@ -118,4 +119,29 @@ interface CyberArkAuthService {
         @Header(EndpointUrls.HEADER_AUTHORIZATION) bearerToken: String,
         @Url url: String
     ): OTPEnrollModel
+
+    /**
+     * Submit OTP code
+     *
+     * @param bearerToken: authorization bearer token
+     * @param otpCode: OTP Code
+     * @param otpKeyVersion: OTP Key Version
+     * @param otpTimeStamp: OTP Timestamp
+     * @param userAccepted: user accepted status
+     * @param otpExpiryInterval: OTP expiry interval
+     * @param otpChallengeAnswer: OTP challenge answer
+     * @param udid: profile UDID
+     * @return
+     */
+    @POST(URL_SUBMIT_OTP_CODE)
+    suspend fun submitOTPCode(
+        @Header(EndpointUrls.HEADER_AUTHORIZATION) bearerToken: String,
+        @Query(EndpointUrls.QUERY_OTP_CODE) otpCode: String,
+        @Query(EndpointUrls.QUERY_OTP_KEY_VERSION) otpKeyVersion: Int,
+        @Query(EndpointUrls.QUERY_OTP_TIMESTAMP) otpTimeStamp: Long,
+        @Query(EndpointUrls.QUERY_USER_ACCEPTED) userAccepted: Boolean,
+        @Query(EndpointUrls.QUERY_OTP_CODE_EXPIRY_INTERVAL) otpExpiryInterval: Int,
+        @Query(EndpointUrls.QUERY_OTP_CHALLENGE_ANSWER) otpChallengeAnswer: String,
+        @Query(EndpointUrls.QUERY_OTP_OATH_PROFILE_UUID) udid: String,
+    ): SubmitOTPModel
 }

@@ -127,4 +127,37 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
         bearerToken,
         url
     )
+
+    /**
+     * Submit OTP code
+     *
+     * @param bearerToken: authorization bearer token
+     * @param otpCode: OTP Code
+     * @param otpKeyVersion: OTP Key Version
+     * @param otpTimeStamp: OTP Timestamp
+     * @param userAccepted: user accepted status
+     * @param otpExpiryInterval: OTP expiry interval
+     * @param otpChallengeAnswer: OTP challenge answer
+     * @param udid: profile UDID
+     * @return SubmitOTPModel
+     */
+    suspend fun submitOTPCode(
+        bearerToken: String,
+        otpCode: String,
+        otpKeyVersion: Int,
+        otpTimeStamp: Long,
+        userAccepted: Boolean,
+        otpExpiryInterval: Int,
+        otpChallengeAnswer: String,
+        udid: String
+    ): SubmitOTPModel = cyberArkAuthService.submitOTPCode(
+        bearerToken,
+        otpCode,
+        otpKeyVersion,
+        otpTimeStamp,
+        userAccepted,
+        otpExpiryInterval,
+        otpChallengeAnswer,
+        udid
+    )
 }

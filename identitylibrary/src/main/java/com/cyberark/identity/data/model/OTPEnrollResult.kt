@@ -16,6 +16,9 @@
 
 package com.cyberark.identity.data.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 /**
  * OTP enroll result class
  *
@@ -37,6 +40,7 @@ package com.cyberark.identity.data.model
  * @property IsCma: cma status true/false
  *
  */
+@Parcelize
 data class OTPEnrollResult(
     val Status: Int,
     val OTPKey: String,
@@ -54,4 +58,4 @@ data class OTPEnrollResult(
     val HmacAlgorithm: Int,
     val SecretVersion: Int,
     val IsCma: Boolean
-)
+) : Parcelable

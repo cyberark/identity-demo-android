@@ -23,9 +23,10 @@ import androidx.lifecycle.LiveData
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.model.*
 import com.cyberark.identity.util.ResponseHandler
+import org.json.JSONObject
 
 /**
- * CyberArk auth provider class is used for login, enroll, refresh token and end session functionalities
+ * CyberArk auth provider is used to provide API access for multi-factor authentication
  *
  */
 object CyberArkAuthProvider {
@@ -60,6 +61,10 @@ object CyberArkAuthProvider {
 
     fun otpEnroll(account: CyberArkAccountBuilder): OTPEnrollBuilder {
         return OTPEnrollBuilder(account)
+    }
+
+    fun submitOTP(account: CyberArkAccountBuilder): SubmitOTPBuilder {
+        return SubmitOTPBuilder(account)
     }
 
     /**
@@ -209,16 +214,26 @@ object CyberArkAuthProvider {
             accessToken: String
         ): SendFCMTokenModel? {
             Log.i(TAG, "Upload FCM token")
-            val cyberArkFCMTokenManager = CyberArkFCMTokenManager(context, fcmToken, accessToken, account)
+            val cyberArkFCMTokenManager =
+                CyberArkFCMTokenManager(context, fcmToken, accessToken, account)
 
             return cyberArkFCMTokenManager.uploadFCMToken()
         }
     }
 
+    /**
+     * Parse remote notification builder
+     *
+     * @property remoteMessageData:  Map<String, String>
+     */
     class ParseRemoteNotificationBuilder internal constructor(
         private val remoteMessageData: Map<String, String>
     ) {
-
+        /**
+         * Decode the notification data
+         *
+         * @return NotificationDataModel
+         */
         fun start(): NotificationDataModel {
             Log.i(TAG, "Parse Remote Notification")
             val cyberArkProcessNotification = CyberArkProcessNotification()
@@ -227,10 +242,21 @@ object CyberArkAuthProvider {
         }
     }
 
+    /**
+     * OTP enroll builder
+     *
+     * @property account: CyberArkAccountBuilder instance
+     */
     class OTPEnrollBuilder internal constructor(
         private val account: CyberArkAccountBuilder
     ) {
-
+        /**
+         * Call API to get the OTP key and secret that generates OTP code
+         *
+         * @param context: Application / Activity Context
+         * @param accessToken: access token data
+         * @return OTPEnrollModel
+         */
         suspend fun start(
             context: Context,
             accessToken: String
@@ -239,6 +265,42 @@ object CyberArkAuthProvider {
             val cyberArkOTPEnrollManager = CyberArkOTPEnrollManager(context, accessToken, account)
 
             return cyberArkOTPEnrollManager.otpEnroll()
+        }
+    }
+
+    /**
+     * Submit OTP builder
+     *
+     * @property account: CyberArkAccountBuilder instance
+     */
+    class SubmitOTPBuilder internal constructor(
+        private val account: CyberArkAccountBuilder
+    ) {
+        /**
+         * Call API to accept /deny the push notification
+         *
+         * @param context: Application / Activity Context
+         * @param accessToken: access token data
+         * @param otpEnrollModel: OTPEnrollModel
+         * @param notificationPayload: JSONObject
+         * @return
+         */
+        suspend fun start(
+            context: Context,
+            accessToken: String,
+            otpEnrollModel: OTPEnrollModel,
+            notificationPayload: JSONObject
+        ): SubmitOTPModel {
+            Log.i(TAG, "Submit OTP")
+            val cyberArkOTPEnrollManager = CyberArkSubmitOTPManager(
+                context,
+                accessToken,
+                otpEnrollModel,
+                notificationPayload,
+                account
+            )
+
+            return cyberArkOTPEnrollManager.submitOTP()
         }
     }
 }

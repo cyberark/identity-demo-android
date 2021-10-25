@@ -20,44 +20,46 @@ import android.content.Context
 import android.util.Log
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.model.OTPEnrollModel
+import com.cyberark.identity.data.model.SubmitOTPModel
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.data.network.CyberArkAuthService
-import com.cyberark.identity.util.device.DeviceInfoHelper
+import com.cyberark.identity.util.endpoint.EndpointUrls
+import com.cyberark.identity.util.notification.TOTPManager
 import com.cyberark.identity.viewmodel.EnrollmentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import org.json.JSONObject
 
 /**
- * CyberArk OTP enroll manager class
+ * CyberArk submit OTP manager class
  *
  * @property context: Application / Activity context
  * @property accessToken: access token data
+ * @property otpEnrollModel: OTPEnrollModel
+ * @property notificationPayload: JSONObject
  * @property account: CyberArkAccountBuilder
  */
-internal class CyberArkOTPEnrollManager(
+internal class CyberArkSubmitOTPManager(
     private val context: Context,
     private val accessToken: String,
+    private val otpEnrollModel: OTPEnrollModel,
+    private val notificationPayload: JSONObject,
     private val account: CyberArkAccountBuilder
 ) {
     private val tag: String? = EnrollmentViewModel::class.simpleName
-
-    companion object {
-        private const val KEY_UDID = "udid"
-    }
 
     init {
         Log.i(tag, "initialize CyberArkOTPEnrollManager")
     }
 
     /**
-     * Upload FCM token to CyberArk Server
+     * Send OTP code and notification accepted status to CyberArk Server
      *
-     * @return OTPEnrollModel
+     * @return SubmitOTPModel
      */
-    internal suspend fun otpEnroll(): OTPEnrollModel {
-        var otpEnrollModel: OTPEnrollModel
+    internal suspend fun submitOTP(): SubmitOTPModel {
+        var submitOTPModel: SubmitOTPModel
         withContext(Dispatchers.IO) {
 
             val cyberArkAuthService: CyberArkAuthService =
@@ -65,29 +67,40 @@ internal class CyberArkOTPEnrollManager(
                     .create(CyberArkAuthService::class.java)
             val cyberArkAuthHelper = CyberArkAuthHelper(cyberArkAuthService)
 
-            otpEnrollModel = cyberArkAuthHelper.otpEnroll("Bearer $accessToken", getOTPEnrollURL)
+            val challengeAnswer: String =
+                notificationPayload.getString(EndpointUrls.QUERY_OTP_CHALLENGE_ANSWER)
+            val userAccepted: Boolean =
+                notificationPayload.getBoolean(EndpointUrls.QUERY_USER_ACCEPTED)
+
+            submitOTPModel = cyberArkAuthHelper.submitOTPCode(
+                "Bearer $accessToken",
+                getOTPCode(),
+                otpEnrollModel.Result.OTPKeyVersion,
+                getOTPTimestamp(),
+                userAccepted,
+                otpEnrollModel.Result.OTPCodeExpiryInterval,
+                challengeAnswer,
+                otpEnrollModel.Result.OathProfileUuid
+            )
         }
-        return otpEnrollModel
+        return submitOTPModel
     }
 
     /**
-     * Get OTP enroll URL
+     * Get OTP code from TOTPGenerator class
+     *
+     * @return String
      */
-    private val getOTPEnrollURL: String
-        get() = account.getBaseSystemUrl.toHttpUrlOrNull()!!.newBuilder()
-            .addPathSegment("IosAppRest")
-            .addPathSegment("OtpEnroll")
-            .addQueryParameter(KEY_UDID, getDeviceUDID())
-            .build()
-            .toString()
+    private fun getOTPCode(): String {
+        return TOTPManager.generateTOTP(otpEnrollModel)
+    }
 
     /**
-     * Get device UDID
+     * Get OTP code generated timestamp
      *
-     * @return String: device UDID
+     * @return Long
      */
-    private fun getDeviceUDID(): String {
-        val deviceInfoHelper = DeviceInfoHelper()
-        return deviceInfoHelper.getUDID(context)
+    private fun getOTPTimestamp(): Long {
+        return System.currentTimeMillis()
     }
 }

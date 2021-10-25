@@ -25,7 +25,7 @@ import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.cyberark.identity.data.model.NotificationDataModel
-import com.cyberark.mfa.HomeActivity
+import com.cyberark.mfa.NotificationActivity
 import com.cyberark.mfa.R
 
 class FCMManager(private val context: Context) {
@@ -37,9 +37,9 @@ class FCMManager(private val context: Context) {
     }
 
     /**
-     * Create and show a simple notification containing the received FCM message.
+     * Build and show notification
      *
-     * @param notificationDataModel FCM message body received.
+     * @param notificationDataModel NotificationDataModel instance
      */
     fun sendNotification(notificationDataModel: NotificationDataModel) {
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
@@ -48,10 +48,10 @@ class FCMManager(private val context: Context) {
             .setSmallIcon(R.drawable.ic_launcher_identity_foreground)
             .setContentTitle(notificationDataModel.Title)
             .setContentText(notificationDataModel.Message)
-            .addAction(createDenyAction(notificationDataModel))
-            .addAction(createApproveAction(notificationDataModel))
+            .addAction(denyAction(notificationDataModel))
+            .addAction(approveAction(notificationDataModel))
             .setAutoCancel(true)
-            .setContentIntent(createOnTapPendingIntent())
+            .setContentIntent(bodyAction(notificationDataModel))
             .setSound(defaultSoundUri)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
@@ -77,16 +77,12 @@ class FCMManager(private val context: Context) {
     }
 
     /*
-     * create an action that sends approve intent to the broadcast receiver
+     * Create approve action that sends intent to the broadcast receiver
      */
-    private fun createApproveAction(notificationDataModel: NotificationDataModel): NotificationCompat.Action {
+    private fun approveAction(notificationDataModel: NotificationDataModel): NotificationCompat.Action {
         val approveIntent = Intent(context, FCMReceiver::class.java)
         approveIntent.action = FCMReceiver.ACTION_APPROVE
         approveIntent.putExtra(FCMReceiver.NOTIFICATION_DATA, notificationDataModel)
-        /*
-         * Very important to set request code and flag, so the PendingIntent
-         * will be unique within the system and the bundle containing data will not be lost
-         */
         val approvePendingIntent: PendingIntent = PendingIntent.getBroadcast(
             context,
             POSITIVE,
@@ -94,23 +90,19 @@ class FCMManager(private val context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
         return NotificationCompat.Action.Builder(
-            android.R.drawable.btn_star,
+            0,
             context.getString(R.string.notification_action_approve),
             approvePendingIntent
         ).build()
     }
 
     /*
-     * create an action that sends deny intent to the broadcast receiver
+     * Create Deny action that sends intent to the broadcast receiver
      */
-    private fun createDenyAction(notificationDataModel: NotificationDataModel): NotificationCompat.Action {
+    private fun denyAction(notificationDataModel: NotificationDataModel): NotificationCompat.Action {
         val denyIntent = Intent(context, FCMReceiver::class.java)
         denyIntent.action = FCMReceiver.ACTION_DENY
         denyIntent.putExtra(FCMReceiver.NOTIFICATION_DATA, notificationDataModel)
-        /*
-         * Very important to set request code and flag, so the PendingIntent
-         * will be unique within the system and the bundle containing data will not be lost
-         */
         val denyPendingIntent: PendingIntent = PendingIntent.getBroadcast(
             context,
             NEGATIVE,
@@ -124,9 +116,13 @@ class FCMManager(private val context: Context) {
         ).build()
     }
 
-    private fun createOnTapPendingIntent(): PendingIntent {
-        val intent = Intent(context, HomeActivity::class.java)
+    /*
+     * Create body action that starts activity through pending intent
+     */
+    private fun bodyAction(notificationDataModel: NotificationDataModel): PendingIntent {
+        val intent = Intent(context, NotificationActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        intent.putExtra(FCMReceiver.NOTIFICATION_DATA, notificationDataModel)
         return PendingIntent.getActivity(
             context, (System.currentTimeMillis() and 0xfffffff).toInt(), intent,
             PendingIntent.FLAG_UPDATE_CURRENT

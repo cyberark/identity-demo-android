@@ -45,14 +45,14 @@ import com.cyberark.identity.util.biometric.CyberArkBiometricManager
 import com.cyberark.identity.util.biometric.CyberArkBiometricPromptUtility
 import com.cyberark.identity.util.jwt.JWTUtils
 import com.cyberark.identity.util.keystore.KeyStoreProvider
+import com.cyberark.identity.util.notification.NotificationConstants
 import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
-import com.cyberark.mfa.fcm.FCMService
 import com.cyberark.mfa.fcm.FCMTokenInterface
 import com.cyberark.mfa.fcm.FCMTokenUtil
 import com.cyberark.mfa.utils.PreferenceConstants
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -170,7 +170,8 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
         biometricsOnRefreshTokenCheckbox = findViewById(R.id.biometrics_on_refresh_token_checkbox)
 
         // Invoke biometric utility instance
-        cyberArkBiometricPromptUtility = CyberArkBiometricManager().getBiometricUtility(biometricCallback)
+        cyberArkBiometricPromptUtility =
+            CyberArkBiometricManager().getBiometricUtility(biometricCallback)
     }
 
     /**
@@ -218,14 +219,20 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
         }
         // Get the shared preference status and handle device biometrics on app launch
         biometricsOnAppLaunchRequested =
-            CyberArkPreferenceUtil.getBoolean(getString(R.string.pref_key_invoke_biometrics_on_app_launch), false)
+            CyberArkPreferenceUtil.getBoolean(
+                getString(R.string.pref_key_invoke_biometrics_on_app_launch),
+                false
+            )
         biometricsOnAppLaunchCheckbox.isChecked = biometricsOnAppLaunchRequested
         biometricsOnAppLaunchCheckbox.setOnClickListener {
             handleClick(it, cyberArkAccountBuilder)
         }
         // Get the shared preference status and handle device biometrics when access token expires
         biometricsOnRefreshTokenCheckbox.isChecked =
-            CyberArkPreferenceUtil.getBoolean(getString(R.string.pref_key_invoke_biometrics_when_access_token_expires), false)
+            CyberArkPreferenceUtil.getBoolean(
+                getString(R.string.pref_key_invoke_biometrics_when_access_token_expires),
+                false
+            )
         biometricsOnRefreshTokenCheckbox.setOnClickListener {
             handleClick(it, cyberArkAccountBuilder)
         }
@@ -235,8 +242,6 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
             saveBiometricsRequestOnRefreshToken(true)
         }
     }
-
-
 
 
     // ******************** Handle all click actions Start ************************* //
@@ -255,7 +260,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
             if (::accessTokenData.isInitialized) {
                 // Get the access token expire status
                 var status = false
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     status = JWTUtils.isAccessTokenExpired(accessTokenData)
                 } else {
                     Log.i(TAG, "Not supported VERSION.SDK_INT < O")
@@ -297,8 +302,6 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
     // ******************** Handle all click actions End ************************* //
 
 
-
-
     // ******************** Handle enrollment flow Start ************************* //
     /**
      * Enroll device using access token
@@ -323,7 +326,10 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
                             Toast.LENGTH_SHORT
                         ).show()
                         // Save enrollment status
-                        CyberArkPreferenceUtil.putBoolean(PreferenceConstants.ENROLLMENT_STATUS, true)
+                        CyberArkPreferenceUtil.putBoolean(
+                            PreferenceConstants.ENROLLMENT_STATUS,
+                            true
+                        )
                         // Update UI status
                         logOutButton.isEnabled = true
                         isEnrolled = true
@@ -352,8 +358,6 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
     // ******************** Handle enrollment flow End ************************* //
 
 
-
-
     // ****************** Handle QR Code Authenticator flow Start *********************** //
     /**
      * Start QR Code authenticator Activity
@@ -364,6 +368,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
         intent.putExtra("access_token", accessTokenData)
         startForResult.launch(intent)
     }
+
     /**
      * Callback to handle QR Code Authenticator result
      */
@@ -381,8 +386,6 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
             }
         }
     // ****************** Handle QR Code Authenticator flow End *********************** //
-
-
 
 
     // ****************** Handle refresh token flow Start *********************** //
@@ -435,8 +438,6 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
     // ****************** Handle refresh token flow End *********************** //
 
 
-
-
     // ******************** Handle logout flow Start ************************* //
     /**
      * End session from custom chrome tab browser
@@ -448,8 +449,6 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
         CyberArkAuthProvider.endSession(cyberArkAccountBuilder).start(this)
     }
     // ********************* Handle logout flow End ************************* //
-
-
 
 
     // *********** Handle access and refresh token expire scenarios Start *********** //
@@ -508,8 +507,6 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
     // *********** Handle access and refresh token expire scenarios End *********** //
 
 
-
-
     // ************************ Handle biometrics Start **************************** //
     /**
      * Save "Invoke biometrics on app launch" status in shared preference
@@ -522,7 +519,10 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
             value = true
             biometricsOnRefreshTokenCheckbox.isChecked = value
         }
-        CyberArkPreferenceUtil.putBoolean(getString(R.string.pref_key_invoke_biometrics_on_app_launch), value)
+        CyberArkPreferenceUtil.putBoolean(
+            getString(R.string.pref_key_invoke_biometrics_on_app_launch),
+            value
+        )
     }
 
     /**
@@ -536,7 +536,10 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
             value = true
             biometricsOnAppLaunchCheckbox.isChecked = value
         }
-        CyberArkPreferenceUtil.putBoolean(getString(R.string.pref_key_invoke_biometrics_when_access_token_expires), value)
+        CyberArkPreferenceUtil.putBoolean(
+            getString(R.string.pref_key_invoke_biometrics_when_access_token_expires),
+            value
+        )
     }
 
     /**
@@ -568,7 +571,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
 
             // Verify if access token is expired or not
             var status = false
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 status = JWTUtils.isAccessTokenExpired(accessTokenData)
             } else {
                 Log.i(TAG, "Not supported VERSION.SDK_INT < O")
@@ -663,9 +666,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
     // ************************ Handle biometrics End ******************************** //
 
 
-
-
-    // ******************* Handle FCM Token upload to server Start *************************** //
+    // ******************* Handle notification Start *************************** //
     /**
      * Obtain FCM token immediately after the successful enrollment
      */
@@ -704,11 +705,11 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
     /**
      * Handle upload FCM token response
      *
-     * @param sendFCMTokenModel: SendFCMTokenModel model class instance
+     * @param sendFCMTokenModel: SendFCMTokenModel instance
      */
     private fun handleUploadFCMTokenResponse(sendFCMTokenModel: SendFCMTokenModel?) {
         if (sendFCMTokenModel == null) {
-            Log.i(TAG, "Unable to get response from server")
+            Log.i(TAG, "Upload FCM Token: Unable to get response from server")
         } else if (!sendFCMTokenModel.Status) {
             Log.i(TAG, "Unable to upload FCM Token to Server")
         } else {
@@ -718,7 +719,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
     }
 
     /**
-     * Setup System URL and host URL in CyberArkAccountBuilder to upload FCM token
+     * Setup System URL and host URL in CyberArkAccountBuilder
      *
      * @return CyberArkAccountBuilder instance
      */
@@ -729,24 +730,26 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
             .build()
     }
 
-
+    /**
+     * Call API to get OTP key, secret and save into shared preference
+     *
+     */
     private fun otpEnroll() {
         lifecycleScope.launch(Dispatchers.Main) {
             val accessTokenData = KeyStoreProvider.get().getAuthToken()
             if (accessTokenData != null) {
-                val sendFCMTokenModel: OTPEnrollModel =
-                    CyberArkAuthProvider.otpEnroll(setupFCMUrl())
-                        .start(applicationContext, accessTokenData)
-                Log.i(TAG, "sendFCMTokenModel :: " + sendFCMTokenModel.success)
-                Log.i(TAG, "sendFCMTokenModel :: " + sendFCMTokenModel.Result.SecretKey)
-                Log.i(TAG, "sendFCMTokenModel :: " + sendFCMTokenModel.Result.OTPKey)
-                Log.i(TAG, "sendFCMTokenModel :: " + sendFCMTokenModel.Result.Status)
-                Log.i(TAG, "sendFCMTokenModel :: " + sendFCMTokenModel.Result.OathProfileUuid)
-                Log.i(TAG, "sendFCMTokenModel :: " + sendFCMTokenModel.Result.Period)
+                val otpEnrollModel: OTPEnrollModel = CyberArkAuthProvider.otpEnroll(setupFCMUrl())
+                    .start(this@MFAActivity, accessTokenData)
+                // Save OTP enroll data
+                val otpEnrollModelString = Gson().toJson(otpEnrollModel)
+                CyberArkPreferenceUtil.putString(
+                    NotificationConstants.OTP_ENROLL_DATA,
+                    otpEnrollModelString
+                )
             } else {
                 Log.i(TAG, "Access Token is not initialized")
             }
         }
     }
-    // ******************* Handle FCM Token upload to server End *************************** //
+    // ******************* Handle notification End *************************** //
 }

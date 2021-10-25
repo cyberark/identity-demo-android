@@ -51,10 +51,10 @@ class FCMService : FirebaseMessagingService() {
             CyberArkAuthProvider.parseRemoteNotification(remoteMessage.data).start()
 
         /**
-         * if application is in foreground process the push in activity
+         * if application is in foreground process the notification in activity
          */
         if (AppUtils.isAppOnForeground()) {
-            Log.i(TAG, "App in foreground from FCM AppUtils ")
+            Log.i(TAG, "FCMService() App in foreground")
             val intent = Intent(this, NotificationActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -64,7 +64,7 @@ class FCMService : FirebaseMessagingService() {
             /**
              * if the application is in the background build and show Notification
              */
-            Log.i(TAG, "App in background from FCM AppUtils ")
+            Log.i(TAG, "FCMService() App in background")
             FCMManager(this).sendNotification(notificationDataModel)
         }
     }
@@ -109,11 +109,11 @@ class FCMService : FirebaseMessagingService() {
     /**
      * Handle upload FCM token response
      *
-     * @param sendFCMTokenModel: SendFCMTokenModel model class instance
+     * @param sendFCMTokenModel: SendFCMTokenModel instance
      */
     private fun handleUploadFCMTokenResponse(sendFCMTokenModel: SendFCMTokenModel?) {
         if (sendFCMTokenModel == null) {
-            Log.i(TAG, "Unable to get response from server")
+            Log.i(TAG, "Upload FCM Token: Unable to get response from server")
         } else if (!sendFCMTokenModel.Status) {
             Log.i(TAG, "Unable to upload FCM Token to Server")
         } else {
@@ -122,7 +122,7 @@ class FCMService : FirebaseMessagingService() {
     }
 
     /**
-     * Setup System URL and host URL in CyberArkAccountBuilder to upload FCM token
+     * Setup System URL and host URL in CyberArkAccountBuilder
      *
      * @return CyberArkAccountBuilder instance
      */
