@@ -39,7 +39,7 @@ import javax.crypto.spec.SecretKeySpec
  * @param period: period value
  * @param clock: SystemClock
  */
-class TOTPGenerator internal constructor(
+internal class TOTPGenerator constructor(
     algorithm: String,
     secret: ByteArray?,
     digits: Int,
@@ -59,7 +59,7 @@ class TOTPGenerator internal constructor(
      * @param digits: number of digits
      * @param period: time period (in seconds)
      */
-    constructor(algorithm: String, secret: ByteArray?, digits: Int, period: Int) : this(
+    internal constructor(algorithm: String, secret: ByteArray?, digits: Int, period: Int) : this(
         algorithm,
         secret,
         digits,

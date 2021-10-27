@@ -23,7 +23,7 @@ import com.cyberark.identity.data.model.OTPEnrollModel
  * TOTP generator class used to generate OTP code using secret, algorithms, digits and period
  *
  */
-object TOTPManager {
+internal object TOTPManager {
 
     /**
      * Generate time-based OTP code
