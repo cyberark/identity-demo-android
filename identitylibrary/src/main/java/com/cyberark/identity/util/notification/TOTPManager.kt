@@ -17,7 +17,6 @@
 package com.cyberark.identity.util.notification
 
 import android.util.Base64
-import android.util.Log
 import com.cyberark.identity.data.model.OTPEnrollModel
 
 /**
@@ -34,13 +33,9 @@ object TOTPManager {
      */
     fun generateTOTP(otpEnrollModel: OTPEnrollModel): String {
         return try {
-            val secretKey = otpEnrollModel.Result.SecretKey
-            val data: ByteArray = secretKey.toByteArray(charset("UTF-8"))
-            val base64String = Base64.encodeToString(data, Base64.DEFAULT)
-            Log.i("TOTPManager selected algorithms name", getTOTPAlgorithm(otpEnrollModel.Result.HmacAlgorithm))
             val totp = TOTPGenerator(
                 getTOTPAlgorithm(otpEnrollModel.Result.HmacAlgorithm),
-                Base64.decode(base64String, Base64.DEFAULT),
+                getSecretKeyByteArray(otpEnrollModel.Result.SecretKey),
                 otpEnrollModel.Result.Digits,
                 otpEnrollModel.Result.Period
             )
@@ -73,5 +68,17 @@ object TOTPManager {
                 ""
             }
         }
+    }
+
+    /**
+     * Get secret key byte array
+     *
+     * @param secretKey: otp secret key
+     * @return ByteArray
+     */
+    private fun getSecretKeyByteArray(secretKey: String): ByteArray? {
+        val data: ByteArray = secretKey.toByteArray(charset("UTF-8"))
+        val base64String = Base64.encodeToString(data, Base64.DEFAULT)
+        return Base64.decode(base64String, Base64.DEFAULT)
     }
 }
