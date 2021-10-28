@@ -1,7 +1,4 @@
-package com.cyberark.identity.Utility
-
-import android.util.Log
-import com.cyberark.identity.builder.CyberArkAccountBuilder
+package com.cyberark.identity.testUtility
 
 internal object Constants {
     const val systemURL = "https://aaj7617.my.dev.idaptive.app"

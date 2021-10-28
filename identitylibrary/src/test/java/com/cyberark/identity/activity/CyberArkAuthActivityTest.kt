@@ -3,8 +3,8 @@ package com.cyberark.identity.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import com.cyberark.identity.Utility.Constants
-import com.cyberark.identity.Utility.RobolectricBase
+import com.cyberark.identity.testUtility.Constants
+import com.cyberark.identity.testUtility.RobolectricBase
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.provider.CyberArkAuthManager
 import com.cyberark.identity.provider.CyberArkAuthProvider

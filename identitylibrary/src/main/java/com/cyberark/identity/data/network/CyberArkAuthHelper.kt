@@ -73,7 +73,7 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
 
     /**
      * Enroll device
-     * @param idapNativeClient: idap native client
+     * @param idapNativeClient: idaptive native client
      * @param acceptLang: accepted language
      * @param bearerToken: authorization bearer token
      * @param body: request body

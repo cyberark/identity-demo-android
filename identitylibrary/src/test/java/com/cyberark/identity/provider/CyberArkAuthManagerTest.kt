@@ -6,7 +6,7 @@ import android.net.Uri
 import android.net.UrlQuerySanitizer
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelStore
-import com.cyberark.identity.Utility.Constants
+import com.cyberark.identity.testUtility.Constants
 import com.cyberark.identity.activity.CyberArkAuthActivity
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.viewmodel.AuthenticationViewModel

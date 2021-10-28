@@ -33,7 +33,7 @@ interface CyberArkAuthService {
     /**
      * Qr code login
      *
-     * @param idapNativeClient: IDAP native client
+     * @param idapNativeClient: Idaptive native client
      * @param bearerToken: Authorization Bearer Token
      * @param url: QR Code login URL
      * @return QRCodeLoginModel
@@ -76,7 +76,7 @@ interface CyberArkAuthService {
     /**
      * Enroll device
      *
-     * @param idapNativeClient: idap native client
+     * @param idapNativeClient: idaptive native client
      * @param acceptLang: accepted language
      * @param bearerToken: authorization bearer token
      * @param payload: request body

@@ -1,4 +1,4 @@
-package com.cyberark.identity.Utility
+package com.cyberark.identity.testUtility
 
 import android.os.Build
 import org.junit.Rule
@@ -8,11 +8,6 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore
 import org.powermock.modules.junit4.rule.PowerMockRule
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import org.mockito.junit.MockitoJUnit
-
-import org.mockito.junit.MockitoRule
-
-
 
 
 @Config(sdk = [Build.VERSION_CODES.O_MR1])

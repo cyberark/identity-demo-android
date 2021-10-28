@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
-import com.cyberark.identity.Utility.Constants
+import com.cyberark.identity.testUtility.Constants
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper

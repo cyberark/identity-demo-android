@@ -3,7 +3,7 @@ package com.cyberark.identity.activity
 import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
-import com.cyberark.identity.Utility.RobolectricBase
+import com.cyberark.identity.testUtility.RobolectricBase
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.robolectric.Robolectric
