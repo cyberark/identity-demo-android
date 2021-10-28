@@ -59,13 +59,12 @@ class CyberarkAuthHelperTest : TestCase() {
     @Test
     public fun testfastEnrollV3() {
         runBlocking {
-            var centrifyNativeClient: Boolean = true
             var idapNativeClient: Boolean =  true
             var acceptLang: String = "acceptLang"
             var bearerToken: String = "bearerToken"
             var requestBody = PowerMockito.mock(RequestBody::class.java)
-            cyberarkAuthHelper.fastEnrollV3(centrifyNativeClient,idapNativeClient,acceptLang,bearerToken,requestBody)
-            verify(cyberarkAuthService).fastEnrollV3(centrifyNativeClient,idapNativeClient,acceptLang,bearerToken,requestBody)
+            cyberarkAuthHelper.fastEnrollV3(idapNativeClient,acceptLang,bearerToken,requestBody)
+            verify(cyberarkAuthService).fastEnrollV3(idapNativeClient,acceptLang,bearerToken,requestBody)
         }
     }
 

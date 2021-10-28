@@ -63,18 +63,16 @@ class EnrollmentViewModelTest : TestCase() {
         val acceptCode = "Code"
         val authorization = "Authrorization"
         val isIdaptive = true
-        val isCentrify = true
 
         val jsonObject = JSONObject()
         jsonObject.put(EndpointUrls.HEADER_ACCEPT_LANGUAGE,acceptCode)
         jsonObject.put(EndpointUrls.HEADER_AUTHORIZATION,authorization)
         jsonObject.put(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT,isIdaptive)
-        jsonObject.put(EndpointUrls.HEADER_X_CENTRIFY_NATIVE_CLIENT,isCentrify)
 
         val requestBody = Whitebox.invokeMethod<RequestBody>(enrollmentViewModel,"createJsonBody",getBodyPayload().toString())
 
         runBlocking {
-            PowerMockito.`when`(cyberArkAuthHelper.fastEnrollV3(isCentrify,isIdaptive,acceptCode,authorization,requestBody)).thenReturn( PowerMockito.mock(EnrollmentModel::class.java))
+            PowerMockito.`when`(cyberArkAuthHelper.fastEnrollV3(isIdaptive,acceptCode,authorization,requestBody)).thenReturn( PowerMockito.mock(EnrollmentModel::class.java))
             enrollmentViewModel.getEnrolledData().observeForever(enrollObserver)
             enrollmentViewModel.handleEnrollment(jsonObject,getBodyPayload())
             verify(enrollObserver, atLeastOnce()).onChanged(any())
@@ -85,7 +83,6 @@ class EnrollmentViewModelTest : TestCase() {
     //TODO.. need to remove all hardcoded values
     private fun getBodyPayload(): JSONObject {
         val payload = JSONObject()
-        payload.put("devicetype", "A")
         payload.put("name", "Pixel 5 (IMEI: 3fcf45ed38044067)")
         payload.put("simpleName", "Pixel 5")
         payload.put("version", "11")

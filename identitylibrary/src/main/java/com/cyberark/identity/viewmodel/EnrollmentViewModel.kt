@@ -59,8 +59,6 @@ internal class EnrollmentViewModel(private val cyberArkAuthHelper: CyberArkAuthH
         viewModelScope.launch {
             enrolledResponse.postValue(ResponseHandler.loading(null))
             try {
-                val centrifyNativeClient: Boolean =
-                    headerPayload.getBoolean(EndpointUrls.HEADER_X_CENTRIFY_NATIVE_CLIENT)
                 val idapNativeClient: Boolean =
                     headerPayload.getBoolean(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT)
                 val acceptLang: String =
@@ -68,7 +66,6 @@ internal class EnrollmentViewModel(private val cyberArkAuthHelper: CyberArkAuthH
                 val bearerToken: String = headerPayload.getString(EndpointUrls.HEADER_AUTHORIZATION)
 
                 val enrollmentData = cyberArkAuthHelper.fastEnrollV3(
-                    centrifyNativeClient,
                     idapNativeClient,
                     acceptLang,
                     bearerToken,

@@ -59,11 +59,11 @@ class CyberArkAuthActivityTest: RobolectricBase() {
     private fun setupAccount(): CyberArkAccountBuilder {
         val cyberArkAccountBuilder = CyberArkAccountBuilder.Builder()
             .clientId("Axis")
-            .hostURL("aaj7617.my.dev.idaptive.app")
+            .hostURL("mock.my.dev.mock.app")
             .appId("testoauth4")
             .responseType("code")
             .scope("All")
-            .redirectUri("demo://aaj7617.my.dev.idaptive.app/android/com.cyberark.mfa/callback")
+            .redirectUri("demo://mock.my.dev.mock.app/android/com.mock.mfa/callback")
             .build()
         // Print authorize URL
         return cyberArkAccountBuilder

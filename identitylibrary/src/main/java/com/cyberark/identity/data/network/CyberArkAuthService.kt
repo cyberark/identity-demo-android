@@ -76,7 +76,6 @@ interface CyberArkAuthService {
     /**
      * Enroll device
      *
-     * @param centrifyNativeClient: centrify native client
      * @param idapNativeClient: idap native client
      * @param acceptLang: accepted language
      * @param bearerToken: authorization bearer token
@@ -85,7 +84,6 @@ interface CyberArkAuthService {
      */
     @POST(URL_FAST_ENROLL_V3)
     suspend fun fastEnrollV3(
-        @Header(EndpointUrls.HEADER_X_CENTRIFY_NATIVE_CLIENT) centrifyNativeClient: Boolean,
         @Header(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT) idapNativeClient: Boolean,
         @Header(EndpointUrls.HEADER_ACCEPT_LANGUAGE) acceptLang: String,
         @Header(EndpointUrls.HEADER_AUTHORIZATION) bearerToken: String,
@@ -95,14 +93,14 @@ interface CyberArkAuthService {
     /**
      * Send FCM token
      *
-     * @param centrifyNativeClient: centrify native client
+     * @param idapNativeClient: idaptive native client
      * @param bearerToken: authorization bearer token
      * @param payload: request body
      * @return SendFCMTokenModel
      */
     @POST(URL_UPDATE_DEV_SETTINGS)
     suspend fun sendFCMToken(
-        @Header(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT) centrifyNativeClient: Boolean,
+        @Header(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT) idapNativeClient: Boolean,
         @Header(EndpointUrls.HEADER_AUTHORIZATION) bearerToken: String,
         @Body payload: RequestBody
     ): SendFCMTokenModel

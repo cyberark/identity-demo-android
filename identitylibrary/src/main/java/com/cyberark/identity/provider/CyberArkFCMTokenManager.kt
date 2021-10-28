@@ -73,10 +73,10 @@ internal class CyberArkFCMTokenManager(
             val headerPayload = getHeaderPayload()
             val bodyPayload = getBodyPayload()
 
-            val centrifyNativeClient: Boolean = headerPayload.getBoolean(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT)
+            val idapNativeClient: Boolean = headerPayload.getBoolean(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT)
             val bearerToken: String = headerPayload.getString(EndpointUrls.HEADER_AUTHORIZATION)
 
-            sendFCMTokenData = cyberArkAuthHelper.sendFCMToken(centrifyNativeClient, bearerToken, createJsonBody(bodyPayload.toString()))
+            sendFCMTokenData = cyberArkAuthHelper.sendFCMToken(idapNativeClient, bearerToken, createJsonBody(bodyPayload.toString()))
         }
         return sendFCMTokenData
     }

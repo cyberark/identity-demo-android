@@ -26,7 +26,6 @@ internal object EndpointUrls {
     const val URL_UPDATE_DEV_SETTINGS = "/IosAppRest/UpdateDevSettings"
     const val URL_SUBMIT_OTP_CODE = "/IosAppRest/SubmitOtpCode"
 
-    const val HEADER_X_CENTRIFY_NATIVE_CLIENT = "X-CENTRIFY-NATIVE-CLIENT"
     const val HEADER_X_IDAP_NATIVE_CLIENT = "X-IDAP-NATIVE-CLIENT"
     const val HEADER_ACCEPT_LANGUAGE = "Accept-Language"
     const val HEADER_AUTHORIZATION = "Authorization"

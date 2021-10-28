@@ -160,7 +160,6 @@ internal class CyberArkBiometricPromptUtilityImpl(private val callbackCyberArk: 
      * @param authResult: BiometricPrompt.AuthenticationResult instance
      */
     private fun decryptServerTokenFromStorage(authResult: BiometricPrompt.AuthenticationResult) {
-        Log.v(tag, "auth result :: $authResult")
         this@CyberArkBiometricPromptUtilityImpl.callbackCyberArk.isAuthenticationSuccess(true)
     }
 
