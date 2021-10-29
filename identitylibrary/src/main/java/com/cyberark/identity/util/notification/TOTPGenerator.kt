@@ -83,7 +83,7 @@ internal class TOTPGenerator constructor(
      * @param eventCount: counter value
      * @return String: OTP code
      */
-    private fun generate(eventCount: Long): String {
+    fun generate(eventCount: Long): String {
         // convert to byte array
         var movingFactor = eventCount
         val counter = ByteArray(8) // 64 bits
