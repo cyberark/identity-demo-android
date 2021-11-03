@@ -16,24 +16,19 @@
 
 package com.cyberark.identity.testUtility
 
-import java.math.BigInteger
+import com.google.common.io.BaseEncoding
+import java.util.*
 
 object Utils {
     /**
-     * This method converts a HEX string to Byte[]
+     * Converts a HEX string to Byte[]
      *
-     * @param hex: the HEX string
-     * @return a byte array
+     * @param hexString: hex string
+     * @return ByteArray: byte array
      */
     @JvmStatic
-    fun hexStr2Bytes(hex: String): ByteArray {
-        // Adding one byte to get the right conversion
-        // Values starting with "0" can be converted
-        val bArray = BigInteger("10$hex", 16).toByteArray()
-
-        // Copy all the REAL bytes, not the "first"
-        val ret = ByteArray(bArray.size - 1)
-        for (i in ret.indices) ret[i] = bArray[i + 1]
-        return ret
+    fun hexStr2Bytes(hexString: String): ByteArray {
+        return BaseEncoding.base16()
+            .decode(hexString.uppercase(Locale.getDefault()))
     }
 }

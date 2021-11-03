@@ -334,8 +334,6 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
                         logOutButton.isEnabled = true
                         isEnrolled = true
                         enrollButton.setText(R.string.tv_qr_authenticator)
-                        // Hide progress indicator
-                        progressBar.visibility = View.GONE
                     }
                     ResponseStatus.ERROR -> {
                         // Show enrollment error message using Toast
@@ -680,6 +678,8 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
     }
 
     override fun onFcmTokenFailure(exception: Throwable?) {
+        // Hide progress indicator
+        progressBar.visibility = View.GONE
         Log.e(TAG, "Error obtaining FCM token", exception)
     }
 
@@ -708,12 +708,16 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
      * @param sendFCMTokenModel: SendFCMTokenModel instance
      */
     private fun handleUploadFCMTokenResponse(sendFCMTokenModel: SendFCMTokenModel?) {
+        // Hide progress indicator
+        progressBar.visibility = View.GONE
         if (sendFCMTokenModel == null) {
             Log.i(TAG, "Upload FCM Token: Unable to get response from server")
         } else if (!sendFCMTokenModel.Status) {
             Log.i(TAG, "Unable to upload FCM Token to Server")
         } else {
             Log.i(TAG, "Uploaded FCM Token to Server successfully")
+            // Hide progress indicator
+            progressBar.visibility = View.VISIBLE
             otpEnroll()
         }
     }
@@ -746,9 +750,16 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
                     NotificationConstants.OTP_ENROLL_DATA,
                     otpEnrollModelString
                 )
+                Toast.makeText(
+                    this@MFAActivity,
+                    "OTP Enroll completed",
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 Log.i(TAG, "Access Token is not initialized")
             }
+            // Hide progress indicator
+            progressBar.visibility = View.GONE
         }
     }
     // ******************* Handle notification End *************************** //

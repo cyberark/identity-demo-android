@@ -24,4 +24,5 @@ object NotificationConstants {
     const val OTP_ENROLL_DATA = "OTP_ENROLL_DATA"
     const val USER_ACCEPTED = "userAccepted"
     const val OTP_CHALLENGE_ANSWER = "challengeAnswer"
+    const val TOKEN_EXPIRE_STATUS = "TOKEN_EXPIRE_STATUS"
 }

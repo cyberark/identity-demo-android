@@ -33,6 +33,7 @@ import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.IllegalArgumentException
 
 class FCMService : FirebaseMessagingService() {
 
@@ -46,26 +47,33 @@ class FCMService : FirebaseMessagingService() {
      * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
      */
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        try {
+            if (remoteMessage.data.isNotEmpty()) {
+                val notificationDataModel: NotificationDataModel =
+                    CyberArkAuthProvider.parseRemoteNotification(remoteMessage.data).start()
 
-        val notificationDataModel: NotificationDataModel =
-            CyberArkAuthProvider.parseRemoteNotification(remoteMessage.data).start()
-
-        /**
-         * if application is in foreground process the notification in activity
-         */
-        if (AppUtils.isAppOnForeground()) {
-            Log.i(TAG, "FCMService() App in foreground")
-            val intent = Intent(this, NotificationActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.putExtra(FCMReceiver.NOTIFICATION_DATA, notificationDataModel)
-            startActivity(intent)
-        } else {
-            /**
-             * if the application is in the background build and show Notification
-             */
-            Log.i(TAG, "FCMService() App in background")
-            FCMManager(this).sendNotification(notificationDataModel)
+                /**
+                 * if application is in foreground process the notification in activity
+                 */
+                if (AppUtils.isAppOnForeground()) {
+                    Log.i(TAG, "FCMService() App in foreground")
+                    val intent = Intent(this, NotificationActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    intent.putExtra(FCMReceiver.NOTIFICATION_DATA, notificationDataModel)
+                    startActivity(intent)
+                } else {
+                    /**
+                     * if the application is in the background build and show Notification
+                     */
+                    Log.i(TAG, "FCMService() App in background")
+                    FCMManager(this).sendNotification(notificationDataModel)
+                }
+            } else {
+                Log.i(TAG, "FCMService() remote message contains empty data payload")
+            }
+        } catch (e: IllegalArgumentException) {
+            Log.e(TAG, "FCMService() This is not a CyberArk Notification", e)
         }
     }
 

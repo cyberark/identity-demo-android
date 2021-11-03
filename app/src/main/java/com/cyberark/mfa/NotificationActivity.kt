@@ -17,23 +17,36 @@
 package com.cyberark.mfa
 
 import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.model.NotificationDataModel
 import com.cyberark.identity.data.model.OTPEnrollModel
+import com.cyberark.identity.data.model.RefreshTokenModel
 import com.cyberark.identity.data.model.SubmitOTPModel
 import com.cyberark.identity.provider.CyberArkAuthProvider
+import com.cyberark.identity.util.*
+import com.cyberark.identity.util.biometric.CyberArkBiometricCallback
+import com.cyberark.identity.util.biometric.CyberArkBiometricManager
+import com.cyberark.identity.util.biometric.CyberArkBiometricPromptUtility
+import com.cyberark.identity.util.jwt.JWTUtils
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.notification.NotificationConstants
+import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.fcm.FCMReceiver
+import com.cyberark.mfa.utils.PreferenceConstants
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -56,12 +69,52 @@ class NotificationActivity : AppCompatActivity() {
     private lateinit var notificationData: NotificationDataModel
     private lateinit var otpEnrollModel: OTPEnrollModel
 
+    private lateinit var accessTokenData: String
+    private lateinit var refreshTokenData: String
+    private var userAccepted: Boolean = false
+    private var logoutStatus: Boolean = false
+    private var tokenExpireStatus: Boolean = false
+
+    // SDK biometrics utility class variable
+    private lateinit var cyberArkBiometricPromptUtility: CyberArkBiometricPromptUtility
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notification)
         initializeData()
         invokeUI()
         updateUI()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(tokenExpireStatus) {
+            // showAccessTokenExpireAlert()
+            // Show biometrics popup when access token is expired
+            showBiometrics()
+        }
+        // Perform logout action when logout status true
+        if (logoutStatus) {
+            // Remove access token and refresh token from device storage
+            CyberArkPreferenceUtil.remove(Constants.ACCESS_TOKEN)
+            CyberArkPreferenceUtil.remove(Constants.ACCESS_TOKEN_IV)
+            CyberArkPreferenceUtil.remove(Constants.REFRESH_TOKEN)
+            CyberArkPreferenceUtil.remove(Constants.REFRESH_TOKEN_IV)
+
+            // Remove ENROLLMENT_STATUS flag from device storage
+            CyberArkPreferenceUtil.remove(PreferenceConstants.ENROLLMENT_STATUS)
+            CyberArkPreferenceUtil.clear()
+
+            // Remove OTP enroll data
+            CyberArkPreferenceUtil.remove(NotificationConstants.OTP_ENROLL_DATA)
+
+            // Start HomeActivity
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            intent.putExtra("EXIT", true)
+            startActivity(intent)
+            finishAffinity()
+        }
     }
 
     /**
@@ -74,7 +127,18 @@ class NotificationActivity : AppCompatActivity() {
 
         val otpEnrollData =
             CyberArkPreferenceUtil.getString(NotificationConstants.OTP_ENROLL_DATA, null)
-        otpEnrollModel = Gson().fromJson(otpEnrollData, OTPEnrollModel::class.java)
+        if(otpEnrollData != null) {
+            otpEnrollModel = Gson().fromJson(otpEnrollData, OTPEnrollModel::class.java)
+        } else {
+            otpEnroll()
+        }
+        accessTokenData = KeyStoreProvider.get().getAuthToken().toString()
+        refreshTokenData = KeyStoreProvider.get().getRefreshToken().toString()
+
+        // Invoke biometric utility instance
+        cyberArkBiometricPromptUtility =
+            CyberArkBiometricManager().getBiometricUtility(biometricCallback)
+        tokenExpireStatus = notificationIntent.getBooleanExtra(NotificationConstants.TOKEN_EXPIRE_STATUS, false)
     }
 
     /**
@@ -88,9 +152,11 @@ class NotificationActivity : AppCompatActivity() {
         denyButton = findViewById(R.id.deny_button)
 
         approveButton.setOnClickListener {
+            userAccepted = true
             approveNotification()
         }
         denyButton.setOnClickListener {
+            userAccepted = false
             denyNotification()
         }
     }
@@ -101,7 +167,7 @@ class NotificationActivity : AppCompatActivity() {
      */
     private fun updateUI() {
         title = notificationData.AppName
-        notificationDesc.setText(notificationData.Message)
+        notificationDesc.text = notificationData.Message
     }
 
     /**
@@ -110,11 +176,7 @@ class NotificationActivity : AppCompatActivity() {
      */
     private fun approveNotification() {
         Log.i("NotificationActivity", "Approve")
-        // Show progress indicator
-        progressBar.visibility = View.VISIBLE
-        val notificationPayload: JSONObject =
-            getNotificationPayload(notificationData.ChallengeAnswer, true)
-        submitOTP(this, otpEnrollModel, notificationPayload)
+        verifyWithAccessToken(true)
     }
 
     /**
@@ -123,11 +185,40 @@ class NotificationActivity : AppCompatActivity() {
      */
     private fun denyNotification() {
         Log.i("NotificationActivity", "Deny")
-        // Show progress indicator
-        progressBar.visibility = View.VISIBLE
-        val notificationPayload: JSONObject =
-            getNotificationPayload(notificationData.ChallengeAnswer, false)
-        submitOTP(this, otpEnrollModel, notificationPayload)
+        verifyWithAccessToken(false)
+    }
+
+    /**
+     * Verify if the existing access token is valid or not
+     * If valid, then call submit OTP API
+     * In not valid, then show access token expire alert popup
+     *
+     * @param userAcceptedStatus : user accepted status, true/false
+     */
+    private fun verifyWithAccessToken(userAcceptedStatus: Boolean) {
+        if (::accessTokenData.isInitialized) {
+            var status = false
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                status = JWTUtils.isAccessTokenExpired(accessTokenData)
+            } else {
+                Log.i(TAG, "Not supported VERSION.SDK_INT < O")
+            }
+
+            if (!status) {
+//                // Show access token expire alert popup
+//                showAccessTokenExpireAlert()
+                // Show biometrics popup when access token is expired
+                showBiometrics()
+            } else {
+                // Show progress indicator
+                progressBar.visibility = View.VISIBLE
+                val notificationPayload: JSONObject =
+                    getNotificationPayload(notificationData.ChallengeAnswer, userAcceptedStatus)
+                submitOTP(this, otpEnrollModel, notificationPayload)
+            }
+        } else {
+            Log.i(TAG, "Access Token is not initialized")
+        }
     }
 
     /**
@@ -198,4 +289,279 @@ class NotificationActivity : AppCompatActivity() {
         return notificationPayload
     }
 
+    /**
+     * Set-up account for OAuth 2.0 PKCE driven flow
+     * update account configuration in "res/values/config.xml"
+     *
+     * @return cyberArkAccountBuilder: CyberArkAccountBuilder instance
+     */
+    private fun setupAccount(): CyberArkAccountBuilder {
+        return CyberArkAccountBuilder.Builder()
+            .systemURL(getString(R.string.cyberark_account_system_url))
+            .hostURL(getString(R.string.cyberark_account_host_url))
+            .clientId(getString(R.string.cyberark_account_client_id))
+            .appId(getString(R.string.cyberark_account_app_id))
+            .responseType(getString(R.string.cyberark_account_response_type))
+            .scope(getString(R.string.cyberark_account_scope))
+            .redirectUri(getString(R.string.cyberark_account_redirect_uri))
+            .build()
+    }
+
+    // *********** Handle access and refresh token expire scenarios Start *********** //
+    /**
+     * Show alert popup when access token is expired
+     */
+    private fun showAccessTokenExpireAlert() {
+
+        val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
+            override fun tappedButtonType(buttonType: AlertButtonType) {
+                if (buttonType == AlertButtonType.NEGATIVE) {
+                    // User cancels dialog
+                } else if (buttonType == AlertButtonType.POSITIVE) {
+                    // Show biometrics popup when access token is expired
+                    showBiometrics()
+                }
+            }
+        })
+        enrollFingerPrintDlg.displayAlert(
+            this,
+            this.getString(R.string.dialog_header_text),
+            this.getString(R.string.dialog_access_token_expire_desc), false,
+            mutableListOf(
+                AlertButton("Cancel", AlertButtonType.NEGATIVE),
+                AlertButton("OK", AlertButtonType.POSITIVE)
+            )
+        )
+    }
+
+    /**
+     * Show alert popup when refresh token is expired
+     */
+    private fun showRefreshTokenExpireAlert() {
+
+        val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
+            override fun tappedButtonType(buttonType: AlertButtonType) {
+                if (buttonType == AlertButtonType.NEGATIVE) {
+                    // User cancels dialog
+                } else if (buttonType == AlertButtonType.POSITIVE) {
+                    // End session if refresh token is expired
+                    val account = setupAccount()
+                    logout(account)
+                }
+            }
+        })
+        enrollFingerPrintDlg.displayAlert(
+            this,
+            this.getString(R.string.dialog_header_text),
+            this.getString(R.string.dialog_refresh_token_expire_desc), false,
+            mutableListOf(
+                AlertButton("Cancel", AlertButtonType.NEGATIVE),
+                AlertButton("OK", AlertButtonType.POSITIVE)
+            )
+        )
+    }
+    // *********** Handle access and refresh token expire scenarios End *********** //
+
+
+    // ****************** Handle refresh token flow Start *********************** //
+    /**
+     * Get the access token using refresh token
+     * and handle API response using active observer
+     *
+     * @param cyberArkAccountBuilder: CyberArkAccountBuilder instance
+     */
+    private fun refreshToken(cyberArkAccountBuilder: CyberArkAccountBuilder) {
+
+        val refreshTokenResponseHandler: LiveData<ResponseHandler<RefreshTokenModel>> =
+            CyberArkAuthProvider.refreshToken(cyberArkAccountBuilder).start(this, refreshTokenData)
+
+        if (!refreshTokenResponseHandler.hasActiveObservers()) {
+            refreshTokenResponseHandler.observe(this, {
+                when (it.status) {
+                    ResponseStatus.SUCCESS -> {
+                        // Save access token in local variable
+                        accessTokenData = it.data!!.access_token
+                        // Save access token in shared preference using keystore encryption
+                        KeyStoreProvider.get().saveAuthToken(accessTokenData)
+                        // Show success message using Toast
+                        Toast.makeText(
+                            this,
+                            "Received New Access Token" + ResponseStatus.SUCCESS.toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        val notificationPayload: JSONObject =
+                            getNotificationPayload(notificationData.ChallengeAnswer, userAccepted)
+                        submitOTP(this, otpEnrollModel, notificationPayload)
+                    }
+                    ResponseStatus.ERROR -> {
+                        progressBar.visibility = View.GONE
+                        // Show error message using Toast
+                        Toast.makeText(
+                            this,
+                            "Error: Unable to fetch access token using refresh token" + ResponseStatus.ERROR.toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        // Show dialog when refresh token is expired
+                        showRefreshTokenExpireAlert()
+                    }
+                    ResponseStatus.LOADING -> {
+                        // Hide progress indicator
+                        progressBar.visibility = View.VISIBLE
+                    }
+                }
+            })
+        }
+    }
+    // ****************** Handle refresh token flow End *********************** //
+
+    // ******************** Handle logout flow Start ************************* //
+    /**
+     * End session from custom chrome tab browser
+     *
+     * @param cyberArkAccountBuilder: CyberArkAccountBuilder instance
+     */
+    private fun logout(cyberArkAccountBuilder: CyberArkAccountBuilder) {
+        logoutStatus = true
+        CyberArkAuthProvider.endSession(cyberArkAccountBuilder).start(this)
+    }
+    // ********************* Handle logout flow End ************************* //
+
+    /**
+     * Call API to get OTP key, secret and save into shared preference
+     *
+     */
+    private fun otpEnroll() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val accessTokenData = KeyStoreProvider.get().getAuthToken()
+            if (accessTokenData != null) {
+                otpEnrollModel = CyberArkAuthProvider.otpEnroll(setupFCMUrl(this@NotificationActivity))
+                    .start(this@NotificationActivity, accessTokenData)
+                // Save OTP enroll data
+                val otpEnrollModelString = Gson().toJson(otpEnrollModel)
+                CyberArkPreferenceUtil.putString(
+                    NotificationConstants.OTP_ENROLL_DATA,
+                    otpEnrollModelString
+                )
+            } else {
+                Log.i(TAG, "Access Token is not initialized")
+            }
+        }
+    }
+
+    /**
+     * Show all strong biometrics in a prompt
+     * negativeButtonText: "Use App Pin" text in order to handle fallback scenario
+     * useDevicePin: true/false (true when biometrics is integrated with device pin as fallback else false)
+     *
+     */
+    private fun showBiometrics() {
+        cyberArkBiometricPromptUtility.showBioAuthentication(this, null, "Use App Pin", false)
+    }
+
+    /**
+     * Callback to handle biometrics response
+     */
+    private val biometricCallback = object : CyberArkBiometricCallback {
+        override fun isAuthenticationSuccess(success: Boolean) {
+            // Show Authentication success message using Toast
+            Toast.makeText(
+                this@NotificationActivity,
+                "Authentication success",
+                Toast.LENGTH_LONG
+            ).show()
+
+            // Verify if access token is expired or not
+            var status = false
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                status = JWTUtils.isAccessTokenExpired(accessTokenData)
+            } else {
+                Log.i(TAG, "Not supported VERSION.SDK_INT < O")
+            }
+            if (!status) {
+                // Invoke API to get access token using refresh token
+                val account = setupAccount()
+                refreshToken(account)
+            }
+        }
+
+        override fun passwordAuthenticationSelected() {
+            Toast.makeText(
+                this@NotificationActivity,
+                "Password authentication selected",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        override fun showErrorMessage(message: String) {
+            Toast.makeText(this@NotificationActivity, message, Toast.LENGTH_LONG).show()
+        }
+
+        override fun isHardwareSupported(boolean: Boolean) {
+            if (!boolean) {
+                Toast.makeText(
+                    this@NotificationActivity,
+                    "Hardware not supported",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
+        override fun isSdkVersionSupported(boolean: Boolean) {
+            Toast.makeText(
+                this@NotificationActivity,
+                "SDK version not supported",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        override fun isBiometricEnrolled(boolean: Boolean) {
+            if (!boolean) {
+                // Show biometric enrollment alert popup
+                showBiometricsEnrollmentAlert()
+            }
+        }
+
+        override fun biometricErrorSecurityUpdateRequired() {
+            Toast.makeText(
+                this@NotificationActivity,
+                "Biometric security updates required",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    /**
+     * Show biometrics enrollment popup if not registered
+     *
+     */
+    private fun showBiometricsEnrollmentAlert() {
+
+        val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
+            override fun tappedButtonType(buttonType: AlertButtonType) {
+                if (buttonType == AlertButtonType.NEGATIVE) {
+                    // User cancels dialog
+                } else if (buttonType == AlertButtonType.POSITIVE) {
+                    // Launch device settings screen for biometrics setup
+                    launchBiometricSetup()
+                }
+            }
+        })
+        enrollFingerPrintDlg.displayAlert(
+            this,
+            this.getString(R.string.dialog_header_text),
+            this.getString(R.string.dialog_biometric_desc), false,
+            mutableListOf(
+                AlertButton("Cancel", AlertButtonType.NEGATIVE),
+                AlertButton("OK", AlertButtonType.POSITIVE)
+            )
+        )
+    }
+
+    /**
+     * Invoke security settings screen to register biometrics
+     *
+     */
+    private fun launchBiometricSetup() {
+        this.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
+    }
 }

@@ -19,6 +19,7 @@ package com.cyberark.mfa.fcm
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 import com.cyberark.identity.builder.CyberArkAccountBuilder
@@ -26,9 +27,11 @@ import com.cyberark.identity.data.model.NotificationDataModel
 import com.cyberark.identity.data.model.OTPEnrollModel
 import com.cyberark.identity.data.model.SubmitOTPModel
 import com.cyberark.identity.provider.CyberArkAuthProvider
+import com.cyberark.identity.util.jwt.JWTUtils
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.notification.NotificationConstants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
+import com.cyberark.mfa.NotificationActivity
 import com.cyberark.mfa.R
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +48,10 @@ class FCMReceiver : BroadcastReceiver() {
         const val NOTIFICATION_DATA = "NotificationData"
     }
 
+    private lateinit var accessTokenData: String
+
     override fun onReceive(context: Context, intent: Intent) {
+        accessTokenData = KeyStoreProvider.get().getAuthToken().toString()
         val notificationData = intent.getParcelableExtra<NotificationDataModel>(NOTIFICATION_DATA)
         val otpEnrollData =
             CyberArkPreferenceUtil.getString(NotificationConstants.OTP_ENROLL_DATA, null)
@@ -55,17 +61,66 @@ class FCMReceiver : BroadcastReceiver() {
                 Log.i(TAG, ACTION_APPROVE)
                 val notificationPayload: JSONObject =
                     getNotificationPayload(notificationData!!.ChallengeAnswer, true)
-                submitOTP(context, otpEnrollModel, notificationPayload)
+                verifyWithAccessToken(
+                    context,
+                    notificationData,
+                    otpEnrollModel,
+                    notificationPayload
+                )
             }
             intent.action != null && intent.action.equals(ACTION_DENY, ignoreCase = true) -> {
                 Log.i(TAG, ACTION_DENY)
                 val notificationPayload: JSONObject =
                     getNotificationPayload(notificationData!!.ChallengeAnswer, false)
-                submitOTP(context, otpEnrollModel, notificationPayload)
+                verifyWithAccessToken(
+                    context,
+                    notificationData,
+                    otpEnrollModel,
+                    notificationPayload
+                )
             }
         }
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.cancel(notificationData?.CommandUuid.hashCode())
+    }
+
+    /**
+     * Verify if the existing access token is valid or not
+     * If valid, then call submit OTP API
+     * In not valid, then launch NotificationActivity
+     *
+     * @param context: application context
+     * @param notificationData: Notification data model
+     * @param otpEnrollModel: OTP enroll model
+     * @param notificationPayload: notification payload
+     */
+    private fun verifyWithAccessToken(
+        context: Context,
+        notificationData: NotificationDataModel,
+        otpEnrollModel: OTPEnrollModel,
+        notificationPayload: JSONObject
+    ) {
+        if (::accessTokenData.isInitialized) {
+            var status = false
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                status = JWTUtils.isAccessTokenExpired(accessTokenData)
+            } else {
+                Log.i(TAG, "Not supported VERSION.SDK_INT < O")
+            }
+            if (!status) {
+                val closeIntent = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
+                context.sendBroadcast(closeIntent)
+                val intent = Intent(context, NotificationActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intent.putExtra(NOTIFICATION_DATA, notificationData)
+                intent.putExtra(NotificationConstants.TOKEN_EXPIRE_STATUS, true)
+                context.startActivity(intent)
+            } else {
+                submitOTP(context, otpEnrollModel, notificationPayload)
+            }
+        } else {
+            Log.i(TAG, "Access Token is not initialized")
+        }
     }
 
     /**

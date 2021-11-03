@@ -80,7 +80,6 @@ class EnrollmentViewModelTest : TestCase() {
 
     }
 
-    //TODO.. need to remove all hardcoded values
     private fun getBodyPayload(): JSONObject {
         val payload = JSONObject()
         payload.put("name", "Pixel 5 (IMEI: 3fcf45ed38044067)")
