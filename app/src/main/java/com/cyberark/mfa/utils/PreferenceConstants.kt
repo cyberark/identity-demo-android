@@ -22,4 +22,10 @@ package com.cyberark.mfa.utils
 object PreferenceConstants {
 
     const val ENROLLMENT_STATUS = "ENROLLMENT_STATUS"
+    const val SYSTEM_URL = "system_url"
+    const val HOST_URL = "host_url"
+    const val CLIENT_ID = "client_id"
+    const val APP_ID = "app_id"
+    const val REDIRECT_URI = "redirect_uri"
+    const val SCHEME = "scheme"
 }

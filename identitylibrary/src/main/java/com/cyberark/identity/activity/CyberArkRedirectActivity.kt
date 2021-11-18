@@ -19,7 +19,6 @@ package com.cyberark.identity.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import java.net.URL
 
 /**
  * CyberArkRedirectActivity is used to handle chrome custom tab browser callback
@@ -37,8 +36,8 @@ class CyberArkRedirectActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         if (intent == null || intent.data == null) {
-            finish();
-            return;
+            finish()
+            return
         }
         val cyberArkAuthActivityIntent = Intent(this, CyberArkAuthActivity::class.java)
         cyberArkAuthActivityIntent.action = CYBERARK_REDIRECT_ACTION

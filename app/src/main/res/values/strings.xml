@@ -41,7 +41,7 @@
     <string name="dialog_access_token_expire_desc">Access token is expired. Would you like to get new Access Token using refresh token?</string>
     <string name="dialog_refresh_token_expire_desc">Refresh token is expired. You need to login again</string>
 
-    <!--NOTIFICATIONS STRINGS-->
+    <!-- Notification Strings -->
     <string name="notification_action_approve">Approve</string>
     <string name="notification_action_deny">Deny</string>
     <string name="notification_channel_id" translatable="false">CyberArk SDK Channel ID</string>
@@ -51,4 +51,16 @@
     <string name="approve">Approve</string>
     <string name="deny">Deny</string>
     <string name="product_icon">product_icon</string>
+
+    <!-- Settings Strings -->
+    <string name="settings">Settings</string>
+    <string name="system_url">System URL</string>
+    <string name="host_url">Host URL</string>
+    <string name="client_id">Client ID</string>
+    <string name="app_id">App ID</string>
+    <string name="response_type">Response Type</string>
+    <string name="scope">Scope</string>
+    <string name="redirect_uri">Redirect URI</string>
+    <string name="scheme">Scheme</string>
+    <string name="save">Save</string>
 </resources>

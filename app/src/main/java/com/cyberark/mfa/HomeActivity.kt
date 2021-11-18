@@ -18,7 +18,8 @@ package com.cyberark.mfa
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -31,6 +32,7 @@ import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.ResponseHandler
 import com.cyberark.identity.util.ResponseStatus
 import com.cyberark.identity.util.keystore.KeyStoreProvider
+import com.cyberark.mfa.utils.AppConfig
 
 /**
  * Implementing SDK feature in HomeActivity
@@ -53,7 +55,7 @@ class HomeActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar_home_activity)
 
         // Setup account
-        val account = setupAccount()
+        val account =  AppConfig.setupAccountFromSharedPreference(this)
 
         // Perform login
         logInButton = findViewById(R.id.button_login)
@@ -69,24 +71,6 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-    }
-
-    /**
-     * Set-up account for OAuth 2.0 PKCE driven flow
-     * update account configuration in "res/values/config.xml"
-     *
-     * @return cyberArkAccountBuilder: CyberArkAccountBuilder instance
-     */
-    private fun setupAccount(): CyberArkAccountBuilder {
-        return CyberArkAccountBuilder.Builder()
-            .systemURL(getString(R.string.cyberark_account_system_url))
-            .hostURL(getString(R.string.cyberark_account_host_url))
-            .clientId(getString(R.string.cyberark_account_client_id))
-            .appId(getString(R.string.cyberark_account_app_id))
-            .responseType(getString(R.string.cyberark_account_response_type))
-            .scope(getString(R.string.cyberark_account_scope))
-            .redirectUri(getString(R.string.cyberark_account_redirect_uri))
-            .build()
     }
 
     /**
@@ -138,4 +122,26 @@ class HomeActivity : AppCompatActivity() {
             })
         }
     }
+
+    // **************** Handle menu settings click action Start *********************** //
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.settings_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_settings -> {
+            //Start Settings activity
+            val intent = Intent(this, SettingsActivity::class.java)
+            intent.putExtra("from_activity", "HomeActivity")
+            startActivity(intent)
+            finish()
+            true
+        }
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
+    // **************** Handle menu settings click action End *********************** //
 }

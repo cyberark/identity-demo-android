@@ -22,6 +22,8 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
@@ -50,6 +52,7 @@ import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.fcm.FCMTokenInterface
 import com.cyberark.mfa.fcm.FCMTokenUtil
+import com.cyberark.mfa.utils.AppConfig
 import com.cyberark.mfa.utils.PreferenceConstants
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -108,7 +111,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
         initializeData()
 
         // Setup account
-        val account = setupAccount()
+        val account =  AppConfig.setupAccountFromSharedPreference(this)
 
         // Update UI components
         updateUI(account)
@@ -182,24 +185,6 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
     private fun initializeData() {
         accessTokenData = KeyStoreProvider.get().getAuthToken().toString()
         refreshTokenData = KeyStoreProvider.get().getRefreshToken().toString()
-    }
-
-    /**
-     * Set-up account for OAuth 2.0 PKCE driven flow
-     * update account configuration in "res/values/config.xml"
-     *
-     * @return cyberArkAccountBuilder: CyberArkAccountBuilder instance
-     */
-    private fun setupAccount(): CyberArkAccountBuilder {
-        return CyberArkAccountBuilder.Builder()
-            .systemURL(getString(R.string.cyberark_account_system_url))
-            .hostURL(getString(R.string.cyberark_account_host_url))
-            .clientId(getString(R.string.cyberark_account_client_id))
-            .appId(getString(R.string.cyberark_account_app_id))
-            .responseType(getString(R.string.cyberark_account_response_type))
-            .scope(getString(R.string.cyberark_account_scope))
-            .redirectUri(getString(R.string.cyberark_account_redirect_uri))
-            .build()
     }
 
     /**
@@ -487,7 +472,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
                     // User cancels dialog
                 } else if (buttonType == AlertButtonType.POSITIVE) {
                     // End session if refresh token is expired
-                    val account = setupAccount()
+                    val account =  AppConfig.setupAccountFromSharedPreference(this@MFAActivity)
                     logout(account)
                 }
             }
@@ -576,7 +561,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
             }
             if (!status) {
                 // Invoke API to get access token using refresh token
-                val account = setupAccount()
+                val account =  AppConfig.setupAccountFromSharedPreference(this@MFAActivity)
                 refreshToken(account)
             }
         }
@@ -763,4 +748,27 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
         }
     }
     // ******************* Handle notification End *************************** //
+
+
+    // **************** Handle menu settings click action Start *********************** //
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.settings_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_settings -> {
+            //Start Settings activity
+            val intent = Intent(this, SettingsActivity::class.java)
+            intent.putExtra("from_activity", "MFAActivity")
+            startActivity(intent)
+            finish()
+            true
+        }
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
+    // **************** Handle menu settings click action End *********************** //
 }

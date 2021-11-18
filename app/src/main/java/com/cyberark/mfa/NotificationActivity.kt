@@ -46,6 +46,7 @@ import com.cyberark.identity.util.notification.NotificationConstants
 import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.fcm.FCMReceiver
+import com.cyberark.mfa.utils.AppConfig
 import com.cyberark.mfa.utils.PreferenceConstants
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -289,24 +290,6 @@ class NotificationActivity : AppCompatActivity() {
         return notificationPayload
     }
 
-    /**
-     * Set-up account for OAuth 2.0 PKCE driven flow
-     * update account configuration in "res/values/config.xml"
-     *
-     * @return cyberArkAccountBuilder: CyberArkAccountBuilder instance
-     */
-    private fun setupAccount(): CyberArkAccountBuilder {
-        return CyberArkAccountBuilder.Builder()
-            .systemURL(getString(R.string.cyberark_account_system_url))
-            .hostURL(getString(R.string.cyberark_account_host_url))
-            .clientId(getString(R.string.cyberark_account_client_id))
-            .appId(getString(R.string.cyberark_account_app_id))
-            .responseType(getString(R.string.cyberark_account_response_type))
-            .scope(getString(R.string.cyberark_account_scope))
-            .redirectUri(getString(R.string.cyberark_account_redirect_uri))
-            .build()
-    }
-
     // *********** Handle access and refresh token expire scenarios Start *********** //
     /**
      * Show alert popup when access token is expired
@@ -345,7 +328,7 @@ class NotificationActivity : AppCompatActivity() {
                     // User cancels dialog
                 } else if (buttonType == AlertButtonType.POSITIVE) {
                     // End session if refresh token is expired
-                    val account = setupAccount()
+                    val account =  AppConfig.setupAccountFromSharedPreference(this@NotificationActivity)
                     logout(account)
                 }
             }
@@ -479,7 +462,7 @@ class NotificationActivity : AppCompatActivity() {
             }
             if (!status) {
                 // Invoke API to get access token using refresh token
-                val account = setupAccount()
+                val account =  AppConfig.setupAccountFromSharedPreference(this@NotificationActivity)
                 refreshToken(account)
             }
         }

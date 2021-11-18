@@ -32,7 +32,7 @@ import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
 class CyberArkViewModelFactory(private val cyberArkAuthHelper: CyberArkAuthHelper) :
     ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(AuthenticationViewModel::class.java) -> {
                 AuthenticationViewModel(cyberArkAuthHelper) as T
@@ -47,4 +47,3 @@ class CyberArkViewModelFactory(private val cyberArkAuthHelper: CyberArkAuthHelpe
         }
     }
 }
-
