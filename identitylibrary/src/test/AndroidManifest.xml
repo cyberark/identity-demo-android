@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +19,6 @@
     android:versionCode="1"
     android:versionName="1.0.0">
 
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 
     <queries>
@@ -31,13 +27,11 @@
         </intent>
     </queries>
 
-    <application
-        android:theme="@style/Theme.AppCompat">
+    <application android:theme="@style/Theme.AppCompat">
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
             tools:replace="screenOrientation" />
-
 
         <activity
             android:name="com.cyberark.identity.activity.CyberArkAuthActivity"
@@ -51,8 +45,7 @@
             android:name="com.cyberark.identity.activity.CyberArkRedirectActivity"
             android:autoRemoveFromRecents="true"
             android:exported="true"
-            tools:node="replace"
-            >
+            tools:node="replace">
             <intent-filter
                 android:autoVerify="true"
                 tools:targetApi="M">
@@ -64,8 +57,7 @@
                 <data
                     android:host="aaj7617.my.dev.idaptive.app"
                     android:pathPrefix="/android/com.cyberark.mfa/callback"
-                    android:scheme="demo"
-                    />
+                    android:scheme="demo" />
             </intent-filter>
         </activity>
 

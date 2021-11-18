@@ -22,7 +22,7 @@
 
     <!-- MFAActivity Button -->
     <string name="button_log_out">Logout</string>
-    <string name="button_enroll">Opt in for QR code Authenticator</string>
+    <string name="button_enroll">Opt in for MFA</string>
 
     <!-- MFAActivity TextView -->
     <string name="tv_qr_authenticator">QR Authenticator</string>
