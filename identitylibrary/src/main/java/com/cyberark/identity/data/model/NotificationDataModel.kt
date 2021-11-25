@@ -17,7 +17,7 @@
 package com.cyberark.identity.data.model
 
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import kotlinx.android.parcel.Parcelize
 
 /**
  * Refresh token model class
@@ -30,19 +30,19 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class NotificationDataModel(
-    val Title: String,
-    val AppIconUrl: String,
-    val IpAddress: String,
+    val Title: String?,
+    val AppIconUrl: String?,
+    val IpAddress: String?,
     val ChallengeAnswer: String,
-    val Location: String,
-    val Message: String,
-    val CollapseId: String,
-    val TargetAuthUser: String,
-    val LoginType: String,
-    val ExpiryDate: String,
-    val AppName: String,
-    val AuthRequestDate: String,
-    val CommandUuid: String,
-    val CountryCode: String,
-    val CountryName: String
+    val Location: String?,
+    val Message: String?,
+    val CollapseId: String?,
+    val TargetAuthUser: String?,
+    val LoginType: String?,
+    val ExpiryDate: String?,
+    val AppName: String?,
+    val AuthRequestDate: String?,
+    val CommandUuid: String?,
+    val CountryCode: String?,
+    val CountryName: String?
 ) : Parcelable
