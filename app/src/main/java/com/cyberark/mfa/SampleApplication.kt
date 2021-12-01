@@ -19,13 +19,13 @@ package com.cyberark.mfa
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.utils.AppUtils
 
-class SampleApplication : Application(), LifecycleObserver {
+class SampleApplication : Application(), LifecycleEventObserver {
 
     companion object {
         private val TAG = SampleApplication::class.simpleName
@@ -38,17 +38,21 @@ class SampleApplication : Application(), LifecycleObserver {
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun onAppBackground() {
-        Log.i(TAG, "App in background")
-        // App in background
-        AppUtils.setAppOnForeground(false)
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun onAppForeground() {
-        Log.i(TAG, "App in foreground")
-        // App in foreground
-        AppUtils.setAppOnForeground(true)
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        when (event) {
+            Lifecycle.Event.ON_STOP -> {
+                Log.i(TAG, "App in background")
+                // App in background
+                AppUtils.setAppOnForeground(false)
+            }
+            Lifecycle.Event.ON_START -> {
+                Log.i(TAG, "App in foreground")
+                // App in foreground
+                AppUtils.setAppOnForeground(true)
+            }
+            else -> {
+                Log.i(TAG, "No state change")
+            }
+        }
     }
 }
