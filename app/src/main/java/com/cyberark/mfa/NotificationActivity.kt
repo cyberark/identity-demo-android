@@ -104,7 +104,7 @@ class NotificationActivity : AppCompatActivity() {
 
             // Remove ENROLLMENT_STATUS flag from device storage
             CyberArkPreferenceUtil.remove(PreferenceConstants.ENROLLMENT_STATUS)
-            CyberArkPreferenceUtil.clear()
+            CyberArkPreferenceUtil.apply()
 
             // Remove OTP enroll data
             CyberArkPreferenceUtil.remove(NotificationConstants.OTP_ENROLL_DATA)

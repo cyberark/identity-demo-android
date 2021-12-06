@@ -61,6 +61,7 @@
     <string name="response_type">Response Type</string>
     <string name="scope">Scope</string>
     <string name="redirect_uri">Redirect URI</string>
+    <string name="host">Host</string>
     <string name="scheme">Scheme</string>
     <string name="save">Save</string>
 </resources>

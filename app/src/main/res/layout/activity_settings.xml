@@ -27,8 +27,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="text"
-            android:layout_marginBottom="5dp"/>
+            android:inputType="textUri"
+            android:layout_marginBottom="5dp"
+            android:importantForAutofill="no"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:layout_width="match_parent"
@@ -40,8 +42,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="text"
-            android:layout_marginBottom="5dp"/>
+            android:inputType="textUri"
+            android:layout_marginBottom="5dp"
+            android:importantForAutofill="no"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:layout_width="match_parent"
@@ -54,7 +58,9 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="text"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="5dp"
+            android:importantForAutofill="no"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:layout_width="match_parent"
@@ -67,7 +73,9 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="text"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="5dp"
+            android:importantForAutofill="no"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:layout_width="match_parent"
@@ -80,7 +88,9 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="none"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="5dp"
+            android:importantForAutofill="no"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:layout_width="match_parent"
@@ -93,7 +103,9 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="none"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="5dp"
+            android:importantForAutofill="no"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:layout_width="match_parent"
@@ -105,8 +117,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:inputType="textUri"
+            android:layout_marginBottom="5dp"
+            android:importantForAutofill="no"
+            tools:ignore="LabelFor" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/host"/>
+
+        <EditText
+            android:id="@+id/editTextHost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
             android:inputType="none"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="5dp"
+            android:importantForAutofill="no"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:layout_width="match_parent"
@@ -118,8 +147,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="text"
-            android:layout_marginBottom="5dp"/>
+            android:inputType="none"
+            android:layout_marginBottom="5dp"
+            android:importantForAutofill="no"
+            tools:ignore="LabelFor" />
     </LinearLayout>
 
     </ScrollView>

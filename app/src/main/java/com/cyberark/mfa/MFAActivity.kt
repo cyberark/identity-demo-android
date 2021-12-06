@@ -152,7 +152,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
 
             // Remove ENROLLMENT_STATUS flag from device storage
             CyberArkPreferenceUtil.remove(PreferenceConstants.ENROLLMENT_STATUS)
-            CyberArkPreferenceUtil.clear()
+            CyberArkPreferenceUtil.apply()
 
             // Start HomeActivity
             val intent = Intent(this, HomeActivity::class.java)

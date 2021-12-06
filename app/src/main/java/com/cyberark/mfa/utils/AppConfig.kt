@@ -97,5 +97,13 @@ object AppConfig {
             PreferenceConstants.REDIRECT_URI,
             context.getString(R.string.cyberark_account_redirect_uri)
         )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.HOST,
+            context.getString(R.string.cyberark_account_host)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.SCHEME,
+            context.getString(R.string.cyberark_account_scheme)
+        )
     }
 }
