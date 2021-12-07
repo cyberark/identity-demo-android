@@ -34,6 +34,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var responseType: EditText
     private lateinit var scope: EditText
     private lateinit var redirectUri: EditText
+    private lateinit var host: EditText
     private lateinit var scheme: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,9 +52,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun invokeUI() {
         systemURL = findViewById(R.id.editTextSystemURL)
-        systemURL.isEnabled = false
         hostURL = findViewById(R.id.editTextHostURL)
-        hostURL.isEnabled = false
         clientId = findViewById(R.id.editTextClientId)
         appId = findViewById(R.id.editTextAppId)
         responseType = findViewById(R.id.editTextResponseType)
@@ -61,9 +60,8 @@ class SettingsActivity : AppCompatActivity() {
         scope = findViewById(R.id.editTextScope)
         scope.isEnabled = false
         redirectUri = findViewById(R.id.editTextRedirectURI)
-        redirectUri.isEnabled = false
+        host = findViewById(R.id.editTextHost)
         scheme = findViewById(R.id.editTextScheme)
-        scheme.isEnabled = false
     }
 
     private fun updateUI() {
@@ -74,6 +72,7 @@ class SettingsActivity : AppCompatActivity() {
         responseType.setText(getString(R.string.cyberark_account_response_type))
         scope.setText(getString(R.string.cyberark_account_scope))
         redirectUri.setText(getString(R.string.cyberark_account_redirect_uri))
+        host.setText(getString(R.string.cyberark_account_host))
         scheme.setText(getString(R.string.cyberark_account_scheme))
     }
 
@@ -86,6 +85,8 @@ class SettingsActivity : AppCompatActivity() {
             PreferenceConstants.REDIRECT_URI,
             redirectUri.text.toString()
         )
+        CyberArkPreferenceUtil.putString(PreferenceConstants.HOST, host.text.toString())
+        CyberArkPreferenceUtil.putString(PreferenceConstants.SCHEME, scheme.text.toString())
     }
 
     private fun verifyAndSaveInSharedPreference() {
@@ -109,6 +110,14 @@ class SettingsActivity : AppCompatActivity() {
         if (!redirectUriSP.equals(redirectUri.text.toString())) {
             redirectUri.setText(redirectUriSP)
         }
+        val hostSP = CyberArkPreferenceUtil.getString(PreferenceConstants.HOST, null)
+        if (!hostSP.equals(host.text.toString())) {
+            host.setText(hostSP)
+        }
+        val schemeSP = CyberArkPreferenceUtil.getString(PreferenceConstants.SCHEME, null)
+        if (!schemeSP.equals(scheme.text.toString())) {
+            scheme.setText(schemeSP)
+        }
     }
 
     // **************** Handle menu settings click action Start *********************** //
@@ -131,10 +140,10 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun updateFromSettings() {
         val activityIntent = intent
-        if(activityIntent.getStringExtra("from_activity").equals("HomeActivity")) {
+        if (activityIntent.getStringExtra("from_activity").equals("HomeActivity")) {
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
-        } else if(activityIntent.getStringExtra("from_activity").equals("MFAActivity")) {
+        } else if (activityIntent.getStringExtra("from_activity").equals("MFAActivity")) {
             val intent = Intent(this, MFAActivity::class.java)
             startActivity(intent)
         }
