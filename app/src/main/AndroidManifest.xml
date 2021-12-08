@@ -32,6 +32,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IdentitySDK">
         <activity
+            android:name=".HomeActivity"
+            android:exported="true" />
+        <activity
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
@@ -39,7 +42,7 @@
             android:exported="false" />
         <activity android:name=".MFAActivity" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
