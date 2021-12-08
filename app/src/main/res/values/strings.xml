@@ -72,6 +72,10 @@
     <string name="get_started">Get Started</string>
 
     <!-- Login options -->
-    <string name="login_external">Login with external browser</string>
+    <string name="cyberark_hosted_login">CyberArk Hosted Login</string>
+    <string name="start">Start</string>
+    <string name="learn_more"><u>Learn More</u></string>
+    <string name="login_widget">Login Widget</string>
+    <string name="mfa_widget">MFA Widget</string>
 
 </resources>
