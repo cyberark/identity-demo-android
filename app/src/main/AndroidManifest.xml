@@ -33,16 +33,22 @@
         android:theme="@style/Theme.IdentitySDK">
         <activity
             android:name=".HomeActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".NotificationActivity"
             android:exported="false" />
-        <activity android:name=".MFAActivity" />
+        <activity
+            android:name=".MFAActivity"
+            android:exported="false" />
         <activity
             android:name=".WelcomeActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".LoginOptionsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

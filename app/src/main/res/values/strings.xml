@@ -64,8 +64,14 @@
     <string name="host">Host</string>
     <string name="scheme">Scheme</string>
     <string name="save">Save</string>
+
+    <!-- Welcome Screen -->
     <string name="for_developer_guides_and_api_documentation">For developer guides and API documentation, please visit <a href="https://identity-developer.cyberark.com/docs/cyberark-idetity-sdk-for-android/">CyberArk Identity Developer Program</a> website</string>
     <string name="welcome_to_acme_inc">Welcome to Acme Inc. !!​</string>
     <string name="acme_inc_is_a_banking_company">Acme Inc. is a banking company using CyberArk Identity APIs, SDKs, and widgets to secure its web applications. This playground application shows all the possible variations that a developer from Acme has at their disposal.</string>
     <string name="get_started">Get Started</string>
+
+    <!-- Login options -->
+    <string name="login_external">Login with external browser</string>
+
 </resources>

@@ -39,7 +39,7 @@ import com.cyberark.mfa.utils.AppConfig
  * 1. OAuth 2.0 PKCE driven login flow
  *
  */
-class HomeActivity : AppCompatActivity() {
+open class HomeActivity : AppCompatActivity() {
 
     // Progress indicator variable
     private lateinit var progressBar: ProgressBar
@@ -79,7 +79,7 @@ class HomeActivity : AppCompatActivity() {
      *
      * @param cyberArkAccountBuilder: CyberArkAccountBuilder instance
      */
-    private fun login(cyberArkAccountBuilder: CyberArkAccountBuilder) {
+    protected fun login(cyberArkAccountBuilder: CyberArkAccountBuilder) {
         val authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>> =
             CyberArkAuthProvider.login(cyberArkAccountBuilder).start(this)
 
