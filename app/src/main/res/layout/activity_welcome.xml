@@ -46,7 +46,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
                 android:padding="10dp"
-                android:text="Welcome to Acme Inc. !!​"
+                android:text="@string/welcome_to_acme_inc"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -56,7 +56,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
                 android:padding="10dp"
-                android:text="Acme Inc. is a banking company using CyberArk Identity APIs, SDKs, and widgets to secure its web applications. This playground application shows all the possible variations that a developer from Acme has at their disposal."
+                android:text="@string/acme_inc_is_a_banking_company"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
@@ -75,7 +75,7 @@
                 android:id="@+id/button_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Get Started"
+                android:text="@string/get_started"
                 android:layout_gravity="center_horizontal"
                 android:textAllCaps="false"
                 android:layout_marginTop="20dp"/>
