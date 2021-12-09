@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-parcelize'
 }
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 31
@@ -92,4 +93,9 @@ dependencies {
     implementation('com.journeyapps:zxing-android-embedded:4.2.0') { transitive = false }
     implementation 'com.google.zxing:core:3.4.1'
     implementation 'pub.devrel:easypermissions:3.0.0'
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
