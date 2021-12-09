@@ -33,5 +33,5 @@
 
     <color name="colorPrimary50">#809E9E9E</color>
     <color name="dark_blue">#192436</color>
-
+    <color name="light_gray">#F2F2F2</color>
 </resources>

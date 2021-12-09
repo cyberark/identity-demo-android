@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/acme_logo_1"
+                android:background="@drawable/acme_logo"
                 tools:srcCompat="@drawable/acme_logo" />
 
             <TextView

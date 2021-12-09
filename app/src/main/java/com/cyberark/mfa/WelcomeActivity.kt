@@ -16,9 +16,11 @@
 
 package com.cyberark.mfa
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
+import android.widget.Button
 import android.widget.TextView
 
 class WelcomeActivity : AppCompatActivity() {
@@ -27,6 +29,13 @@ class WelcomeActivity : AppCompatActivity() {
         supportActionBar?.hide()
         setContentView(R.layout.activity_welcome)
         setupHyperlink()
+
+        val start: Button = findViewById(R.id.button_start)
+        start.setOnClickListener {
+            //Start MFA activity if access token is available
+            val intent = Intent(this, LoginOptionsActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setupHyperlink() {
