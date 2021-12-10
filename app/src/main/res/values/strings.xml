@@ -83,4 +83,10 @@
 \nThe user will be redirected to the CyberArk Identity Login page and prompted to enter username and the corresponding MFA factors. On successful authentication an access token will be returned for the user
         \n\n\nPlease visit link for details on implementation.</string>
 
+    <string name="cancel">Cancel</string>
+    <string name="login_hosted_title">CyberArk Hosted Login</string>
+    <string name="login_hosted_description">In this scenario the Acme wants to use the MFA provided by CyberArk Identity by authenticating the users with the CyberArk Identity login. \n
+\nThe user will be redirected to the CyberArk Identity Login page and prompted to enter username and the corresponding MFA factors. On successful authentication an access token will be returned for the user</string>
+    <string name="login_hosted_end">\nPlease visit <a href="https://identity-developer.cyberark.com/docs/cyberark-idetity-sdk-for-android/"><b>link</b></a> for details on implementation.</string>
+
 </resources>
