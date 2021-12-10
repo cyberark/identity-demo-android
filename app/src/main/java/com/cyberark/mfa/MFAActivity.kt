@@ -155,7 +155,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
             CyberArkPreferenceUtil.apply()
 
             // Start HomeActivity
-            val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, LoginOptionsActivity::class.java)
             startActivity(intent)
             finish()
         }

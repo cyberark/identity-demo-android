@@ -69,7 +69,7 @@
     <string name="for_developer_guides_and_api_documentation">For developer guides and API documentation, please visit <a href="https://identity-developer.cyberark.com/docs/cyberark-idetity-sdk-for-android/"><b>CyberArk Identity Developer Program</b></a> website</string>
     <string name="welcome_to_acme_inc">Welcome to Acme Inc. !!​</string>
     <string name="acme_inc_is_a_banking_company">Acme Inc. is a banking company using CyberArk Identity APIs, SDKs, and widgets to secure its web applications. This playground application shows all the possible variations that a developer from Acme has at their disposal.</string>
-    <string name="get_started">Get Started</string>
+    <string name="get_started"> Get Started </string>
 
     <!-- Login options -->
     <string name="cyberark_hosted_login">CyberArk Hosted Login</string>

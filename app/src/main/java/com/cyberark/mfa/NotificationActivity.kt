@@ -110,7 +110,7 @@ class NotificationActivity : AppCompatActivity() {
             CyberArkPreferenceUtil.remove(NotificationConstants.OTP_ENROLL_DATA)
 
             // Start HomeActivity
-            val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, LoginOptionsActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             intent.putExtra("EXIT", true)
             startActivity(intent)

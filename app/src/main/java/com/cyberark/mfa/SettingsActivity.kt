@@ -141,11 +141,14 @@ class SettingsActivity : AppCompatActivity() {
     private fun updateFromSettings() {
         val activityIntent = intent
         if (activityIntent.getStringExtra("from_activity").equals("HomeActivity")) {
-            val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, LoginOptionsActivity::class.java)
             startActivity(intent)
         } else if (activityIntent.getStringExtra("from_activity").equals("MFAActivity")) {
             val intent = Intent(this, MFAActivity::class.java)
             startActivity(intent)
+        } else if (activityIntent.getStringExtra("from_activity").equals("LoginOptionsActivity")) {
+//            val intent = Intent(this, LoginOptionsActivity::class.java)
+//            startActivity(intent)
         }
         finish()
     }
