@@ -34,4 +34,6 @@
     <color name="colorPrimary50">#809E9E9E</color>
     <color name="dark_blue">#192436</color>
     <color name="light_gray">#F2F2F2</color>
+    <color name="notification_approve">#55B47C</color>
+    <color name="notification_deny">#D93721</color>
 </resources>

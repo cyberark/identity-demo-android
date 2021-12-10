@@ -28,6 +28,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import com.cyberark.identity.builder.CyberArkAccountBuilder
@@ -65,8 +66,8 @@ class NotificationActivity : AppCompatActivity() {
 
     private lateinit var progressBar: ProgressBar
     private lateinit var notificationDesc: TextView
-    private lateinit var approveButton: Button
-    private lateinit var denyButton: Button
+    private lateinit var approveButton: ConstraintLayout
+    private lateinit var denyButton: ConstraintLayout
     private lateinit var notificationData: NotificationDataModel
     private lateinit var otpEnrollModel: OTPEnrollModel
 

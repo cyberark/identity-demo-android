@@ -42,6 +42,7 @@
     <string name="dialog_refresh_token_expire_desc">Refresh token is expired. You need to login again</string>
 
     <!-- Notification Strings -->
+    <string name="notification_login_text">Login Request</string>
     <string name="notification_action_approve">Approve</string>
     <string name="notification_action_deny">Deny</string>
     <string name="notification_channel_id" translatable="false">CyberArk SDK Channel ID</string>
