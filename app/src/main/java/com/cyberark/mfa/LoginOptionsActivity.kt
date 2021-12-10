@@ -54,7 +54,7 @@ class LoginOptionsActivity : BaseActivity() {
         progressBar = findViewById(R.id.progressBar_home_activity)
 
         // Setup account
-        account=  AppConfig.setupAccountFromSharedPreference(this)
+        account = AppConfig.setupAccountFromSharedPreference(this)
 
         findViewById<CardView>(R.id.cv_redirect_login).setOnClickListener {
             login(account, progressBar)
@@ -62,17 +62,27 @@ class LoginOptionsActivity : BaseActivity() {
         inflateMenuFromToolbar()
     }
 
+    private val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data?.getStringExtra("ALERT_LOGIN_STATUS").toBoolean()
+                if (data) {
+                    login(account, progressBar)
+                }
+            }
+        }
+
     fun showInfo(view: View) {
-        val intent = Intent(this,AlertActivity::class.java)
-        intent.putExtra("title",getString(R.string.login_hosted_title))
-        intent.putExtra("desc",getString(R.string.login_hosted_description))
+        val intent = Intent(this, AlertActivity::class.java)
+        intent.putExtra("title", getString(R.string.login_hosted_title))
+        intent.putExtra("desc", getString(R.string.login_hosted_description))
         startForResult.launch(intent)
     }
 
     // **************** Handle menu settings click action Start *********************** //
 
     private fun inflateMenuFromToolbar() {
-        val toolbar:Toolbar = findViewById(R.id.toolbar)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         if (supportActionBar != null) {
             supportActionBar?.title = "Acme"
@@ -92,21 +102,5 @@ class LoginOptionsActivity : BaseActivity() {
             super.onOptionsItemSelected(item)
         }
     }
-
-    fun showInfo(view: android.view.View) {
-        val intent = Intent(this,AlertActivity::class.java)
-        intent.putExtra("info",getString(R.string.login_hosted_description))
-        startActivity(intent)
-    }
     // **************** Handle menu settings click action End *********************** //
-
-    private val startForResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data = result.data?.getStringExtra("ALERT_LOGIN_STATUS").toBoolean()
-                if(data) {
-                    login(account, progressBar)
-                }
-            }
-        }
 }
