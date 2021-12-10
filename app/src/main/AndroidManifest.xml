@@ -32,7 +32,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".BaseActivity"
+            android:name=".HomeActivity"
             android:exported="false" />
         <activity
             android:name=".SettingsActivity"
@@ -44,11 +44,11 @@
             android:name=".MFAActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginOptionsActivity"
+            android:name=".WelcomeActivity"
             android:exported="false" />
 
         <activity
-            android:name=".WelcomeActivity"
+            android:name=".LoginOptionsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

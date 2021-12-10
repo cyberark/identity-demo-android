@@ -92,6 +92,12 @@ class LoginOptionsActivity : BaseActivity() {
             super.onOptionsItemSelected(item)
         }
     }
+
+    fun showInfo(view: android.view.View) {
+        val intent = Intent(this,AlertActivity::class.java)
+        intent.putExtra("info",getString(R.string.login_hosted_description))
+        startActivity(intent)
+    }
     // **************** Handle menu settings click action End *********************** //
 
     private val startForResult =
