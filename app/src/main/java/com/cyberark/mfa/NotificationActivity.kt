@@ -18,15 +18,14 @@ package com.cyberark.mfa
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LiveData
@@ -66,8 +65,8 @@ class NotificationActivity : AppCompatActivity() {
 
     private lateinit var progressBar: ProgressBar
     private lateinit var notificationDesc: TextView
-    private lateinit var approveButton: ConstraintLayout
-    private lateinit var denyButton: ConstraintLayout
+    private lateinit var approveButton: ImageButton
+    private lateinit var denyButton: ImageButton
     private lateinit var notificationData: NotificationDataModel
     private lateinit var otpEnrollModel: OTPEnrollModel
 
@@ -83,6 +82,8 @@ class NotificationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notification)
+        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#000000")))
+        title = getString(R.string.acme)
         initializeData()
         invokeUI()
         updateUI()
@@ -111,7 +112,7 @@ class NotificationActivity : AppCompatActivity() {
             CyberArkPreferenceUtil.remove(NotificationConstants.OTP_ENROLL_DATA)
 
             // Start HomeActivity
-            val intent = Intent(this, LoginOptionsActivity::class.java)
+            val intent = Intent(this, WelcomeActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             intent.putExtra("EXIT", true)
             startActivity(intent)
@@ -150,8 +151,8 @@ class NotificationActivity : AppCompatActivity() {
     private fun invokeUI() {
         progressBar = findViewById(R.id.progressBar_notification_activity)
         notificationDesc = findViewById(R.id.notification_desc)
-        approveButton = findViewById(R.id.approve_button)
-        denyButton = findViewById(R.id.deny_button)
+        approveButton = findViewById(R.id.button_login)
+        denyButton = findViewById(R.id.button_cancel)
 
         approveButton.setOnClickListener {
             userAccepted = true

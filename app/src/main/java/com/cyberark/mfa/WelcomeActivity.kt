@@ -22,12 +22,22 @@ import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.widget.Button
 import android.widget.TextView
+import com.cyberark.identity.util.keystore.KeyStoreProvider
 
 class WelcomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.hide()
         setContentView(R.layout.activity_welcome)
+
+        // Verify if access token is present or not
+        val accessToken = KeyStoreProvider.get().getAuthToken()
+        if (accessToken != null) {
+            //Start MFA activity if access token is available
+            val intent = Intent(this, MFAActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
         setupHyperlink()
 
         val start: Button = findViewById(R.id.button_start)

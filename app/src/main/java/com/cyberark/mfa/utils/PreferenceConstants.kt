@@ -29,4 +29,7 @@ object PreferenceConstants {
     const val REDIRECT_URI = "redirect_uri"
     const val HOST = "host"
     const val SCHEME = "scheme"
+    const val INVOKE_BIOMETRICS_ON_APP_LAUNCH = "INVOKE_BIOMETRICS_ON_APP_LAUNCH"
+    const val INVOKE_BIOMETRICS_ON_QR_CODE_LAUNCH = "INVOKE_BIOMETRICS_ON_QR_CODE_LAUNCH"
+    const val INVOKE_BIOMETRICS_ON_TOKEN_EXPIRES = "INVOKE_BIOMETRICS_ON_TOKEN_EXPIRES"
 }

@@ -18,13 +18,14 @@ package com.cyberark.mfa
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.util.keystore.KeyStoreProvider
@@ -40,12 +41,15 @@ class LoginOptionsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_options)
+        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#000000")))
+        title = getString(R.string.acme)
 
         // Verify if access token is present or not
         val accessToken = KeyStoreProvider.get().getAuthToken()
         if (accessToken != null) {
             //Start MFA activity if access token is available
             val intent = Intent(this, MFAActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
         }
@@ -59,7 +63,6 @@ class LoginOptionsActivity : BaseActivity() {
         findViewById<CardView>(R.id.cv_redirect_login).setOnClickListener {
             login(account, progressBar)
         }
-        inflateMenuFromToolbar()
     }
 
     private val startForResult =
@@ -80,15 +83,6 @@ class LoginOptionsActivity : BaseActivity() {
     }
 
     // **************** Handle menu settings click action Start *********************** //
-
-    private fun inflateMenuFromToolbar() {
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        if (supportActionBar != null) {
-            supportActionBar?.title = "Acme"
-        }
-        toolbar.inflateMenu(R.menu.settings_menu)
-    }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_settings -> {
