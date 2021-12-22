@@ -70,7 +70,7 @@
     <!-- Welcome Screen -->
     <string name="for_developer_guides_and_api_documentation">For developer guides and API documentation, please visit <a href="https://docs.cyberark.com/Product-Doc/OnlineHelp/Portal/Content/Resources/_TopNav/cc_Portal.htm"><b>CyberArk Identity Developer Program</b></a> website</string>
     <string name="welcome_to_acme_inc">Welcome to Acme Inc. !!​</string>
-    <string name="acme_inc_is_a_banking_company">Acme Inc. is a banking company using CyberArk Identity APIs, SDKs, and widgets to secure its web applications. This playground application shows all the possible variations that a developer from Acme has at their disposal.</string>
+    <string name="acme_inc_is_a_banking_company">Acme Inc. is a banking company using CyberArk Identity APIs, SDKs, and widgets to secure its web applications and mobile applications. This playground application shows all the possible variations that a developer from Acme has at their disposal.</string>
     <string name="get_started">&#160;&#160;Get Started&#160;&#160;</string>
 
     <!-- Login options -->
@@ -83,11 +83,14 @@
     <string name="cancel">Cancel</string>
     <string name="login_hosted_title">CyberArk Hosted Login</string>
     <string name="login_hosted_description">In this scenario the Acme wants to use the MFA provided by CyberArk Identity by authenticating the users with the CyberArk Identity login. \n
-\nThe user will be redirected to the CyberArk Identity Login page and prompted to enter username and the corresponding MFA factors. On successful authentication an access token will be returned for the user</string>
-    <string name="login_hosted_end">\nPlease visit <a href="https://identity-developer.cyberark.com/docs/cyberark-idetity-sdk-for-android/"><b>link</b></a> for details on implementation.</string>
+\nThe user will be redirected to the CyberArk Identity Login page and prompted to enter username and the corresponding MFA factors. On successful authentication an access token will be returned for the user.</string>
+    <string name="login_hosted_end">\nPlease visit <a href="https://identity-developer.cyberark.com/docs/cyberark-idetity-sdk-for-android/"><b>here</b></a> for details on implementation.</string>
 
     <string name="click_on_active_mfa">Click on “Active MFA” button to silently enroll the mobile device to CyberArk Identity. The access token retrieved in previous step is used to enroll the user.</string>
     <string name="enrolling_the_mobile_device_enables">Enrolling the mobile device enables to user to leverage the QR code authenticator and mobile push authentication service provided by CyberArk Identity.</string>
     <string name="click_on_qr_code_authenticator">Click on “QR code authenticator” to open the QR code scanner. The user should scan the barcode displayed on the Acme website using this scanner for successful authentication to the website.</string>
     <string name="login_request">Login Request</string>
+    <string name="access_token_and_refresh_token_received">Access token and refresh token received</string>
+    <string name="access_token_received">Access token received</string>
+    <string name="authentication_is_successful">Authentication is successful</string>
 </resources>

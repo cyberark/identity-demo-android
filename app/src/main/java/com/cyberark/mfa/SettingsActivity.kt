@@ -95,7 +95,6 @@ class SettingsActivity : AppCompatActivity() {
         responseType = findViewById(R.id.editTextResponseType)
         responseType.isEnabled = false
         scope = findViewById(R.id.editTextScope)
-        scope.isEnabled = false
         redirectUri = findViewById(R.id.editTextRedirectURI)
         host = findViewById(R.id.editTextHost)
         scheme = findViewById(R.id.editTextScheme)

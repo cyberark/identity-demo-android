@@ -93,13 +93,15 @@
                     android:text="@string/app_configs"
                     android:textColor="@color/black"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1.5dp"
                     android:background="@color/colorPrimary"
-                    android:layout_marginBottom="15dp"/>
+                    android:layout_marginBottom="15dp"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:layout_width="match_parent"

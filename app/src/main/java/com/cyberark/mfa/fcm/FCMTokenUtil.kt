@@ -46,7 +46,7 @@ class FCMTokenUtil {
 
                 // Get new FCM registration token
                 val token = task.result
-                Log.d(TAG, "Recieved token $token")
+                Log.d(TAG, "Received token $token")
                 if (token != null) {
                     fcmTokenInterface.onFcmTokenReceived(token)
                 }

@@ -168,12 +168,12 @@ open class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Pe
                     if(it.data?.success == true) {
                         intent.putExtra(
                             "QR_CODE_AUTH_RESULT",
-                            "QR Code Authentication is done successfully"
+                            "QR code authentication is successful"
                         )
                     } else {
                         intent.putExtra(
                             "QR_CODE_AUTH_RESULT",
-                            "QR Code Authentication is failed"
+                            "QR code authentication has failed"
                         )
                     }
 

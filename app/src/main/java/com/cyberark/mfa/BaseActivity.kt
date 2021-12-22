@@ -55,7 +55,7 @@ open class BaseActivity : AppCompatActivity() {
                         // Show authentication success message using Toast
                         Toast.makeText(
                             this,
-                            "Received Access Token & Refresh Token" + ResponseStatus.SUCCESS.toString(),
+                            getString(R.string.access_token_and_refresh_token_received) + ResponseStatus.SUCCESS.toString(),
                             Toast.LENGTH_SHORT
                         ).show()
                         // Save access token and refresh token in SharedPref using keystore encryption

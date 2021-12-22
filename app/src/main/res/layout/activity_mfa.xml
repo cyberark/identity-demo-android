@@ -22,76 +22,88 @@
     android:padding="10dp"
     tools:context=".MFAActivity">
 
-    <LinearLayout
-        android:id="@+id/cardViewLayout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/dark_blue"
-            card_view:cardCornerRadius="20dp"
-            card_view:cardElevation="10dp"
-            card_view:cardUseCompatPadding="true">
+            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/content_layout"
+                android:id="@+id/cardViewLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/header_text"
-                    android:layout_width="wrap_content"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:backgroundTint="@color/dark_blue"
+                    card_view:cardCornerRadius="20dp"
+                    card_view:cardElevation="10dp"
+                    card_view:cardUseCompatPadding="true">
 
-                <TextView
-                    android:id="@+id/content_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    <LinearLayout
+                        android:id="@+id/content_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
-                <TextView
-                    android:id="@+id/end_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/login_hosted_end"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
+                        <TextView
+                            android:id="@+id/header_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="20dp"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/content_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/end_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/login_hosted_end"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+            <Button
+                android:id="@+id/button_enroll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="16dp"
+                android:backgroundTint="@color/purple_500"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/button_enroll"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
-    </LinearLayout>
+        </LinearLayout>
 
-    <Button
-        android:id="@+id/button_enroll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cardViewLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="16dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:backgroundTint="@color/purple_500"
-        android:text="@string/button_enroll"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
+    </ScrollView>
 
     <ProgressBar
         android:id="@+id/progressBar_mfa_activity"

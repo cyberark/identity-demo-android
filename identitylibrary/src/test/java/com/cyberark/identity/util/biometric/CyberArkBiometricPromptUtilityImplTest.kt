@@ -35,10 +35,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 import org.powermock.reflect.Whitebox
 import org.junit.Assert.*
 
-//import org.powermock.modules.junit4.PowerMockRunner
-
-//@RunWith(::class)
-
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(
     CyberArkBiometricPromptUtilityImpl::class,
@@ -51,31 +47,31 @@ class CyberArkBiometricPromptUtilityImplTest {
 
     private val callback = object : CyberArkBiometricCallback {
         override fun isAuthenticationSuccess(success: Boolean) {
-            println("Authentication success")
+            println("Authentication is successful")
         }
 
         override fun passwordAuthenticationSelected() {
-            print("Password authentication selected")
+            print("Password authentication is selected")
         }
 
         override fun showErrorMessage(message: String) {
-            print("Error message ${message}")
+            print("Error message $message")
         }
 
         override fun isHardwareSupported(boolean: Boolean) {
-            println("Hanrdware not detected")
+            println("Hardware is not detected")
         }
 
         override fun isSdkVersionSupported(boolean: Boolean) {
-
+            println("SDK version is not supported")
         }
 
         override fun isBiometricEnrolled(boolean: Boolean) {
-
+            println("Biometrics is not enrolled")
         }
 
         override fun biometricErrorSecurityUpdateRequired() {
-
+            println("Biometrics error, security update is required")
         }
 
     }

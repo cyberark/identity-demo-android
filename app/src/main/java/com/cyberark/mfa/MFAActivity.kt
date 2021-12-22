@@ -407,7 +407,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
                         // Show success message using Toast
                         Toast.makeText(
                             this,
-                            "Received New Access Token" + ResponseStatus.SUCCESS.toString(),
+                            getString(R.string.access_token_received) + ResponseStatus.SUCCESS.toString(),
                             Toast.LENGTH_SHORT
                         ).show()
                         // Hide progress indicator
@@ -523,7 +523,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
             // Show Authentication success message using Toast
             Toast.makeText(
                 this@MFAActivity,
-                "Authentication success",
+                getString(R.string.authentication_is_successful),
                 Toast.LENGTH_LONG
             ).show()
 
@@ -549,7 +549,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
         override fun passwordAuthenticationSelected() {
             Toast.makeText(
                 this@MFAActivity,
-                "Password authentication selected",
+                "Password authentication is selected",
                 Toast.LENGTH_LONG
             ).show()
         }
@@ -562,7 +562,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
             if (!boolean) {
                 Toast.makeText(
                     this@MFAActivity,
-                    "Hardware not supported",
+                    "Hardware is not supported",
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -571,13 +571,18 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
         override fun isSdkVersionSupported(boolean: Boolean) {
             Toast.makeText(
                 this@MFAActivity,
-                "SDK version not supported",
+                "SDK version is not supported",
                 Toast.LENGTH_LONG
             ).show()
         }
 
         override fun isBiometricEnrolled(boolean: Boolean) {
             if (!boolean) {
+                Toast.makeText(
+                    this@MFAActivity,
+                    "Biometric is not enrolled",
+                    Toast.LENGTH_LONG
+                ).show()
                 // Show biometric enrollment alert popup
                 showBiometricsEnrollmentAlert()
             }
@@ -586,7 +591,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
         override fun biometricErrorSecurityUpdateRequired() {
             Toast.makeText(
                 this@MFAActivity,
-                "Biometric security updates required",
+                "Biometric error, security update is required",
                 Toast.LENGTH_LONG
             ).show()
         }

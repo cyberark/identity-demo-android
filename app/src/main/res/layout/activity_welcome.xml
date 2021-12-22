@@ -36,7 +36,7 @@
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="25dp"
                 android:src="@drawable/acme_icon_2" />
 
             <TextView
@@ -47,7 +47,7 @@
                 android:padding="10dp"
                 android:text="@string/welcome_to_acme_inc"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="19sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -57,7 +57,7 @@
                 android:padding="10dp"
                 android:text="@string/acme_inc_is_a_banking_company"
                 android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/api_doc"
@@ -68,7 +68,7 @@
                 android:padding="10dp"
                 android:text="@string/for_developer_guides_and_api_documentation"
                 android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/button_start"

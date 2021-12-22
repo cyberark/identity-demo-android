@@ -83,7 +83,6 @@ class NotificationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notification)
         supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#000000")))
-        title = getString(R.string.acme)
         initializeData()
         invokeUI()
         updateUI()
@@ -169,7 +168,7 @@ class NotificationActivity : AppCompatActivity() {
      *
      */
     private fun updateUI() {
-        title = notificationData.AppName
+        title = getString(R.string.acme)
         notificationDesc.text = notificationData.Message
     }
 
@@ -371,7 +370,7 @@ class NotificationActivity : AppCompatActivity() {
                         // Show success message using Toast
                         Toast.makeText(
                             this,
-                            "Received New Access Token" + ResponseStatus.SUCCESS.toString(),
+                            getString(R.string.access_token_received) + ResponseStatus.SUCCESS.toString(),
                             Toast.LENGTH_SHORT
                         ).show()
                         val notificationPayload: JSONObject =
@@ -451,7 +450,7 @@ class NotificationActivity : AppCompatActivity() {
             // Show Authentication success message using Toast
             Toast.makeText(
                 this@NotificationActivity,
-                "Authentication success",
+                getString(R.string.authentication_is_successful),
                 Toast.LENGTH_LONG
             ).show()
 
@@ -472,7 +471,7 @@ class NotificationActivity : AppCompatActivity() {
         override fun passwordAuthenticationSelected() {
             Toast.makeText(
                 this@NotificationActivity,
-                "Password authentication selected",
+                "Password authentication is selected",
                 Toast.LENGTH_LONG
             ).show()
         }
@@ -485,7 +484,7 @@ class NotificationActivity : AppCompatActivity() {
             if (!boolean) {
                 Toast.makeText(
                     this@NotificationActivity,
-                    "Hardware not supported",
+                    "Hardware is not supported",
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -494,13 +493,18 @@ class NotificationActivity : AppCompatActivity() {
         override fun isSdkVersionSupported(boolean: Boolean) {
             Toast.makeText(
                 this@NotificationActivity,
-                "SDK version not supported",
+                "SDK version is not supported",
                 Toast.LENGTH_LONG
             ).show()
         }
 
         override fun isBiometricEnrolled(boolean: Boolean) {
             if (!boolean) {
+                Toast.makeText(
+                    this@NotificationActivity,
+                    "Biometric is not enrolled",
+                    Toast.LENGTH_LONG
+                ).show()
                 // Show biometric enrollment alert popup
                 showBiometricsEnrollmentAlert()
             }
@@ -509,7 +513,7 @@ class NotificationActivity : AppCompatActivity() {
         override fun biometricErrorSecurityUpdateRequired() {
             Toast.makeText(
                 this@NotificationActivity,
-                "Biometric security updates required",
+                "Biometric error, security update is required",
                 Toast.LENGTH_LONG
             ).show()
         }
