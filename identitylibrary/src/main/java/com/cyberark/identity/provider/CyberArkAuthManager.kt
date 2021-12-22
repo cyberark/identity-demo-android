@@ -30,6 +30,7 @@ import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.data.network.CyberArkAuthService
 import com.cyberark.identity.viewmodel.AuthenticationViewModel
 import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
+import java.net.URLDecoder
 
 /**
  * CyberArk auth manager class
@@ -71,7 +72,11 @@ internal class CyberArkAuthManager(
                 viewModel.handleAuthorizationCode(params, account.getOAuthTokenURL)
             } else {
                 Log.i(tag, "Unable to fetch code from server to get access token")
-                // TODO.. handle error, throw exception
+                val error = sanitizer.getValue(CyberArkAccountBuilder.KEY_ERROR)
+                val decodedError = error?.replace("_", " ").toString()
+                val errorDesc = sanitizer.getValue(CyberArkAccountBuilder.KEY_ERROR_DESC)
+                val decodedErrorDesc = errorDesc?.replace("_", " ").toString()
+                viewModel.handleLoginError(decodedError, decodedErrorDesc)
             }
         } else {
             Log.i(tag, "Intent data is null")

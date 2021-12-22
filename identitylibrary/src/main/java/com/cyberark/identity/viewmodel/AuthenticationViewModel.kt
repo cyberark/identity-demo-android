@@ -63,6 +63,19 @@ internal class AuthenticationViewModel(private val cyberArkAuthHelper: CyberArkA
     }
 
     /**
+     * Handle login error when user is not permitted to access OAuth web app
+     *
+     * @param error: error header
+     * @param errorDesc: error description
+     */
+    internal fun handleLoginError(error: String, errorDesc: String) {
+        viewModelScope.launch {
+            authResponse.postValue(ResponseHandler.loading(null))
+            authResponse.postValue(ResponseHandler.error("$error, $errorDesc", null))
+        }
+    }
+
+    /**
      * Handle refresh token API call to get new access token
      *
      * @param params: HashMap<String?, String?>, request body

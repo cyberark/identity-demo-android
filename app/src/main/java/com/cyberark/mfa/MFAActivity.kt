@@ -407,7 +407,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
                         // Show success message using Toast
                         Toast.makeText(
                             this,
-                            getString(R.string.access_token_received) + ResponseStatus.SUCCESS.toString(),
+                            getString(R.string.access_token_received),
                             Toast.LENGTH_SHORT
                         ).show()
                         // Hide progress indicator
@@ -418,7 +418,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
                         // Show error message using Toast
                         Toast.makeText(
                             this,
-                            "Error: Unable to fetch access token using refresh token" + ResponseStatus.ERROR.toString(),
+                            "Error: Unable to fetch access token using refresh token",
                             Toast.LENGTH_SHORT
                         ).show()
                         // Show dialog when refresh token is expired

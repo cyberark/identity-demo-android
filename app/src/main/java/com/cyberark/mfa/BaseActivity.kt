@@ -55,7 +55,7 @@ open class BaseActivity : AppCompatActivity() {
                         // Show authentication success message using Toast
                         Toast.makeText(
                             this,
-                            getString(R.string.access_token_and_refresh_token_received) + ResponseStatus.SUCCESS.toString(),
+                            getString(R.string.access_token_and_refresh_token_received),
                             Toast.LENGTH_SHORT
                         ).show()
                         // Save access token and refresh token in SharedPref using keystore encryption
@@ -72,12 +72,22 @@ open class BaseActivity : AppCompatActivity() {
                     ResponseStatus.ERROR -> {
                         // Hide progress indicator
                         progressBar.visibility = View.GONE
-                        // Show authentication error message using Toast
-                        Toast.makeText(
-                            this,
-                            "Error: Unable to fetch Access Token & Refresh Token",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        if(it.message?.contains("access denied") == true) {
+                            CyberArkAuthProvider.endSession(cyberArkAccountBuilder).start(this)
+                            // Show authentication access denied error message using Toast
+                            Toast.makeText(
+                                this,
+                                it.message,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            // Show authentication generic error message using Toast
+                            Toast.makeText(
+                                this,
+                                "Error: Unable to fetch Access Token & Refresh Token",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
                     ResponseStatus.LOADING -> {
                         // Show progress indicator
