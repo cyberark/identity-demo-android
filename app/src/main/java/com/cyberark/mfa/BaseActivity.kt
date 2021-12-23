@@ -19,9 +19,7 @@ package com.cyberark.mfa
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -32,45 +30,11 @@ import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.ResponseHandler
 import com.cyberark.identity.util.ResponseStatus
 import com.cyberark.identity.util.keystore.KeyStoreProvider
-import com.cyberark.mfa.utils.AppConfig
 
-/**
- * Implementing SDK feature in HomeActivity
- * 1. OAuth 2.0 PKCE driven login flow
- *
- */
-open class HomeActivity : AppCompatActivity() {
-
-    // Progress indicator variable
-    private lateinit var progressBar: ProgressBar
-
-    // Login button variable
-    private lateinit var logInButton: Button
+open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-
-        // Invoke UI element
-        progressBar = findViewById(R.id.progressBar_home_activity)
-
-        // Setup account
-        val account =  AppConfig.setupAccountFromSharedPreference(this)
-
-        // Perform login
-        logInButton = findViewById(R.id.button_login)
-        logInButton.setOnClickListener {
-            login(account)
-        }
-
-        // Verify if access token is present or not
-        val accessToken = KeyStoreProvider.get().getAuthToken()
-        if (accessToken != null) {
-            //Start MFA activity if access token is available
-            val intent = Intent(this, MFAActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
     }
 
     /**
@@ -79,7 +43,7 @@ open class HomeActivity : AppCompatActivity() {
      *
      * @param cyberArkAccountBuilder: CyberArkAccountBuilder instance
      */
-    protected fun login(cyberArkAccountBuilder: CyberArkAccountBuilder) {
+    protected fun login(cyberArkAccountBuilder: CyberArkAccountBuilder, progressBar: ProgressBar) {
         val authResponseHandler: LiveData<ResponseHandler<AuthCodeFlowModel>> =
             CyberArkAuthProvider.login(cyberArkAccountBuilder).start(this)
 
@@ -91,7 +55,7 @@ open class HomeActivity : AppCompatActivity() {
                         // Show authentication success message using Toast
                         Toast.makeText(
                             this,
-                            "Received Access Token & Refresh Token" + ResponseStatus.SUCCESS.toString(),
+                            getString(R.string.access_token_and_refresh_token_received),
                             Toast.LENGTH_SHORT
                         ).show()
                         // Save access token and refresh token in SharedPref using keystore encryption
@@ -101,18 +65,29 @@ open class HomeActivity : AppCompatActivity() {
                         progressBar.visibility = View.GONE
                         // Start MFAActivity
                         val intent = Intent(this, MFAActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
                         finish()
                     }
                     ResponseStatus.ERROR -> {
                         // Hide progress indicator
                         progressBar.visibility = View.GONE
-                        // Show authentication error message using Toast
-                        Toast.makeText(
-                            this,
-                            "Error: Unable to fetch Access Token & Refresh Token",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        if(it.message?.contains("access denied") == true) {
+                            CyberArkAuthProvider.endSession(cyberArkAccountBuilder).start(this)
+                            // Show authentication access denied error message using Toast
+                            Toast.makeText(
+                                this,
+                                it.message,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            // Show authentication generic error message using Toast
+                            Toast.makeText(
+                                this,
+                                "Error: Unable to fetch Access Token & Refresh Token",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
                     ResponseStatus.LOADING -> {
                         // Show progress indicator
@@ -123,25 +98,9 @@ open class HomeActivity : AppCompatActivity() {
         }
     }
 
-    // **************** Handle menu settings click action Start *********************** //
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.settings_menu, menu)
         return true
     }
-
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.action_settings -> {
-            //Start Settings activity
-            val intent = Intent(this, SettingsActivity::class.java)
-            intent.putExtra("from_activity", "HomeActivity")
-            startActivity(intent)
-            finish()
-            true
-        }
-        else -> {
-            super.onOptionsItemSelected(item)
-        }
-    }
-    // **************** Handle menu settings click action End *********************** //
 }

@@ -18,16 +18,16 @@ package com.cyberark.mfa
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import com.cyberark.identity.builder.CyberArkAccountBuilder
@@ -65,8 +65,8 @@ class NotificationActivity : AppCompatActivity() {
 
     private lateinit var progressBar: ProgressBar
     private lateinit var notificationDesc: TextView
-    private lateinit var approveButton: Button
-    private lateinit var denyButton: Button
+    private lateinit var approveButton: ImageButton
+    private lateinit var denyButton: ImageButton
     private lateinit var notificationData: NotificationDataModel
     private lateinit var otpEnrollModel: OTPEnrollModel
 
@@ -82,6 +82,7 @@ class NotificationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notification)
+        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#000000")))
         initializeData()
         invokeUI()
         updateUI()
@@ -110,7 +111,7 @@ class NotificationActivity : AppCompatActivity() {
             CyberArkPreferenceUtil.remove(NotificationConstants.OTP_ENROLL_DATA)
 
             // Start HomeActivity
-            val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, WelcomeActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             intent.putExtra("EXIT", true)
             startActivity(intent)
@@ -149,8 +150,8 @@ class NotificationActivity : AppCompatActivity() {
     private fun invokeUI() {
         progressBar = findViewById(R.id.progressBar_notification_activity)
         notificationDesc = findViewById(R.id.notification_desc)
-        approveButton = findViewById(R.id.approve_button)
-        denyButton = findViewById(R.id.deny_button)
+        approveButton = findViewById(R.id.button_login)
+        denyButton = findViewById(R.id.button_cancel)
 
         approveButton.setOnClickListener {
             userAccepted = true
@@ -167,7 +168,7 @@ class NotificationActivity : AppCompatActivity() {
      *
      */
     private fun updateUI() {
-        title = notificationData.AppName
+        title = getString(R.string.acme)
         notificationDesc.text = notificationData.Message
     }
 
@@ -369,7 +370,7 @@ class NotificationActivity : AppCompatActivity() {
                         // Show success message using Toast
                         Toast.makeText(
                             this,
-                            "Received New Access Token" + ResponseStatus.SUCCESS.toString(),
+                            getString(R.string.access_token_received),
                             Toast.LENGTH_SHORT
                         ).show()
                         val notificationPayload: JSONObject =
@@ -381,7 +382,7 @@ class NotificationActivity : AppCompatActivity() {
                         // Show error message using Toast
                         Toast.makeText(
                             this,
-                            "Error: Unable to fetch access token using refresh token" + ResponseStatus.ERROR.toString(),
+                            "Error: Unable to fetch access token using refresh token",
                             Toast.LENGTH_SHORT
                         ).show()
                         // Show dialog when refresh token is expired
@@ -449,7 +450,7 @@ class NotificationActivity : AppCompatActivity() {
             // Show Authentication success message using Toast
             Toast.makeText(
                 this@NotificationActivity,
-                "Authentication success",
+                getString(R.string.authentication_is_successful),
                 Toast.LENGTH_LONG
             ).show()
 
@@ -470,7 +471,7 @@ class NotificationActivity : AppCompatActivity() {
         override fun passwordAuthenticationSelected() {
             Toast.makeText(
                 this@NotificationActivity,
-                "Password authentication selected",
+                "Password authentication is selected",
                 Toast.LENGTH_LONG
             ).show()
         }
@@ -483,7 +484,7 @@ class NotificationActivity : AppCompatActivity() {
             if (!boolean) {
                 Toast.makeText(
                     this@NotificationActivity,
-                    "Hardware not supported",
+                    "Hardware is not supported",
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -492,13 +493,18 @@ class NotificationActivity : AppCompatActivity() {
         override fun isSdkVersionSupported(boolean: Boolean) {
             Toast.makeText(
                 this@NotificationActivity,
-                "SDK version not supported",
+                "SDK version is not supported",
                 Toast.LENGTH_LONG
             ).show()
         }
 
         override fun isBiometricEnrolled(boolean: Boolean) {
             if (!boolean) {
+                Toast.makeText(
+                    this@NotificationActivity,
+                    "Biometric is not enrolled",
+                    Toast.LENGTH_LONG
+                ).show()
                 // Show biometric enrollment alert popup
                 showBiometricsEnrollmentAlert()
             }
@@ -507,7 +513,7 @@ class NotificationActivity : AppCompatActivity() {
         override fun biometricErrorSecurityUpdateRequired() {
             Toast.makeText(
                 this@NotificationActivity,
-                "Biometric security updates required",
+                "Biometric error, security update is required",
                 Toast.LENGTH_LONG
             ).show()
         }

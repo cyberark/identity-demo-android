@@ -64,6 +64,8 @@ class CyberArkAccountBuilder(
         const val KEY_CODE_CHALLENGE_METHOD = "code_challenge_method"
         const val CODE_CHALLENGE_METHOD_VALUE = "S256"
         const val AUTHORIZATION_CODE_VALUE = "authorization_code"
+        const val KEY_ERROR = "error"
+        const val KEY_ERROR_DESC = "error_description"
     }
 
     /**

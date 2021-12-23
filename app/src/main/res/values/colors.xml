@@ -26,4 +26,14 @@
     <color name="white">#FFFFFFFF</color>
     <color name="main_dark_grey">#363a40</color>
     <color name="actionbar2_text_color">#ffffff</color>
+
+    <color name="colorPrimary">#9E9E9E</color>
+    <color name="colorPrimaryDark">#616161</color>
+    <color name="colorAccent">#607D8B</color>
+
+    <color name="colorPrimary50">#809E9E9E</color>
+    <color name="dark_blue">#192436</color>
+    <color name="light_gray">#F2F2F2</color>
+    <color name="notification_approve">#14b876</color>
+    <color name="notification_deny">#eb1000</color>
 </resources>

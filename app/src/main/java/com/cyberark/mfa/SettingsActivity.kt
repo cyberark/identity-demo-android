@@ -17,10 +17,15 @@
 package com.cyberark.mfa
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.utils.PreferenceConstants
@@ -37,9 +42,19 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var host: EditText
     private lateinit var scheme: EditText
 
+    // Device biometrics checkbox variables
+    private lateinit var biometricsOnAppLaunchCheckbox: CheckBox
+    private lateinit var biometricsOnQRCodeLaunchCheckbox: CheckBox
+    private lateinit var biometricsOnRefreshTokenCheckbox: CheckBox
+
+    private var biometricsOnAppLaunchRequested: Boolean = false
+    private var biometricsOnQRCodeLaunchRequested: Boolean = false
+    private var biometricsOnRefreshTokenRequested: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#000000")))
         title = getString(R.string.settings)
         invokeUI()
         updateUI()
@@ -51,6 +66,28 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun invokeUI() {
+        biometricsOnAppLaunchCheckbox = findViewById(R.id.biometrics_on_app_launch_checkbox)
+        biometricsOnQRCodeLaunchCheckbox = findViewById(R.id.biometrics_on_qr_code_launch_checkbox)
+        biometricsOnRefreshTokenCheckbox = findViewById(R.id.biometrics_on_refresh_token_checkbox)
+
+        val beforeLoginLayout: LinearLayout = findViewById(R.id.before_login_layout)
+        val afterLoginLayout: LinearLayout = findViewById(R.id.after_login_layout)
+        val activityIntent = intent
+        when {
+            activityIntent.getStringExtra("from_activity").equals("LoginOptionsActivity") -> {
+                beforeLoginLayout.visibility = View.VISIBLE
+                afterLoginLayout.visibility = View.GONE
+            }
+            activityIntent.getStringExtra("from_activity").equals("MFAActivity") -> {
+                beforeLoginLayout.visibility = View.GONE
+                afterLoginLayout.visibility = View.VISIBLE
+            }
+            else -> {
+                beforeLoginLayout.visibility = View.GONE
+                afterLoginLayout.visibility = View.GONE
+            }
+        }
+
         systemURL = findViewById(R.id.editTextSystemURL)
         hostURL = findViewById(R.id.editTextHostURL)
         clientId = findViewById(R.id.editTextClientId)
@@ -58,7 +95,6 @@ class SettingsActivity : AppCompatActivity() {
         responseType = findViewById(R.id.editTextResponseType)
         responseType.isEnabled = false
         scope = findViewById(R.id.editTextScope)
-        scope.isEnabled = false
         redirectUri = findViewById(R.id.editTextRedirectURI)
         host = findViewById(R.id.editTextHost)
         scheme = findViewById(R.id.editTextScheme)
@@ -74,6 +110,45 @@ class SettingsActivity : AppCompatActivity() {
         redirectUri.setText(getString(R.string.cyberark_account_redirect_uri))
         host.setText(getString(R.string.cyberark_account_host))
         scheme.setText(getString(R.string.cyberark_account_scheme))
+
+        // Get the shared preference status and handle device biometrics on app launch
+        biometricsOnAppLaunchCheckbox.isChecked =
+            CyberArkPreferenceUtil.getBoolean(
+                PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH,
+                false
+            )
+        biometricsOnAppLaunchRequested = biometricsOnAppLaunchCheckbox.isChecked
+        biometricsOnAppLaunchCheckbox.setOnClickListener {
+            saveBiometricsRequestOnAppLaunch(biometricsOnAppLaunchCheckbox.isChecked)
+        }
+
+        // Get the shared preference status and handle device biometrics on QR Code launch
+        biometricsOnQRCodeLaunchCheckbox.isChecked =
+            CyberArkPreferenceUtil.getBoolean(
+                PreferenceConstants.INVOKE_BIOMETRICS_ON_QR_CODE_LAUNCH,
+                false
+            )
+        biometricsOnQRCodeLaunchRequested = biometricsOnQRCodeLaunchCheckbox.isChecked
+        biometricsOnQRCodeLaunchCheckbox.setOnClickListener {
+            saveBiometricsRequestOnQRCodeLaunch(biometricsOnQRCodeLaunchCheckbox.isChecked)
+        }
+
+        // Get the shared preference status and handle device biometrics when access token expires
+        biometricsOnRefreshTokenCheckbox.isChecked =
+            CyberArkPreferenceUtil.getBoolean(
+                PreferenceConstants.INVOKE_BIOMETRICS_ON_TOKEN_EXPIRES,
+                false
+            )
+        biometricsOnRefreshTokenRequested = biometricsOnRefreshTokenCheckbox.isChecked
+        biometricsOnRefreshTokenCheckbox.setOnClickListener {
+            saveBiometricsRequestOnRefreshToken(biometricsOnRefreshTokenCheckbox.isChecked)
+        }
+        // Get the shared preference status and update the biometrics selection
+        if (!CyberArkPreferenceUtil.contains(PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH)) {
+            saveBiometricsRequestOnAppLaunch(true)
+            saveBiometricsRequestOnQRCodeLaunch(true)
+            saveBiometricsRequestOnRefreshToken(true)
+        }
     }
 
     private fun saveInSharedPreference() {
@@ -87,6 +162,21 @@ class SettingsActivity : AppCompatActivity() {
         )
         CyberArkPreferenceUtil.putString(PreferenceConstants.HOST, host.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.SCHEME, scheme.text.toString())
+
+        CyberArkPreferenceUtil.putBoolean(
+            PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH,
+            biometricsOnAppLaunchRequested
+        )
+
+        CyberArkPreferenceUtil.putBoolean(
+            PreferenceConstants.INVOKE_BIOMETRICS_ON_QR_CODE_LAUNCH,
+            biometricsOnQRCodeLaunchRequested
+        )
+
+        CyberArkPreferenceUtil.putBoolean(
+            PreferenceConstants.INVOKE_BIOMETRICS_ON_TOKEN_EXPIRES,
+            biometricsOnRefreshTokenRequested
+        )
     }
 
     private fun verifyAndSaveInSharedPreference() {
@@ -140,19 +230,66 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun updateFromSettings() {
         val activityIntent = intent
-        if (activityIntent.getStringExtra("from_activity").equals("HomeActivity")) {
-            val intent = Intent(this, HomeActivity::class.java)
+        if (activityIntent.getStringExtra("from_activity").equals("LoginOptionsActivity")) {
+            val intent = Intent(this, LoginOptionsActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         } else if (activityIntent.getStringExtra("from_activity").equals("MFAActivity")) {
             val intent = Intent(this, MFAActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         }
         finish()
     }
+    // **************** Handle menu settings click action End *********************** //
+
+
+    // ************************ Handle biometrics Start **************************** //
+    /**
+     * Save "Invoke biometrics on app launch" status in shared preference
+     *
+     * @param checked: Boolean
+     */
+    private fun saveBiometricsRequestOnAppLaunch(checked: Boolean) {
+        var value = checked
+        if (!CyberArkPreferenceUtil.contains(PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH)) {
+            value = true
+            biometricsOnRefreshTokenCheckbox.isChecked = value
+        }
+        biometricsOnAppLaunchRequested = value
+    }
+
+    /**
+     * Save "Invoke biometrics on QR Code launch" status in shared preference
+     *
+     * @param checked: Boolean
+     */
+    private fun saveBiometricsRequestOnQRCodeLaunch(checked: Boolean) {
+        var value = checked
+        if (!CyberArkPreferenceUtil.contains(PreferenceConstants.INVOKE_BIOMETRICS_ON_QR_CODE_LAUNCH)) {
+            value = true
+            biometricsOnQRCodeLaunchCheckbox.isChecked = value
+        }
+        biometricsOnQRCodeLaunchRequested= value
+    }
+
+    /**
+     * Save "Invoke biometrics when access token expires" status in shared preference
+     *
+     * @param checked: Boolean
+     */
+    private fun saveBiometricsRequestOnRefreshToken(checked: Boolean) {
+        var value = checked
+        if (!CyberArkPreferenceUtil.contains(PreferenceConstants.INVOKE_BIOMETRICS_ON_TOKEN_EXPIRES)) {
+            value = true
+            biometricsOnAppLaunchCheckbox.isChecked = value
+        }
+        biometricsOnRefreshTokenRequested = value
+    }
+    // ************************ Handle biometrics End **************************** //
 
     override fun onBackPressed() {
         super.onBackPressed()
-        updateFromSettings()
+        finish()
     }
-    // **************** Handle menu settings click action End *********************** //
 }
