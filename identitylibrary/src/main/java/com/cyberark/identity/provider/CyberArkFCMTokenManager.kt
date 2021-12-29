@@ -62,21 +62,25 @@ internal class CyberArkFCMTokenManager(
      * @return SendFCMTokenModel
      */
     internal suspend fun uploadFCMToken(): SendFCMTokenModel? {
-        var sendFCMTokenData: SendFCMTokenModel?
+        var sendFCMTokenData: SendFCMTokenModel? = null
         withContext(Dispatchers.IO) {
+            try {
+                val cyberArkAuthService: CyberArkAuthService =
+                    CyberArkAuthBuilder.getRetrofit(account.getBaseSystemUrl)
+                        .create(CyberArkAuthService::class.java)
+                val cyberArkAuthHelper = CyberArkAuthHelper(cyberArkAuthService)
 
-            val cyberArkAuthService: CyberArkAuthService =
-                CyberArkAuthBuilder.getRetrofit(account.getBaseSystemUrl)
-                    .create(CyberArkAuthService::class.java)
-            val cyberArkAuthHelper = CyberArkAuthHelper(cyberArkAuthService)
+                val headerPayload = getHeaderPayload()
+                val bodyPayload = getBodyPayload()
 
-            val headerPayload = getHeaderPayload()
-            val bodyPayload = getBodyPayload()
+                val idapNativeClient: Boolean = headerPayload.getBoolean(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT)
+                val bearerToken: String = headerPayload.getString(EndpointUrls.HEADER_AUTHORIZATION)
 
-            val idapNativeClient: Boolean = headerPayload.getBoolean(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT)
-            val bearerToken: String = headerPayload.getString(EndpointUrls.HEADER_AUTHORIZATION)
-
-            sendFCMTokenData = cyberArkAuthHelper.sendFCMToken(idapNativeClient, bearerToken, createJsonBody(bodyPayload.toString()))
+                sendFCMTokenData = cyberArkAuthHelper.sendFCMToken(idapNativeClient, bearerToken, createJsonBody(bodyPayload.toString()))
+            } catch (e: Exception) {
+                //TODO.. log added to verify failure case, need to verify and remove later
+                Log.i(tag, e.toString())
+            }
         }
         return sendFCMTokenData
     }

@@ -681,8 +681,18 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
         // Hide progress indicator
         progressBar.visibility = View.GONE
         if (sendFCMTokenModel == null) {
+            Toast.makeText(
+                this,
+                "Upload FCM Token: Unable to get response from server",
+                Toast.LENGTH_SHORT
+            ).show()
             Log.i(TAG, "Upload FCM Token: Unable to get response from server")
         } else if (!sendFCMTokenModel.Status) {
+            Toast.makeText(
+                this,
+                "Unable to upload FCM Token to Server",
+                Toast.LENGTH_SHORT
+            ).show()
             Log.i(TAG, "Unable to upload FCM Token to Server")
         } else {
             Log.i(TAG, "Uploaded FCM Token to Server successfully")
@@ -698,9 +708,10 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
      * @return CyberArkAccountBuilder instance
      */
     private fun setupFCMUrl(): CyberArkAccountBuilder {
+        val account =  AppConfig.setupAccountFromSharedPreference(this)
         return CyberArkAccountBuilder.Builder()
-            .systemURL(getString(R.string.cyberark_account_system_url))
-            .hostURL(getString(R.string.cyberark_account_host_url))
+            .systemURL(account.getBaseSystemUrl)
+            .hostURL(account.getBaseUrl)
             .build()
     }
 
@@ -712,7 +723,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
         lifecycleScope.launch(Dispatchers.Main) {
             val accessTokenData = KeyStoreProvider.get().getAuthToken()
             if (accessTokenData != null) {
-                val otpEnrollModel: OTPEnrollModel = CyberArkAuthProvider.otpEnroll(setupFCMUrl())
+                val otpEnrollModel: OTPEnrollModel? = CyberArkAuthProvider.otpEnroll(setupFCMUrl())
                     .start(this@MFAActivity, accessTokenData)
                 // Save OTP enroll data
                 val otpEnrollModelString = Gson().toJson(otpEnrollModel)

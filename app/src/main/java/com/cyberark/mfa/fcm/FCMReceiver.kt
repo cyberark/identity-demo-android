@@ -32,7 +32,7 @@ import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.notification.NotificationConstants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.NotificationActivity
-import com.cyberark.mfa.R
+import com.cyberark.mfa.utils.AppConfig
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -152,7 +152,7 @@ class FCMReceiver : BroadcastReceiver() {
      *
      * @param submitOTPModel: SubmitOTPModel instance
      */
-    private fun handleSubmitOTPResponse(submitOTPModel: SubmitOTPModel) {
+    private fun handleSubmitOTPResponse(submitOTPModel: SubmitOTPModel?) {
         if (submitOTPModel == null) {
             Log.i(TAG, "Submit OTP: Unable to get response from server")
         } else if (!submitOTPModel.success) {
@@ -168,9 +168,10 @@ class FCMReceiver : BroadcastReceiver() {
      * @return CyberArkAccountBuilder instance
      */
     private fun setupFCMUrl(context: Context): CyberArkAccountBuilder {
+        val account =  AppConfig.setupAccountFromSharedPreference(context)
         return CyberArkAccountBuilder.Builder()
-            .systemURL(context.getString(R.string.cyberark_account_system_url))
-            .hostURL(context.getString(R.string.cyberark_account_host_url))
+            .systemURL(account.getBaseSystemUrl)
+            .hostURL(account.getBaseUrl)
             .build()
     }
 

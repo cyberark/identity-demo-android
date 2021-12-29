@@ -260,7 +260,7 @@ object CyberArkAuthProvider {
         suspend fun start(
             context: Context,
             accessToken: String
-        ): OTPEnrollModel {
+        ): OTPEnrollModel? {
             Log.i(TAG, "OTP Enroll")
             val cyberArkOTPEnrollManager = CyberArkOTPEnrollManager(context, accessToken, account)
 
@@ -290,7 +290,7 @@ object CyberArkAuthProvider {
             accessToken: String,
             otpEnrollModel: OTPEnrollModel,
             notificationPayload: JSONObject
-        ): SubmitOTPModel {
+        ): SubmitOTPModel? {
             Log.i(TAG, "Submit OTP")
             val cyberArkOTPEnrollManager = CyberArkSubmitOTPManager(
                 context,
