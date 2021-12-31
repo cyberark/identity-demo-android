@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa
+package com.cyberark.mfa.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -23,6 +23,7 @@ import android.view.Window
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.cyberark.mfa.R
 
 class AlertActivity : AppCompatActivity() {
 

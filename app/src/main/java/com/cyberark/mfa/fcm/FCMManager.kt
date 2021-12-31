@@ -25,7 +25,7 @@ import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.cyberark.identity.data.model.NotificationDataModel
-import com.cyberark.mfa.NotificationActivity
+import com.cyberark.mfa.activity.NotificationActivity
 import com.cyberark.mfa.R
 
 class FCMManager(private val context: Context) {

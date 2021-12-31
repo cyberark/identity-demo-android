@@ -18,31 +18,31 @@
         android:theme="@style/AppTheme.NoActionBar">
 
         <activity
-            android:name=".AlertActivity"
+            android:name=".activity.AlertActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Dialog"/>
         <activity
-            android:name=".BaseActivity"
+            android:name=".activity.base.BaseActivity"
             android:exported="false" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activity.SettingsActivity"
             android:exported="false"
             android:theme="@style/AppTheme.WithActionBar"/>
         <activity
-            android:name=".NotificationActivity"
+            android:name=".activity.NotificationActivity"
             android:exported="false"
             android:theme="@style/AppTheme.WithActionBar"/>
         <activity
-            android:name=".MFAActivity"
+            android:name=".scenario1.MFAActivity"
             android:exported="false"
             android:theme="@style/AppTheme.WithActionBar"/>
         <activity
-            android:name=".LoginOptionsActivity"
+            android:name=".activity.LoginOptionsActivity"
             android:exported="false"
             android:theme="@style/AppTheme.WithActionBar"/>
 
         <activity
-            android:name=".WelcomeActivity"
+            android:name=".activity.WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

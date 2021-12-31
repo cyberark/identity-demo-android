@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa
+package com.cyberark.mfa.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -29,6 +29,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.util.keystore.KeyStoreProvider
+import com.cyberark.mfa.R
+import com.cyberark.mfa.activity.base.BaseActivity
+import com.cyberark.mfa.scenario1.MFAActivity
 import com.cyberark.mfa.utils.AppConfig
 
 class LoginOptionsActivity : BaseActivity() {

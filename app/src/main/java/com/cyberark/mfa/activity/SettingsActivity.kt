@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa
+package com.cyberark.mfa.activity
 
 import android.content.Intent
 import android.graphics.Color
@@ -28,6 +28,8 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
+import com.cyberark.mfa.R
+import com.cyberark.mfa.scenario1.MFAActivity
 import com.cyberark.mfa.utils.PreferenceConstants
 
 class SettingsActivity : AppCompatActivity() {

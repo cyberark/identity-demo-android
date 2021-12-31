@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa
+package com.cyberark.mfa.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +23,8 @@ import android.text.method.LinkMovementMethod
 import android.widget.Button
 import android.widget.TextView
 import com.cyberark.identity.util.keystore.KeyStoreProvider
+import com.cyberark.mfa.R
+import com.cyberark.mfa.scenario1.MFAActivity
 
 class WelcomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

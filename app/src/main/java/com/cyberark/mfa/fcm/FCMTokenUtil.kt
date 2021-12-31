@@ -17,7 +17,7 @@
 package com.cyberark.mfa.fcm
 
 import android.util.Log
-import com.cyberark.mfa.MFAActivity
+import com.cyberark.mfa.scenario1.MFAActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 

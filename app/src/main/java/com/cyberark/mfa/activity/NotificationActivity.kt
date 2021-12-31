@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa
+package com.cyberark.mfa.activity
 
 import android.content.Context
 import android.content.Intent
@@ -44,6 +44,7 @@ import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.notification.NotificationConstants
 import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
+import com.cyberark.mfa.R
 import com.cyberark.mfa.fcm.FCMReceiver
 import com.cyberark.mfa.utils.AppConfig
 import com.cyberark.mfa.utils.PreferenceConstants
