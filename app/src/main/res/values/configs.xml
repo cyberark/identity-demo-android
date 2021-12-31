@@ -37,7 +37,7 @@
     <string name="cyberark_account_scheme">demo</string>
 </resources>-->
 
-<resources>
+<!--<resources>
     <string name="cyberark_account_system_url">aaj7617.my.dev.idaptive.app</string>
     <string name="cyberark_account_host_url">acme2.my.dev.idaptive.app</string>
     <string name="cyberark_account_client_id">acme</string>
@@ -47,9 +47,9 @@
     <string name="cyberark_account_redirect_uri">demo://acme/android/com.cyberark.mfa/callback</string>
     <string name="cyberark_account_host">acme</string>
     <string name="cyberark_account_scheme">demo</string>
-</resources>
+</resources>-->
 
-<!--<resources>
+<resources>
     <string name="cyberark_account_system_url">aar5203.my.idaptive.qa</string>
     <string name="cyberark_account_host_url">auth.cyberarklab.com</string>
     <string name="cyberark_account_client_id">acme</string>
@@ -59,7 +59,7 @@
     <string name="cyberark_account_redirect_uri">demo://acme/android/com.cyberark.mfa/callback</string>
     <string name="cyberark_account_host">acme</string>
     <string name="cyberark_account_scheme">demo</string>
-</resources>-->
+</resources>
 
 <!--<resources>
     <string name="cyberark_account_system_url">aak7455.my.dev.idaptive.app</string>

@@ -56,16 +56,20 @@ internal class CyberArkOTPEnrollManager(
      *
      * @return OTPEnrollModel
      */
-    internal suspend fun otpEnroll(): OTPEnrollModel {
-        var otpEnrollModel: OTPEnrollModel
+    internal suspend fun otpEnroll(): OTPEnrollModel? {
+        var otpEnrollModel: OTPEnrollModel? = null
         withContext(Dispatchers.IO) {
+            try {
+                val cyberArkAuthService: CyberArkAuthService =
+                    CyberArkAuthBuilder.getRetrofit(account.getBaseSystemUrl)
+                        .create(CyberArkAuthService::class.java)
+                val cyberArkAuthHelper = CyberArkAuthHelper(cyberArkAuthService)
 
-            val cyberArkAuthService: CyberArkAuthService =
-                CyberArkAuthBuilder.getRetrofit(account.getBaseSystemUrl)
-                    .create(CyberArkAuthService::class.java)
-            val cyberArkAuthHelper = CyberArkAuthHelper(cyberArkAuthService)
-
-            otpEnrollModel = cyberArkAuthHelper.otpEnroll("Bearer $accessToken", getOTPEnrollURL)
+                otpEnrollModel = cyberArkAuthHelper.otpEnroll("Bearer $accessToken", getOTPEnrollURL)
+            } catch (e: Exception) {
+                //TODO.. log added to verify failure case, need to verify and remove later
+                Log.i(tag, e.toString())
+            }
         }
         return otpEnrollModel
     }

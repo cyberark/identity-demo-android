@@ -58,30 +58,34 @@ internal class CyberArkSubmitOTPManager(
      *
      * @return SubmitOTPModel
      */
-    internal suspend fun submitOTP(): SubmitOTPModel {
-        var submitOTPModel: SubmitOTPModel
+    internal suspend fun submitOTP(): SubmitOTPModel? {
+        var submitOTPModel: SubmitOTPModel? = null
         withContext(Dispatchers.IO) {
+            try {
+                val cyberArkAuthService: CyberArkAuthService =
+                    CyberArkAuthBuilder.getRetrofit(account.getBaseSystemUrl)
+                        .create(CyberArkAuthService::class.java)
+                val cyberArkAuthHelper = CyberArkAuthHelper(cyberArkAuthService)
 
-            val cyberArkAuthService: CyberArkAuthService =
-                CyberArkAuthBuilder.getRetrofit(account.getBaseSystemUrl)
-                    .create(CyberArkAuthService::class.java)
-            val cyberArkAuthHelper = CyberArkAuthHelper(cyberArkAuthService)
+                val challengeAnswer: String =
+                    notificationPayload.getString(EndpointUrls.QUERY_OTP_CHALLENGE_ANSWER)
+                val userAccepted: Boolean =
+                    notificationPayload.getBoolean(EndpointUrls.QUERY_USER_ACCEPTED)
 
-            val challengeAnswer: String =
-                notificationPayload.getString(EndpointUrls.QUERY_OTP_CHALLENGE_ANSWER)
-            val userAccepted: Boolean =
-                notificationPayload.getBoolean(EndpointUrls.QUERY_USER_ACCEPTED)
-
-            submitOTPModel = cyberArkAuthHelper.submitOTPCode(
-                "Bearer $accessToken",
-                getOTPCode(),
-                otpEnrollModel.Result.OTPKeyVersion,
-                getOTPTimestamp(),
-                userAccepted,
-                otpEnrollModel.Result.OTPCodeExpiryInterval,
-                challengeAnswer,
-                otpEnrollModel.Result.OathProfileUuid
-            )
+                submitOTPModel = cyberArkAuthHelper.submitOTPCode(
+                    "Bearer $accessToken",
+                    getOTPCode(),
+                    otpEnrollModel.Result.OTPKeyVersion,
+                    getOTPTimestamp(),
+                    userAccepted,
+                    otpEnrollModel.Result.OTPCodeExpiryInterval,
+                    challengeAnswer,
+                    otpEnrollModel.Result.OathProfileUuid
+                )
+            } catch (e: Exception) {
+                //TODO.. log added to verify failure case, need to verify and remove later
+                Log.i(tag, e.toString())
+            }
         }
         return submitOTPModel
     }

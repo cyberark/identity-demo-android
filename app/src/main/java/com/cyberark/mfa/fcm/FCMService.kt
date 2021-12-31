@@ -25,7 +25,7 @@ import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.NotificationActivity
-import com.cyberark.mfa.R
+import com.cyberark.mfa.utils.AppConfig
 import com.cyberark.mfa.utils.AppUtils
 import com.cyberark.mfa.utils.PreferenceConstants
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -33,7 +33,6 @@ import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.lang.IllegalArgumentException
 
 class FCMService : FirebaseMessagingService() {
 
@@ -135,9 +134,10 @@ class FCMService : FirebaseMessagingService() {
      * @return CyberArkAccountBuilder instance
      */
     private fun setupFCMUrl(): CyberArkAccountBuilder {
+        val account =  AppConfig.setupAccountFromSharedPreference(this)
         return CyberArkAccountBuilder.Builder()
-            .systemURL(getString(R.string.cyberark_account_system_url))
-            .hostURL(getString(R.string.cyberark_account_host_url))
+            .systemURL(account.getBaseSystemUrl)
+            .hostURL(account.getBaseUrl)
             .build()
     }
 }

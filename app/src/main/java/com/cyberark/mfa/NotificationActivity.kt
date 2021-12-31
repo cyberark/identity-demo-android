@@ -27,7 +27,6 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import com.cyberark.identity.builder.CyberArkAccountBuilder
@@ -238,7 +237,7 @@ class NotificationActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.Main) {
             val accessTokenData = KeyStoreProvider.get().getAuthToken()
             if (accessTokenData != null) {
-                val submitOTPModel = CyberArkAuthProvider.submitOTP(setupFCMUrl(context))
+                val submitOTPModel: SubmitOTPModel? = CyberArkAuthProvider.submitOTP(setupFCMUrl(context))
                     .start(context, accessTokenData, otpEnrollModel, notificationPayload)
                 handleSubmitOTPResponse(submitOTPModel)
             } else {
@@ -255,7 +254,7 @@ class NotificationActivity : AppCompatActivity() {
      *
      * @param submitOTPModel: SubmitOTPModel instance
      */
-    private fun handleSubmitOTPResponse(submitOTPModel: SubmitOTPModel) {
+    private fun handleSubmitOTPResponse(submitOTPModel: SubmitOTPModel?) {
         if (submitOTPModel == null) {
             Log.i(TAG, "Submit OTP: Unable to get response from server")
         } else if (!submitOTPModel.success) {
@@ -271,9 +270,10 @@ class NotificationActivity : AppCompatActivity() {
      * @return CyberArkAccountBuilder instance
      */
     private fun setupFCMUrl(context: Context): CyberArkAccountBuilder {
+        val account =  AppConfig.setupAccountFromSharedPreference(context)
         return CyberArkAccountBuilder.Builder()
-            .systemURL(context.getString(R.string.cyberark_account_system_url))
-            .hostURL(context.getString(R.string.cyberark_account_host_url))
+            .systemURL(account.getBaseSystemUrl)
+            .hostURL(account.getBaseUrl)
             .build()
     }
 
@@ -418,7 +418,7 @@ class NotificationActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.Main) {
             val accessTokenData = KeyStoreProvider.get().getAuthToken()
             if (accessTokenData != null) {
-                otpEnrollModel = CyberArkAuthProvider.otpEnroll(setupFCMUrl(this@NotificationActivity))
+                val otpEnrollModel: OTPEnrollModel? = CyberArkAuthProvider.otpEnroll(setupFCMUrl(this@NotificationActivity))
                     .start(this@NotificationActivity, accessTokenData)
                 // Save OTP enroll data
                 val otpEnrollModelString = Gson().toJson(otpEnrollModel)
