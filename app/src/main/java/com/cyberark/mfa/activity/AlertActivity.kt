@@ -36,6 +36,7 @@ class AlertActivity : AppCompatActivity() {
         headerText?.text = intent.extras?.getString("title")
         val contentText: TextView? = findViewById(R.id.content_text)
         contentText?.text = intent.extras?.getString("desc")
+        val scenarioNo =  intent.extras?.getInt("scenario")
 
         val cancelButton: Button = findViewById(R.id.button_cancel)
         cancelButton.setOnClickListener {
@@ -49,6 +50,7 @@ class AlertActivity : AppCompatActivity() {
         loginButton.setOnClickListener {
             val intent = Intent()
             intent.putExtra("ALERT_LOGIN_STATUS", "true")
+            intent.putExtra("scenario", scenarioNo)
             setResult(RESULT_OK, intent)
             finish()
         }

@@ -21,9 +21,11 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
@@ -73,16 +75,36 @@ class LoginOptionsActivity : BaseActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val data = result.data?.getStringExtra("ALERT_LOGIN_STATUS").toBoolean()
                 if (data) {
-                    login(account, progressBar)
+                    when (result.data?.extras?.getInt("scenario")) {
+                        1 -> {
+                            login(account, progressBar)
+                        }
+                        2 -> {
+                            Log.i("TAG", "Scenario 2 selected")
+                            Toast.makeText(this, "Scenario 2 selected", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         }
 
     fun showInfo(view: View) {
-        val intent = Intent(this, AlertActivity::class.java)
-        intent.putExtra("title", getString(R.string.login_hosted_title))
-        intent.putExtra("desc", getString(R.string.login_hosted_description))
-        startForResult.launch(intent)
+        when (view.id) {
+            R.id.tv_redirect_login -> {
+                val intent = Intent(this, AlertActivity::class.java)
+                intent.putExtra("title", getString(R.string.cyberark_hosted_login_title))
+                intent.putExtra("desc", getString(R.string.cyberark_hosted_login_description))
+                intent.putExtra("scenario", 1)
+                startForResult.launch(intent)
+            }
+            R.id.tv_mfa_widget_login -> {
+                val intent = Intent(this, AlertActivity::class.java)
+                intent.putExtra("title", getString(R.string.mfa_widget_login_title))
+                intent.putExtra("desc", getString(R.string.mfa_widget_login_description))
+                intent.putExtra("scenario", 2)
+                startForResult.launch(intent)
+            }
+        }
     }
 
     // **************** Handle menu settings click action Start *********************** //

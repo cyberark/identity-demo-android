@@ -73,7 +73,7 @@
     <string name="acme_inc_is_a_banking_company">Acme Inc. is a banking company using CyberArk Identity APIs, SDKs, and widgets to secure its web applications and mobile applications. This playground application shows all the possible variations that a developer from Acme has at their disposal.</string>
     <string name="get_started">&#160;&#160;Get Started&#160;&#160;</string>
 
-    <!-- Login options -->
+    <!-- CyberArk hosted Login options -->
     <string name="cyberark_hosted_login">CyberArk Hosted Login</string>
     <string name="start">Start</string>
     <string name="learn_more"><u>Learn More</u></string>
@@ -81,8 +81,8 @@
     <string name="mfa_widget">MFA Widget</string>
 
     <string name="cancel">Cancel</string>
-    <string name="login_hosted_title">CyberArk Hosted Login</string>
-    <string name="login_hosted_description">In this scenario the Acme wants to use the MFA provided by CyberArk Identity by authenticating the users with the CyberArk Identity login. \n
+    <string name="cyberark_hosted_login_title">CyberArk Hosted Login</string>
+    <string name="cyberark_hosted_login_description">In this scenario the Acme wants to use the MFA provided by CyberArk Identity by authenticating the users with the CyberArk Identity login. \n
 \nThe user will be redirected to the CyberArk Identity Login page and prompted to enter username and the corresponding MFA factors. On successful authentication an access token will be returned for the user.</string>
     <string name="login_hosted_end">\nPlease visit <a href="https://identity-developer.cyberark.com/docs/cyberark-idetity-sdk-for-android/"><b>here</b></a> for details on implementation.</string>
 
@@ -93,4 +93,11 @@
     <string name="access_token_and_refresh_token_received">Access token and refresh token received</string>
     <string name="access_token_received">Access token received</string>
     <string name="authentication_is_successful">Authentication is successful</string>
+
+    <!-- MFA widget Login options -->
+    <string name="mfa_widget_login">Step-up authentication \nusing MFA widget</string>
+    <string name="mfa_widget_login_title">Step-up authentication using MFA widget</string>
+    <string name="mfa_widget_login_description">In this scenario Acme Inc wants to provide step-up authentication to end user when the user tries to do funds transfer. \n
+\nTo satisfy this scenario Acme Inc uses the CyberArk Identity MFA widget and embeds the widget into the Acme mobile app using the CyberArk Identity mobile SDK.</string>
+
 </resources>
