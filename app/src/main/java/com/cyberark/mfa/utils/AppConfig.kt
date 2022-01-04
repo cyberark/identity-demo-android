@@ -106,4 +106,47 @@ object AppConfig {
             context.getString(R.string.cyberark_account_scheme)
         )
     }
+
+    /**
+     * Set-up account for basic login flow
+     * update configuration from SharedPreference
+     *
+     * @param context: Activity/Application context
+     * @return cyberArkAccountBuilder: CyberArkAccountBuilder instance
+     */
+    fun setupBasicLoginFromSharedPreference(context: Context): CyberArkAccountBuilder {
+        val basicLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.BASIC_LOGIN_URL, null)
+        if (basicLoginURLSP == null) {
+            saveBasicLoginURLInSharedPreference(context)
+        }
+        val basicLoginUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.BASIC_LOGIN_URL, null)
+        val systemUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.SYSTEM_URL, null)
+        val hostUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.HOST_URL, null)
+
+        return CyberArkAccountBuilder.Builder()
+            .basicLoginURL(basicLoginUrl.toString())
+            .systemURL(systemUrl.toString())
+            .hostURL(hostUrl.toString())
+            .build()
+    }
+
+    /**
+     * Save basic login url in shared preference
+     *
+     * @param context: Activity/Application context
+     */
+    private fun saveBasicLoginURLInSharedPreference(context: Context) {
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.BASIC_LOGIN_URL,
+            context.getString(R.string.cyberark_account_basic_login_url)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.SYSTEM_URL,
+            context.getString(R.string.cyberark_account_system_url)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.HOST_URL,
+            context.getString(R.string.cyberark_account_host_url)
+        )
+    }
 }

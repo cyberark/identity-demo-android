@@ -34,6 +34,7 @@ import com.cyberark.mfa.utils.PreferenceConstants
 
 class SettingsActivity : AppCompatActivity() {
 
+    private lateinit var basicLoginURL: EditText
     private lateinit var systemURL: EditText
     private lateinit var hostURL: EditText
     private lateinit var clientId: EditText
@@ -56,7 +57,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#000000")))
+        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.BLACK))
         title = getString(R.string.settings)
         invokeUI()
         updateUI()
@@ -90,6 +91,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
+        basicLoginURL = findViewById(R.id.editTextBasicLoginURL)
         systemURL = findViewById(R.id.editTextSystemURL)
         hostURL = findViewById(R.id.editTextHostURL)
         clientId = findViewById(R.id.editTextClientId)
@@ -103,6 +105,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun updateUI() {
+        basicLoginURL.setText(getString(R.string.cyberark_account_basic_login_url))
         systemURL.setText(getString(R.string.cyberark_account_system_url))
         hostURL.setText(getString(R.string.cyberark_account_host_url))
         clientId.setText(getString(R.string.cyberark_account_client_id))
@@ -154,6 +157,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun saveInSharedPreference() {
+        CyberArkPreferenceUtil.putString(PreferenceConstants.BASIC_LOGIN_URL, basicLoginURL.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.SYSTEM_URL, systemURL.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.HOST_URL, hostURL.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.CLIENT_ID, clientId.text.toString())
@@ -182,6 +186,10 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun verifyAndSaveInSharedPreference() {
+        val basicLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.BASIC_LOGIN_URL, null)
+        if (!basicLoginURLSP.equals(basicLoginURL.text.toString())) {
+            basicLoginURL.setText(basicLoginURLSP)
+        }
         val systemURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.SYSTEM_URL, null)
         if (!systemURLSP.equals(systemURL.text.toString())) {
             systemURL.setText(systemURLSP)

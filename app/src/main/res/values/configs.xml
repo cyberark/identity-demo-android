@@ -50,6 +50,7 @@
 </resources>-->
 
 <resources>
+    // CyberArk hosted login
     <string name="cyberark_account_system_url">aar5203.my.idaptive.qa</string>
     <string name="cyberark_account_host_url">auth.cyberarklab.com</string>
     <string name="cyberark_account_client_id">acme</string>
@@ -59,6 +60,9 @@
     <string name="cyberark_account_redirect_uri">demo://acme/android/com.cyberark.mfa/callback</string>
     <string name="cyberark_account_host">acme</string>
     <string name="cyberark_account_scheme">demo</string>
+
+    // Step-up authentication using MFA widget
+    <string name="cyberark_account_basic_login_url">https://ciam.cyberarklab.com</string>
 </resources>
 
 <!--<resources>

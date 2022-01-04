@@ -105,7 +105,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mfa)
-        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#000000")))
+        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.BLACK))
         title = getString(R.string.acme)
 
         // Invoke UI elements

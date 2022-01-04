@@ -21,11 +21,9 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
@@ -34,6 +32,7 @@ import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.mfa.R
 import com.cyberark.mfa.activity.base.BaseActivity
 import com.cyberark.mfa.scenario1.MFAActivity
+import com.cyberark.mfa.scenario2.NativeLoginActivity
 import com.cyberark.mfa.utils.AppConfig
 
 class LoginOptionsActivity : BaseActivity() {
@@ -46,7 +45,7 @@ class LoginOptionsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_options)
-        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#000000")))
+        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.BLACK))
         title = getString(R.string.acme)
 
         // Verify if access token is present or not
@@ -62,11 +61,18 @@ class LoginOptionsActivity : BaseActivity() {
         // Invoke UI element
         progressBar = findViewById(R.id.progressBar_home_activity)
 
-        // Setup account
+        // Setup CyberArk hosted login account
         account = AppConfig.setupAccountFromSharedPreference(this)
+        // Initialize basic Login
+        AppConfig.setupBasicLoginFromSharedPreference(this)
 
         findViewById<CardView>(R.id.cv_redirect_login).setOnClickListener {
             login(account, progressBar)
+        }
+
+        findViewById<CardView>(R.id.cv_mfa_widget_login).setOnClickListener {
+            val intent = Intent(this, NativeLoginActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -80,8 +86,8 @@ class LoginOptionsActivity : BaseActivity() {
                             login(account, progressBar)
                         }
                         2 -> {
-                            Log.i("TAG", "Scenario 2 selected")
-                            Toast.makeText(this, "Scenario 2 selected", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, NativeLoginActivity::class.java)
+                            startActivity(intent)
                         }
                     }
                 }
