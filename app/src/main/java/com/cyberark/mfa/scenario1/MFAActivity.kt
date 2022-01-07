@@ -91,7 +91,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
     private lateinit var headerText: TextView
     private lateinit var contentText: TextView
 
-    // SDK biometrics utility class variable
+    // SDK biometrics utility variable
     private lateinit var cyberArkBiometricPromptUtility: CyberArkBiometricPromptUtility
 
     // Flags in order to handle UI and flow

@@ -22,6 +22,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.model.*
+import com.cyberark.identity.provider.manager.CyberArkAuthManager
+import com.cyberark.identity.provider.manager.CyberArkBasicLoginManager
+import com.cyberark.identity.provider.manager.CyberArkEnrollmentManager
+import com.cyberark.identity.provider.manager.CyberArkFCMTokenManager
+import com.cyberark.identity.provider.manager.CyberArkOTPEnrollManager
+import com.cyberark.identity.provider.manager.CyberArkProcessNotification
+import com.cyberark.identity.provider.manager.CyberArkSubmitOTPManager
 import com.cyberark.identity.util.ResponseHandler
 import org.json.JSONObject
 
@@ -65,6 +72,10 @@ object CyberArkAuthProvider {
 
     fun submitOTP(account: CyberArkAccountBuilder): SubmitOTPBuilder {
         return SubmitOTPBuilder(account)
+    }
+
+    fun basicLogin(account: CyberArkAccountBuilder): BasicLoginBuilder {
+        return BasicLoginBuilder(account)
     }
 
     /**
@@ -301,6 +312,35 @@ object CyberArkAuthProvider {
             )
 
             return cyberArkOTPEnrollManager.submitOTP()
+        }
+    }
+
+    /**
+     * Basic login builder class
+     *
+     */
+    class BasicLoginBuilder internal constructor(
+        private val account: CyberArkAccountBuilder
+    ) {
+        /**
+         * Basic login using username and password
+         *
+         * @param context: Activity Context
+         * @param username: login username
+         * @param password: login password
+         * @return LiveData<ResponseHandler<BasicLoginModel>>: LiveData response handler for BasicLoginModel
+         */
+        fun start(
+            context: Context,
+            username: String,
+            password: String
+        ): LiveData<ResponseHandler<BasicLoginModel>> {
+            Log.i(TAG, "Start basic login")
+            val cyberArkBasicLoginManager =
+                CyberArkBasicLoginManager(context, username, password, account)
+            cyberArkBasicLoginManager.basicLogin()
+
+            return cyberArkBasicLoginManager.getViewModelInstance.getBasicLoginData()
         }
     }
 }

@@ -91,6 +91,28 @@ private class KeyStoreManagerImpl : KeyStoreManager {
     }
 
     /**
+     * Save session token in shared preference
+     *
+     * @param sessionToken: session token data
+     * @return Boolean: true if the session token is encrypted successfully, else false
+     */
+    override fun saveSessionToken(sessionToken: String): Boolean {
+        val returnValues = encryptText(Constants.SESSION_ALIAS, sessionToken)
+        if (returnValues != null) {
+            CyberArkPreferenceUtil.putString(
+                Constants.SESSION_TOKEN_IV,
+                Base64.encodeToString(returnValues.first, Base64.DEFAULT)
+            )
+            CyberArkPreferenceUtil.putString(
+                Constants.SESSION_TOKEN,
+                Base64.encodeToString(returnValues.second, Base64.DEFAULT)
+            )
+            return true
+        }
+        return false
+    }
+
+    /**
      * Get auth token from Android keystore
      *
      * @return String: decrypted auth token
@@ -129,6 +151,25 @@ private class KeyStoreManagerImpl : KeyStoreManager {
     }
 
     /**
+     * Get session token from Android keystore
+     *
+     * @return String: decrypted session token
+     */
+    private fun getSessionTokenKeyStore(): String? {
+        var decryptedToken: String? = null
+        val sessionTokenIV = CyberArkPreferenceUtil.getString(Constants.SESSION_TOKEN_IV, null)
+        val sessionToken = CyberArkPreferenceUtil.getString(Constants.SESSION_TOKEN, null)
+        if (sessionTokenIV != null || sessionToken != null) {
+            decryptedToken = decryptText(
+                Constants.SESSION_ALIAS,
+                Base64.decode(sessionToken!!, Base64.DEFAULT),
+                Base64.decode(sessionTokenIV!!, Base64.DEFAULT)
+            )
+        }
+        return decryptedToken
+    }
+
+    /**
      * Get auth token from Android keystore
      *
      * @return String: decrypted auth token
@@ -144,6 +185,15 @@ private class KeyStoreManagerImpl : KeyStoreManager {
      */
     override fun getRefreshToken(): String? {
         return getRefreshTokenKeyStore()
+    }
+
+    /**
+     * Get session token from Android keystore
+     *
+     * @return String: decrypted session token
+     */
+    override fun getSessionToken(): String? {
+        return getSessionTokenKeyStore()
     }
 
     /**

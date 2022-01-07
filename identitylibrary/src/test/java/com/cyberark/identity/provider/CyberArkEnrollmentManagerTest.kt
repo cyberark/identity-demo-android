@@ -8,6 +8,7 @@ import com.cyberark.identity.testUtility.Constants
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
+import com.cyberark.identity.provider.manager.CyberArkEnrollmentManager
 import com.cyberark.identity.util.device.DeviceInfoHelper
 import com.cyberark.identity.viewmodel.EnrollmentViewModel
 import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
@@ -42,7 +43,7 @@ class CyberArkEnrollmentManagerTest  {
     @Mock
     internal lateinit var cyberArkBuilder: CyberArkAccountBuilder
 
-    private lateinit var authEnrollManager:CyberArkEnrollmentManager
+    private lateinit var authEnrollManager: CyberArkEnrollmentManager
 
 
     @Before

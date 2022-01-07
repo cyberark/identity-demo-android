@@ -76,7 +76,7 @@ class NotificationActivity : AppCompatActivity() {
     private var logoutStatus: Boolean = false
     private var tokenExpireStatus: Boolean = false
 
-    // SDK biometrics utility class variable
+    // SDK biometrics utility variable
     private lateinit var cyberArkBiometricPromptUtility: CyberArkBiometricPromptUtility
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -433,6 +433,7 @@ class NotificationActivity : AppCompatActivity() {
         }
     }
 
+    // ************************ Handle biometrics Start **************************** //
     /**
      * Show all strong biometrics in a prompt
      * negativeButtonText: "Use App Pin" text in order to handle fallback scenario
@@ -554,4 +555,5 @@ class NotificationActivity : AppCompatActivity() {
     private fun launchBiometricSetup() {
         this.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
     }
+    // ************************ Handle biometrics End ******************************** //
 }
