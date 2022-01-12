@@ -33,7 +33,10 @@
         <item name="android:background">@color/black</item>
     </style>
 
-    <style name="AppTheme.Popup" parent="ThemeOverlay.AppCompat" />
+    <style name="AppTheme.Popup" parent="ThemeOverlay.AppCompat">
+        <item name="android:background">@color/light_gray</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 
     <!-- declare the theme name that's actually applied in the manifest file -->
     <style name="AppTheme.WithActionBar" parent="BaseAppTheme" />

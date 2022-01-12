@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package com.cyberark.identity.util.device
+package com.cyberark.identity.data.model
 
 /**
- * Device Key constants
+ * Basic login model class
+ *
+ * @property success: enrollment response, true/false
+ * @property Result: basic login result class
+ * @property ErrorMessage: error message
  *
  */
-internal object DeviceConstants {
-    const val KEY_DEVICE_NAME = "name"
-    const val KEY_DEVICE_SIMPLE_NAME = "simpleName"
-    const val KEY_DEVICE_VERSION = "version"
-    const val KEY_DEVICE_UDID = "udid"
-    const val KEY_DEVICE_MANUFACTURER = "Manufacturer"
-    const val KEY_DEVICE_TYPE = "devicetype"
-    const val KEY_DEVICE_OS = "os"
-    const val KEY_DEVICE_ID = "DeviceID"
-    const val KEY_FCM_TOKEN = "Token"
-
-    const val KEY_BASIC_LOGIN_USERNAME = "Username"
-    const val KEY_BASIC_LOGIN_PASSWORD = "Password"
-}
+data class BasicLoginModel(
+    val success: Boolean,
+    val Result: BasicLoginResult,
+    val ErrorMessage: String
+)

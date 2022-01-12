@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import com.cyberark.identity.builder.CyberArkAccountBuilder
+import com.cyberark.identity.provider.manager.CyberArkAuthManager
+import com.cyberark.identity.provider.manager.CyberArkEnrollmentManager
 import com.cyberark.identity.viewmodel.AuthenticationViewModel
 import com.cyberark.identity.viewmodel.EnrollmentViewModel
 import org.junit.Before

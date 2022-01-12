@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.identity.provider
+package com.cyberark.identity.provider.manager
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity

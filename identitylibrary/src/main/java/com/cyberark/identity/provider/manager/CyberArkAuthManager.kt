@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.identity.provider
+package com.cyberark.identity.provider.manager
 
 import android.content.Context
 import android.content.Intent
@@ -28,9 +28,9 @@ import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.data.network.CyberArkAuthService
+import com.cyberark.identity.provider.CyberArkAuthInterface
 import com.cyberark.identity.viewmodel.AuthenticationViewModel
 import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
-import java.net.URLDecoder
 
 /**
  * CyberArk auth manager class

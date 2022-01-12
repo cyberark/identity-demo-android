@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa
+package com.cyberark.mfa.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.cyberark.identity.util.keystore.KeyStoreProvider
+import com.cyberark.mfa.R
+import com.cyberark.mfa.scenario1.MFAActivity
+import com.cyberark.mfa.scenario2.TransferFundActivity
 
 class WelcomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +37,15 @@ class WelcomeActivity : AppCompatActivity() {
         if (accessToken != null) {
             //Start MFA activity if access token is available
             val intent = Intent(this, MFAActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        // Verify if session token is present or not
+        val sessionToken = KeyStoreProvider.get().getSessionToken()
+        if (sessionToken != null) {
+            //Start TransferFundActivity if session token is available
+            val intent = Intent(this, TransferFundActivity::class.java)
             startActivity(intent)
             finish()
         }

@@ -40,6 +40,12 @@ interface KeyStoreManager {
     fun getRefreshToken(): String?
 
     /**
+     * Get the session token saved using @see saveSessionToken(sessionToken:String)
+     * @return string value if the encrypted token exists previously otherwise null
+     */
+    fun getSessionToken(): String?
+
+    /**
      * Save the refresh token by encrypting using android Keystore
      * and saving the encrypted value of refreshToken and generated crypto IV into Shared preferences
      *
@@ -48,4 +54,14 @@ interface KeyStoreManager {
      * @return boolean to indicate if the token successfully encrypted and saved
      */
     fun saveRefreshToken(refreshToken: String): Boolean
+
+    /**
+     * Save the session token by encrypting using android Keystore
+     * and saving the encrypted value of refreshToken and generated crypto IV into Shared preferences
+     *
+     * @param sessionToken token need to be encrypted and saved
+     *
+     * @return boolean to indicate if the token successfully encrypted and saved
+     */
+    fun saveSessionToken(sessionToken: String): Boolean
 }

@@ -22,6 +22,7 @@ package com.cyberark.mfa.utils
 object PreferenceConstants {
 
     const val ENROLLMENT_STATUS = "ENROLLMENT_STATUS"
+    const val BASIC_LOGIN_URL = "basic_login_url"
     const val SYSTEM_URL = "system_url"
     const val HOST_URL = "host_url"
     const val CLIENT_ID = "client_id"
@@ -32,4 +33,7 @@ object PreferenceConstants {
     const val INVOKE_BIOMETRICS_ON_APP_LAUNCH = "INVOKE_BIOMETRICS_ON_APP_LAUNCH"
     const val INVOKE_BIOMETRICS_ON_QR_CODE_LAUNCH = "INVOKE_BIOMETRICS_ON_QR_CODE_LAUNCH"
     const val INVOKE_BIOMETRICS_ON_TOKEN_EXPIRES = "INVOKE_BIOMETRICS_ON_TOKEN_EXPIRES"
+
+    const val INVOKE_BIOMETRICS_ON_APP_LAUNCH_NL = "INVOKE_BIOMETRICS_ON_APP_LAUNCH_NL"
+    const val INVOKE_BIOMETRICS_ON_TRANSFER_FUND_NL = "INVOKE_BIOMETRICS_ON_TRANSFER_FUND_NL"
 }

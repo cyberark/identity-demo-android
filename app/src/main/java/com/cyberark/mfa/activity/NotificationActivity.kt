@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa
+package com.cyberark.mfa.activity
 
 import android.content.Context
 import android.content.Intent
@@ -44,6 +44,7 @@ import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.notification.NotificationConstants
 import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
+import com.cyberark.mfa.R
 import com.cyberark.mfa.fcm.FCMReceiver
 import com.cyberark.mfa.utils.AppConfig
 import com.cyberark.mfa.utils.PreferenceConstants
@@ -75,13 +76,13 @@ class NotificationActivity : AppCompatActivity() {
     private var logoutStatus: Boolean = false
     private var tokenExpireStatus: Boolean = false
 
-    // SDK biometrics utility class variable
+    // SDK biometrics utility variable
     private lateinit var cyberArkBiometricPromptUtility: CyberArkBiometricPromptUtility
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notification)
-        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#000000")))
+        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.BLACK))
         initializeData()
         invokeUI()
         updateUI()
@@ -432,6 +433,7 @@ class NotificationActivity : AppCompatActivity() {
         }
     }
 
+    // ************************ Handle biometrics Start **************************** //
     /**
      * Show all strong biometrics in a prompt
      * negativeButtonText: "Use App Pin" text in order to handle fallback scenario
@@ -553,4 +555,5 @@ class NotificationActivity : AppCompatActivity() {
     private fun launchBiometricSetup() {
         this.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
     }
+    // ************************ Handle biometrics End ******************************** //
 }

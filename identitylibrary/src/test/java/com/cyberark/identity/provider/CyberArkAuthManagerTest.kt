@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelStore
 import com.cyberark.identity.testUtility.Constants
 import com.cyberark.identity.activity.CyberArkAuthActivity
 import com.cyberark.identity.builder.CyberArkAccountBuilder
+import com.cyberark.identity.provider.manager.CyberArkAuthManager
 import com.cyberark.identity.viewmodel.AuthenticationViewModel
 import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
 import org.junit.Before
@@ -45,7 +46,7 @@ class CyberArkAuthManagerTest {
     @Mock
     internal lateinit var cyberArkBuilder: CyberArkAccountBuilder
 
-    private lateinit var authManager:CyberArkAuthManager
+    private lateinit var authManager: CyberArkAuthManager
 
     @Before
     fun setUp() {

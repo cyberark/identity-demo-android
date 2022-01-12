@@ -25,6 +25,9 @@ object Constants {
     const val ACCESS_TOKEN_IV = "ACCESS_TOKEN_IV"
     const val REFRESH_TOKEN = "REFRESH_TOKEN"
     const val REFRESH_TOKEN_IV = "REFRESH_TOKEN_IV"
+    const val SESSION_TOKEN = "SESSION_TOKEN"
+    const val SESSION_TOKEN_IV = "SESSION_TOKEN_IV"
     internal const val AUTH_ALIAS = "AUTH_ALIAS"
     internal const val REFRESH_ALIAS = "REFRESH_ALIAS"
+    internal const val SESSION_ALIAS = "SESSION_ALIAS"
 }

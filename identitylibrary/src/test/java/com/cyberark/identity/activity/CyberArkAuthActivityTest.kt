@@ -6,7 +6,7 @@ import android.os.Bundle
 import com.cyberark.identity.testUtility.Constants
 import com.cyberark.identity.testUtility.RobolectricBase
 import com.cyberark.identity.builder.CyberArkAccountBuilder
-import com.cyberark.identity.provider.CyberArkAuthManager
+import com.cyberark.identity.provider.manager.CyberArkAuthManager
 import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.browser.CustomTabHelper
 import junit.framework.Assert.assertFalse

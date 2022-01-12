@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.identity.provider
+package com.cyberark.identity.provider.manager
 
 import android.os.Bundle
 import android.util.Log

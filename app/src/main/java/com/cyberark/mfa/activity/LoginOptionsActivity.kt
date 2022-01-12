@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa
+package com.cyberark.mfa.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -29,6 +29,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.util.keystore.KeyStoreProvider
+import com.cyberark.mfa.R
+import com.cyberark.mfa.activity.base.BaseActivity
+import com.cyberark.mfa.scenario1.MFAActivity
+import com.cyberark.mfa.scenario2.NativeLoginActivity
 import com.cyberark.mfa.utils.AppConfig
 
 class LoginOptionsActivity : BaseActivity() {
@@ -41,7 +45,7 @@ class LoginOptionsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_options)
-        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#000000")))
+        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.BLACK))
         title = getString(R.string.acme)
 
         // Verify if access token is present or not
@@ -57,11 +61,18 @@ class LoginOptionsActivity : BaseActivity() {
         // Invoke UI element
         progressBar = findViewById(R.id.progressBar_home_activity)
 
-        // Setup account
+        // Setup CyberArk hosted login account
         account = AppConfig.setupAccountFromSharedPreference(this)
+        // Initialize basic Login
+        AppConfig.setupBasicLoginFromSharedPreference(this)
 
         findViewById<CardView>(R.id.cv_redirect_login).setOnClickListener {
             login(account, progressBar)
+        }
+
+        findViewById<CardView>(R.id.cv_mfa_widget_login).setOnClickListener {
+            val intent = Intent(this, NativeLoginActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -70,16 +81,36 @@ class LoginOptionsActivity : BaseActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val data = result.data?.getStringExtra("ALERT_LOGIN_STATUS").toBoolean()
                 if (data) {
-                    login(account, progressBar)
+                    when (result.data?.extras?.getInt("scenario")) {
+                        1 -> {
+                            login(account, progressBar)
+                        }
+                        2 -> {
+                            val intent = Intent(this, NativeLoginActivity::class.java)
+                            startActivity(intent)
+                        }
+                    }
                 }
             }
         }
 
     fun showInfo(view: View) {
-        val intent = Intent(this, AlertActivity::class.java)
-        intent.putExtra("title", getString(R.string.login_hosted_title))
-        intent.putExtra("desc", getString(R.string.login_hosted_description))
-        startForResult.launch(intent)
+        when (view.id) {
+            R.id.tv_redirect_login -> {
+                val intent = Intent(this, AlertActivity::class.java)
+                intent.putExtra("title", getString(R.string.cyberark_hosted_login_title))
+                intent.putExtra("desc", getString(R.string.cyberark_hosted_login_description))
+                intent.putExtra("scenario", 1)
+                startForResult.launch(intent)
+            }
+            R.id.tv_mfa_widget_login -> {
+                val intent = Intent(this, AlertActivity::class.java)
+                intent.putExtra("title", getString(R.string.mfa_widget_login_title))
+                intent.putExtra("desc", getString(R.string.mfa_widget_login_description))
+                intent.putExtra("scenario", 2)
+                startForResult.launch(intent)
+            }
+        }
     }
 
     // **************** Handle menu settings click action Start *********************** //
