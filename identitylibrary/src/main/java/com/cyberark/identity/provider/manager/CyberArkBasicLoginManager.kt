@@ -17,9 +17,10 @@
 package com.cyberark.identity.provider.manager
 
 import android.content.Context
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.cyberark.identity.builder.CyberArkAccountBuilder
+import com.cyberark.identity.builder.CyberArkWidgetBuilder
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.data.network.CyberArkAuthService
@@ -39,7 +40,7 @@ internal class CyberArkBasicLoginManager(
     private val context: Context,
     private val username: String,
     private val password: String,
-    private val account: CyberArkAccountBuilder
+    widgetBuilder: CyberArkWidgetBuilder
 ) {
     private val viewModel: BasicLoginViewModel
 
@@ -58,14 +59,15 @@ internal class CyberArkBasicLoginManager(
 
     init {
         // Initialize BasicLoginViewModel
+        Log.i("widgetBuilder.getNativeLoginURL :: ", widgetBuilder.getNativeLoginURL)
         val appContext: AppCompatActivity = context as AppCompatActivity
         val cyberArkAuthService: CyberArkAuthService =
-            CyberArkAuthBuilder.getRetrofit(account.getBasicLoginUrl)
+            CyberArkAuthBuilder.getRetrofit(widgetBuilder.getNativeLoginURL)
                 .create(CyberArkAuthService::class.java)
         viewModel = ViewModelProvider(
             appContext,
             CyberArkViewModelFactory(CyberArkAuthHelper(cyberArkAuthService))
-        ).get(BasicLoginViewModel::class.java)
+        )[BasicLoginViewModel::class.java]
     }
 
     /**

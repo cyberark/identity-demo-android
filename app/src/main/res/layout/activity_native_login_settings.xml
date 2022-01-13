@@ -98,13 +98,41 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/basic_login_url" />
+                    android:text="@string/native_login_url" />
 
                 <EditText
                     android:id="@+id/editTextBasicLoginURL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:importantForAutofill="no"
+                    android:inputType="textUri"
+                    tools:ignore="LabelFor" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mfa_widget_url" />
+
+                <EditText
+                    android:id="@+id/editTextMFAWidgetHostURL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
+                    android:ems="10"
+                    android:importantForAutofill="no"
+                    android:inputType="textUri"
+                    tools:ignore="LabelFor" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mfa_widget_id" />
+
+                <EditText
+                    android:id="@+id/editTextMFAWidgetId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:ems="10"
                     android:importantForAutofill="no"
                     android:inputType="textUri"

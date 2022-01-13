@@ -28,6 +28,7 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.LiveData
+import com.cyberark.identity.builder.CyberArkWidgetBuilder
 import com.cyberark.identity.data.model.BasicLoginModel
 import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.*
@@ -88,9 +89,9 @@ class NativeLoginActivity : AppCompatActivity() {
      * @param password: login password
      */
     private fun basicLogin(username: String, password: String) {
-        val account = AppConfig.setupBasicLoginFromSharedPreference(this)
+        val account: CyberArkWidgetBuilder = AppConfig.setupNativeLoginFromSharedPreference(this)
         val authResponseHandler: LiveData<ResponseHandler<BasicLoginModel>> =
-            CyberArkAuthProvider.basicLogin(account)
+            CyberArkAuthProvider.nativeLogin(account)
                 .start(this, username, password)
         // Verify if there is any active observer, if not then add observer to get API response
         if (!authResponseHandler.hasActiveObservers()) {

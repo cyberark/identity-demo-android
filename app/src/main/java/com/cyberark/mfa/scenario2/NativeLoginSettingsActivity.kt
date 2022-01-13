@@ -33,7 +33,9 @@ import com.cyberark.mfa.utils.PreferenceConstants
 
 class NativeLoginSettingsActivity : AppCompatActivity() {
 
-    private lateinit var basicLoginURL: EditText
+    private lateinit var nativeLoginURL: EditText
+    private lateinit var mfaWidgetHostUrl: EditText
+    private lateinit var mfaWidgetId: EditText
 
     // Device biometrics checkbox variables
     private lateinit var biometricsOnAppLaunchCheckbox: CheckBox
@@ -44,12 +46,12 @@ class NativeLoginSettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_basic_login_settings)
+        setContentView(R.layout.activity_native_login_settings)
         supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.BLACK))
         title = getString(R.string.settings)
         invokeUI()
         updateUI()
-        val basicLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.BASIC_LOGIN_URL, null)
+        val basicLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.NATIVE_LOGIN_URL, null)
         if (basicLoginURLSP == null) {
             saveInSharedPreference()
         }
@@ -78,11 +80,15 @@ class NativeLoginSettingsActivity : AppCompatActivity() {
             }
         }
 
-        basicLoginURL = findViewById(R.id.editTextBasicLoginURL)
+        nativeLoginURL = findViewById(R.id.editTextBasicLoginURL)
+        mfaWidgetHostUrl = findViewById(R.id.editTextMFAWidgetHostURL)
+        mfaWidgetId = findViewById(R.id.editTextMFAWidgetId)
     }
 
     private fun updateUI() {
-        basicLoginURL.setText(getString(R.string.cyberark_account_basic_login_url))
+        nativeLoginURL.setText(getString(R.string.cyberark_account_native_login_url))
+        mfaWidgetHostUrl.setText(getString(R.string.cyberark_widget_host_url))
+        mfaWidgetId.setText(getString(R.string.cyberark_widget_id))
 
         // Get the shared preference status and handle device biometrics on app launch
         biometricsOnAppLaunchCheckbox.isChecked =
@@ -114,7 +120,10 @@ class NativeLoginSettingsActivity : AppCompatActivity() {
     }
 
     private fun saveInSharedPreference() {
-        CyberArkPreferenceUtil.putString(PreferenceConstants.BASIC_LOGIN_URL, basicLoginURL.text.toString())
+        CyberArkPreferenceUtil.putString(PreferenceConstants.NATIVE_LOGIN_URL, nativeLoginURL.text.toString())
+        CyberArkPreferenceUtil.putString(PreferenceConstants.MFA_WIDGET_URL, mfaWidgetHostUrl.text.toString())
+        CyberArkPreferenceUtil.putString(PreferenceConstants.MFA_WIDGET_ID, mfaWidgetId.text.toString())
+
         CyberArkPreferenceUtil.putBoolean(
             PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH_NL,
             biometricsOnAppLaunchRequested
@@ -126,9 +135,17 @@ class NativeLoginSettingsActivity : AppCompatActivity() {
     }
 
     private fun verifyAndSaveInSharedPreference() {
-        val basicLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.BASIC_LOGIN_URL, null)
-        if (!basicLoginURLSP.equals(basicLoginURL.text.toString())) {
-            basicLoginURL.setText(basicLoginURLSP)
+        val nativeLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.NATIVE_LOGIN_URL, null)
+        if (!nativeLoginURLSP.equals(nativeLoginURL.text.toString())) {
+            nativeLoginURL.setText(nativeLoginURLSP)
+        }
+        val mfaWidgetURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_URL, null)
+        if (!mfaWidgetURLSP.equals(mfaWidgetHostUrl.text.toString())) {
+            mfaWidgetHostUrl.setText(mfaWidgetURLSP)
+        }
+        val mfaWidgetID = CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_ID, null)
+        if (!mfaWidgetID.equals(mfaWidgetId.text.toString())) {
+            mfaWidgetId.setText(mfaWidgetID)
         }
     }
 

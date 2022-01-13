@@ -24,7 +24,6 @@ import java.util.*
 /**
  * CyberArk account builder
  *
- * @property basicLoginURL: basic login URL
  * @property systemURL: system URL
  * @property hostURL: host URL
  * @property clientId: client ID
@@ -35,7 +34,6 @@ import java.util.*
  * @property redirectUri: client callback URI
  */
 class CyberArkAccountBuilder(
-    private val basicLoginURL: String?,
     private val systemURL: String?,
     private val hostURL: String?,
     private val clientId: String?,
@@ -72,7 +70,6 @@ class CyberArkAccountBuilder(
     /**
      * Builder data class
      *
-     * @property basicLoginURL: basic login URL
      * @property systemURL: system URL
      * @property hostURL: host URL
      * @property clientId: client ID
@@ -83,7 +80,6 @@ class CyberArkAccountBuilder(
      * @property redirectUri: client callback URI
      */
     data class Builder(
-        var basicLoginURL: String? = null,
         var systemURL: String? = null,
         var hostURL: String? = null,
         var clientId: String? = null,
@@ -93,13 +89,6 @@ class CyberArkAccountBuilder(
         var scope: String? = null,
         var redirectUri: String? = null
     ) {
-
-        /**
-         * Set basic login URL
-         *
-         * @param basicLoginURL
-         */
-        fun basicLoginURL(basicLoginURL: String) = apply { this.basicLoginURL = basicLoginURL }
 
         /**
          * Set System URL
@@ -162,7 +151,6 @@ class CyberArkAccountBuilder(
          *
          */
         fun build() = CyberArkAccountBuilder(
-            basicLoginURL,
             systemURL,
             hostURL,
             clientId,
@@ -225,12 +213,6 @@ class CyberArkAccountBuilder(
      */
     val getClientId: String
         get() = clientId.toString()
-
-    /**
-     * Get basic login URL
-     */
-    val getBasicLoginUrl: String
-        get() = basicLoginURL.toString()
 
     /**
      * Get Base URL

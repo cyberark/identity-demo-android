@@ -62,7 +62,9 @@
     <string name="cyberark_account_scheme">demo</string>
 
     // Step-up authentication using MFA widget
-    <string name="cyberark_account_basic_login_url">https://ciam.cyberarklab.com</string>
+    <string name="cyberark_account_native_login_url">https://ciam.cyberarklab.com</string>
+    <string name="cyberark_widget_host_url">https://auth.cyberarklab.com</string>
+    <string name="cyberark_widget_id">5f06f919–237b-4d5b-8ccb-516e82e1b13e</string>
 </resources>
 
 <!--<resources>

@@ -116,6 +116,8 @@
     <string name="dialog_login_error_desc">Invalid username and password, please try again.</string>
     <string name="step_up_authentication">Step-up authentication config:</string>
     <string name="cyberark_hosted_login_configs">CyberArk hosted login config:</string>
-    <string name="basic_login_url">Basic Login URL</string>
+    <string name="native_login_url">Native Login URL</string>
+    <string name="mfa_widget_url">Widget host URL</string>
+    <string name="mfa_widget_id">Widget ID</string>
     <string name="on_transfer_funds">On transfer funds</string>
 </resources>
