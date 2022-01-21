@@ -48,6 +48,8 @@ class MFAWidgetWebView : WebView {
         settings.domStorageEnabled = false
         settings.javaScriptCanOpenWindowsAutomatically = true
         settings.mediaPlaybackRequiresUserGesture = false
+        settings.allowFileAccess = false
+        settings.allowContentAccess = false
         settings.cacheMode = WebSettings.LOAD_NO_CACHE
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
