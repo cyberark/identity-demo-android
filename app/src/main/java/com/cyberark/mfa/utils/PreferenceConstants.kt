@@ -33,6 +33,7 @@ object PreferenceConstants {
     const val NATIVE_LOGIN_URL = "native_login_url"
     const val MFA_WIDGET_URL = "mfa_widget_url"
     const val MFA_WIDGET_ID = "mfa_widget_id"
+    const val MFA_WIDGET_USERNAME = "mfa_widget_username"
 
     const val INVOKE_BIOMETRICS_ON_APP_LAUNCH = "INVOKE_BIOMETRICS_ON_APP_LAUNCH"
     const val INVOKE_BIOMETRICS_ON_QR_CODE_LAUNCH = "INVOKE_BIOMETRICS_ON_QR_CODE_LAUNCH"

@@ -63,6 +63,8 @@ internal class BasicLoginViewModel(private val cyberArkAuthHelper: CyberArkAuthH
                 basicLoginResponse.postValue(ResponseHandler.success(basicLoginData))
             } catch (e: HttpException) {
                 basicLoginResponse.postValue(ResponseHandler.error(e.toString(), null))
+            } catch (e: Exception) {
+                basicLoginResponse.postValue(ResponseHandler.error(e.toString(), null))
             }
         }
     }

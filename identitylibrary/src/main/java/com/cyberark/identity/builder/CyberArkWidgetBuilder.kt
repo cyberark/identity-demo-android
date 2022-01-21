@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
+ * Copyright (c) 2022 CyberArk Software Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.cyberark.identity.builder
 
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import java.net.URLDecoder
 import java.util.*
 
 /**
@@ -39,6 +40,7 @@ class CyberArkWidgetBuilder(
 
     companion object {
         const val KEY_WIDGET_ID = "id"
+        const val KEY_USER_NAME = "username"
     }
 
     /**
@@ -97,15 +99,18 @@ class CyberArkWidgetBuilder(
     }
 
     /**
-     * Get OAuth base URL
+     * Get MFA Widget base URL
      */
-    val getMFAWidgetBaseURL: String
-        get() = baseURL!!.newBuilder()
+    fun getMFAWidgetBaseURL(username: String): String {
+        val widgetURL = baseURL!!.newBuilder()
             .addPathSegment("Authenticationwidgets")
             .addPathSegment("WidgetPage")
-            .addQueryParameter(KEY_WIDGET_ID, widgetId.toString())
+            .addQueryParameter(KEY_WIDGET_ID, widgetId)
+            .addQueryParameter(KEY_USER_NAME, username)
             .build()
             .toString()
+        return URLDecoder.decode(widgetURL, "UTF-8")
+    }
 
     /**
      * Get native login URL
