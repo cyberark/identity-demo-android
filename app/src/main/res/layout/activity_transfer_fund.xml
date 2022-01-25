@@ -107,7 +107,8 @@
                         android:id="@+id/edit_text_amount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
+                        android:maxLength="6"
                         android:singleLine="true"
                         android:hint="@string/amount"/>
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.identity.activity
+package com.cyberark.identity.activity.view
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -25,7 +25,6 @@ import android.webkit.*
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import com.cyberark.identity.R
-import com.cyberark.identity.activity.view.MFAWidgetWebView
 import com.cyberark.identity.util.widget.WidgetConstants
 
 class CyberArkMFAWidgetFragment : Fragment(R.layout.fragment_mfa_widget) {
@@ -77,7 +76,7 @@ class CyberArkMFAWidgetFragment : Fragment(R.layout.fragment_mfa_widget) {
 
         @JavascriptInterface
         fun loginSuccessHandler() {
-            Log.i("loginSuccessHandler", "loginSuccessHandler")
+            Log.i("CyberArkMFAWidgetFragment", "loginSuccessHandler()")
             mCallback.onLoginSuccess()
         }
     }

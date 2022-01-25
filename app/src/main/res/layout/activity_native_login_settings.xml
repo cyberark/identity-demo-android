@@ -60,15 +60,6 @@
                     android:textSize="16sp"
                     android:checked="true"/>
 
-                <CheckBox
-                    android:id="@+id/biometrics_on_transfer_fund_checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="@string/on_transfer_funds"
-                    android:textSize="16sp"
-                    android:checked="true"/>
-
             </LinearLayout>
 
             <LinearLayout

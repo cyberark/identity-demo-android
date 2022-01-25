@@ -45,7 +45,6 @@ import com.cyberark.mfa.utils.PreferenceConstants
 class TransferFundActivity : AppCompatActivity() {
 
     private var biometricsOnAppLaunchRequested: Boolean = false
-    private var biometricsOnTransferFundRequested: Boolean = false
 
     private lateinit var mfaWidgetBuilder: CyberArkWidgetBuilder
     private lateinit var editTextAmount: EditText
@@ -85,7 +84,6 @@ class TransferFundActivity : AppCompatActivity() {
         CyberArkPreferenceUtil.remove(Constants.SESSION_TOKEN_IV)
         // Remove biometrics settings status
         CyberArkPreferenceUtil.remove(PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH_NL)
-        CyberArkPreferenceUtil.remove(PreferenceConstants.INVOKE_BIOMETRICS_ON_TRANSFER_FUND_NL)
         CyberArkPreferenceUtil.remove(PreferenceConstants.MFA_WIDGET_USERNAME)
         CyberArkPreferenceUtil.apply()
 
@@ -106,10 +104,6 @@ class TransferFundActivity : AppCompatActivity() {
                 PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH_NL,
                 true
             )
-            CyberArkPreferenceUtil.putBoolean(
-                PreferenceConstants.INVOKE_BIOMETRICS_ON_TRANSFER_FUND_NL,
-                true
-            )
         }
 
         // Invoke biometric utility instance
@@ -120,13 +114,6 @@ class TransferFundActivity : AppCompatActivity() {
         biometricsOnAppLaunchRequested =
             CyberArkPreferenceUtil.getBoolean(
                 PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH_NL,
-                false
-            )
-
-        // Get the shared preference status and handle device biometrics on transfer fund
-        biometricsOnTransferFundRequested =
-            CyberArkPreferenceUtil.getBoolean(
-                PreferenceConstants.INVOKE_BIOMETRICS_ON_TRANSFER_FUND_NL,
                 false
             )
 
@@ -144,16 +131,12 @@ class TransferFundActivity : AppCompatActivity() {
             if (editTextAmount.text.trim().isEmpty()) {
                 enterAmount.visibility = View.VISIBLE
             } else {
-                if (biometricsOnTransferFundRequested) {
-                    showBiometrics()
-                } else {
-                    val intent = Intent(this, MFAWidgetActivity::class.java)
-                    intent.putExtra(
-                        "MFA_WIDGET_URL",
-                        mfaWidgetBuilder.getMFAWidgetBaseURL(mfaWidgetUsername)
-                    )
-                    startActivity(intent)
-                }
+                val intent = Intent(this, MFAWidgetActivity::class.java)
+                intent.putExtra(
+                    "MFA_WIDGET_URL",
+                    mfaWidgetBuilder.getMFAWidgetBaseURL(mfaWidgetUsername)
+                )
+                startActivity(intent)
             }
             editTextAmount.clearFocus()
         }
@@ -221,13 +204,6 @@ class TransferFundActivity : AppCompatActivity() {
 
             if (biometricsOnAppLaunchRequested) {
                 biometricsOnAppLaunchRequested = false
-            } else if (biometricsOnTransferFundRequested) {
-                val intent = Intent(this@TransferFundActivity, MFAWidgetActivity::class.java)
-                intent.putExtra(
-                    "MFA_WIDGET_URL",
-                    mfaWidgetBuilder.getMFAWidgetBaseURL(mfaWidgetUsername)
-                )
-                startActivity(intent)
             }
         }
 

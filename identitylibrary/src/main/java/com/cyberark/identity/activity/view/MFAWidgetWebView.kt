@@ -20,25 +20,22 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
+import android.view.View
 import android.webkit.WebSettings
 import android.webkit.WebView
 
 class MFAWidgetWebView : WebView {
 
     constructor(context: Context) : super(context) {
-        initView(context)
+        initView()
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        initView(context)
+        initView()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun initView(context: Context) {
-        // Clearing WebView data
-        this.clearHistory()
-        this.clearFormData()
-        this.clearCache(true)
+    private fun initView() {
 
         // Enable javascript in web view
         settings.javaScriptEnabled = true
@@ -56,5 +53,6 @@ class MFAWidgetWebView : WebView {
             settings.safeBrowsingEnabled = true
         }
         this.fitsSystemWindows = true
+        this.setLayerType(View.LAYER_TYPE_HARDWARE, null)
     }
 }

@@ -29,6 +29,7 @@ class PopupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.activity_popup)
+        window.setBackgroundDrawableResource(android.R.color.transparent)
 
         val headerText: TextView? = findViewById(R.id.header_text)
         headerText?.text = intent.extras?.getString("title")

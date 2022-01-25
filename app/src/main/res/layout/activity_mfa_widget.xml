@@ -24,7 +24,7 @@
         android:id="@+id/fragment_container_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.cyberark.identity.activity.CyberArkMFAWidgetFragment" />
+        android:name="com.cyberark.identity.activity.view.CyberArkMFAWidgetFragment" />
 
     <ProgressBar
         android:id="@+id/progressBar_mfa_activity"
