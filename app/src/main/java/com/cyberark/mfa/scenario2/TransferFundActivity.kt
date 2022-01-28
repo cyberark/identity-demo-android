@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2022 CyberArk Software Ltd. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.cyberark.mfa.scenario2
 
 import android.content.Intent
@@ -14,10 +30,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.cyberark.identity.util.AlertButton
-import com.cyberark.identity.util.AlertButtonType
-import com.cyberark.identity.util.AlertDialogButtonCallback
-import com.cyberark.identity.util.AlertDialogHandler
+import com.cyberark.identity.builder.CyberArkWidgetBuilder
+import com.cyberark.identity.util.*
 import com.cyberark.identity.util.biometric.CyberArkBiometricCallback
 import com.cyberark.identity.util.biometric.CyberArkBiometricManager
 import com.cyberark.identity.util.biometric.CyberArkBiometricPromptUtility
@@ -25,12 +39,17 @@ import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
 import com.cyberark.mfa.activity.WelcomeActivity
+import com.cyberark.mfa.utils.AppConfig
 import com.cyberark.mfa.utils.PreferenceConstants
 
 class TransferFundActivity : AppCompatActivity() {
 
     private var biometricsOnAppLaunchRequested: Boolean = false
-    private var biometricsOnTransferFundRequested: Boolean = false
+
+    private lateinit var mfaWidgetBuilder: CyberArkWidgetBuilder
+    private lateinit var editTextAmount: EditText
+    private lateinit var enterAmount: TextView
+    private lateinit var mfaWidgetUsername: String
 
     // SDK biometrics utility variable
     private lateinit var cyberArkBiometricPromptUtility: CyberArkBiometricPromptUtility
@@ -40,14 +59,23 @@ class TransferFundActivity : AppCompatActivity() {
         setContentView(R.layout.activity_transfer_fund)
         supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.BLACK))
         title = getString(R.string.acme)
+        mfaWidgetBuilder = AppConfig.setupNativeLoginFromSharedPreference(this)
+        mfaWidgetUsername =
+            CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_USERNAME, null)
+                .toString()
         updateUI()
     }
 
     override fun onResume() {
         super.onResume()
-        if(biometricsOnAppLaunchRequested) {
+        if (biometricsOnAppLaunchRequested) {
             showBiometrics()
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        editTextAmount.text = null
     }
 
     private fun cleanUp() {
@@ -56,7 +84,7 @@ class TransferFundActivity : AppCompatActivity() {
         CyberArkPreferenceUtil.remove(Constants.SESSION_TOKEN_IV)
         // Remove biometrics settings status
         CyberArkPreferenceUtil.remove(PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH_NL)
-        CyberArkPreferenceUtil.remove(PreferenceConstants.INVOKE_BIOMETRICS_ON_TRANSFER_FUND_NL)
+        CyberArkPreferenceUtil.remove(PreferenceConstants.MFA_WIDGET_USERNAME)
         CyberArkPreferenceUtil.apply()
 
         // Start HomeActivity
@@ -76,10 +104,6 @@ class TransferFundActivity : AppCompatActivity() {
                 PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH_NL,
                 true
             )
-            CyberArkPreferenceUtil.putBoolean(
-                PreferenceConstants.INVOKE_BIOMETRICS_ON_TRANSFER_FUND_NL,
-                true
-            )
         }
 
         // Invoke biometric utility instance
@@ -93,32 +117,26 @@ class TransferFundActivity : AppCompatActivity() {
                 false
             )
 
-        // Get the shared preference status and handle device biometrics on transfer fund
-        biometricsOnTransferFundRequested =
-            CyberArkPreferenceUtil.getBoolean(
-                PreferenceConstants.INVOKE_BIOMETRICS_ON_TRANSFER_FUND_NL,
-                false
-            )
-
         setupHyperlink()
-        val enterAmount = findViewById<TextView>(R.id.enter_amount)
-        val editTextAmount = findViewById<EditText>(R.id.edit_text_amount)
+        enterAmount = findViewById(R.id.enter_amount)
+        editTextAmount = findViewById(R.id.edit_text_amount)
 
         // set edit text focus change listener
-        editTextAmount.onFocusChangeListener  = View.OnFocusChangeListener { view, status ->
-            if (status){
+        editTextAmount.onFocusChangeListener = View.OnFocusChangeListener { _, status ->
+            if (status) {
                 enterAmount.visibility = View.GONE
             }
         }
         findViewById<Button>(R.id.button_transfer_funds).setOnClickListener {
-            if(editTextAmount.text.trim().isEmpty()) {
+            if (editTextAmount.text.trim().isEmpty()) {
                 enterAmount.visibility = View.VISIBLE
             } else {
-                if(biometricsOnTransferFundRequested) {
-                    showBiometrics()
-                } else {
-                    Toast.makeText(this@TransferFundActivity, "Invoke MFA Widget", Toast.LENGTH_SHORT).show()
-                }
+                val intent = Intent(this, MFAWidgetActivity::class.java)
+                intent.putExtra(
+                    "MFA_WIDGET_URL",
+                    mfaWidgetBuilder.getMFAWidgetBaseURL(mfaWidgetUsername)
+                )
+                startActivity(intent)
             }
             editTextAmount.clearFocus()
         }
@@ -165,7 +183,11 @@ class TransferFundActivity : AppCompatActivity() {
      *
      */
     private fun showBiometrics() {
-        cyberArkBiometricPromptUtility.showBioAuthentication(this, null, "Use App Pin", false)
+        cyberArkBiometricPromptUtility.showBioAuthentication(
+            this,
+            null,
+            "Use App Pin",
+            false)
     }
 
     /**
@@ -180,10 +202,8 @@ class TransferFundActivity : AppCompatActivity() {
                 Toast.LENGTH_LONG
             ).show()
 
-            if(biometricsOnAppLaunchRequested) {
+            if (biometricsOnAppLaunchRequested) {
                 biometricsOnAppLaunchRequested = false
-            } else if(biometricsOnTransferFundRequested) {
-                Toast.makeText(this@TransferFundActivity, "Invoke MFA Widget", Toast.LENGTH_SHORT).show()
             }
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
+ * Copyright (c) 2022 CyberArk Software Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,20 +25,25 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.LiveData
+import com.cyberark.identity.builder.CyberArkWidgetBuilder
 import com.cyberark.identity.data.model.BasicLoginModel
 import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.*
 import com.cyberark.identity.util.keystore.KeyStoreProvider
+import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
 import com.cyberark.mfa.utils.AppConfig
+import com.cyberark.mfa.utils.PreferenceConstants
 
 class NativeLoginActivity : AppCompatActivity() {
 
     // Progress indicator variable
     private lateinit var progressBar: ProgressBar
+    private lateinit var loginErrorAlert: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,9 +93,9 @@ class NativeLoginActivity : AppCompatActivity() {
      * @param password: login password
      */
     private fun basicLogin(username: String, password: String) {
-        val account = AppConfig.setupBasicLoginFromSharedPreference(this)
+        val account: CyberArkWidgetBuilder = AppConfig.setupNativeLoginFromSharedPreference(this)
         val authResponseHandler: LiveData<ResponseHandler<BasicLoginModel>> =
-            CyberArkAuthProvider.basicLogin(account)
+            CyberArkAuthProvider.nativeLogin(account)
                 .start(this, username, password)
         // Verify if there is any active observer, if not then add observer to get API response
         if (!authResponseHandler.hasActiveObservers()) {
@@ -99,11 +104,17 @@ class NativeLoginActivity : AppCompatActivity() {
                     ResponseStatus.SUCCESS -> {
                         // Save session token
                         KeyStoreProvider.get().saveSessionToken(it.data!!.Result.SessionUuid)
+                        // Save mfa widget username
+                        CyberArkPreferenceUtil.putString(
+                            PreferenceConstants.MFA_WIDGET_USERNAME,
+                            it.data!!.Result.MFAUserName
+                        )
                         // Hide progress indicator
                         progressBar.visibility = View.GONE
                         // Start TransferFundActivity
                         val intent = Intent(this, TransferFundActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
                         finish()
                     }
@@ -149,10 +160,11 @@ class NativeLoginActivity : AppCompatActivity() {
             override fun tappedButtonType(buttonType: AlertButtonType) {
                 if (buttonType == AlertButtonType.POSITIVE) {
                     // User cancels dialog
+                    loginErrorAlert.dismiss()
                 }
             }
         })
-        enrollFingerPrintDlg.displayAlert(
+        loginErrorAlert = enrollFingerPrintDlg.displayAlert(
             this,
             this.getString(R.string.dialog_login_error_header_text),
             this.getString(R.string.dialog_login_error_desc), true,

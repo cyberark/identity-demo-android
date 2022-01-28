@@ -34,7 +34,6 @@ import com.cyberark.mfa.utils.PreferenceConstants
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var basicLoginURL: EditText
     private lateinit var systemURL: EditText
     private lateinit var hostURL: EditText
     private lateinit var clientId: EditText
@@ -44,6 +43,10 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var redirectUri: EditText
     private lateinit var host: EditText
     private lateinit var scheme: EditText
+
+    private lateinit var nativeLoginURL: EditText
+    private lateinit var mfaWidgetHostUrl: EditText
+    private lateinit var mfaWidgetId: EditText
 
     // Device biometrics checkbox variables
     private lateinit var biometricsOnAppLaunchCheckbox: CheckBox
@@ -91,7 +94,6 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        basicLoginURL = findViewById(R.id.editTextBasicLoginURL)
         systemURL = findViewById(R.id.editTextSystemURL)
         hostURL = findViewById(R.id.editTextHostURL)
         clientId = findViewById(R.id.editTextClientId)
@@ -102,10 +104,13 @@ class SettingsActivity : AppCompatActivity() {
         redirectUri = findViewById(R.id.editTextRedirectURI)
         host = findViewById(R.id.editTextHost)
         scheme = findViewById(R.id.editTextScheme)
+
+        nativeLoginURL = findViewById(R.id.editTextBasicLoginURL)
+        mfaWidgetHostUrl = findViewById(R.id.editTextMFAWidgetHostURL)
+        mfaWidgetId = findViewById(R.id.editTextMFAWidgetId)
     }
 
     private fun updateUI() {
-        basicLoginURL.setText(getString(R.string.cyberark_account_basic_login_url))
         systemURL.setText(getString(R.string.cyberark_account_system_url))
         hostURL.setText(getString(R.string.cyberark_account_host_url))
         clientId.setText(getString(R.string.cyberark_account_client_id))
@@ -115,6 +120,10 @@ class SettingsActivity : AppCompatActivity() {
         redirectUri.setText(getString(R.string.cyberark_account_redirect_uri))
         host.setText(getString(R.string.cyberark_account_host))
         scheme.setText(getString(R.string.cyberark_account_scheme))
+
+        nativeLoginURL.setText(getString(R.string.cyberark_account_native_login_url))
+        mfaWidgetHostUrl.setText(getString(R.string.cyberark_widget_host_url))
+        mfaWidgetId.setText(getString(R.string.cyberark_widget_id))
 
         // Get the shared preference status and handle device biometrics on app launch
         biometricsOnAppLaunchCheckbox.isChecked =
@@ -157,7 +166,6 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun saveInSharedPreference() {
-        CyberArkPreferenceUtil.putString(PreferenceConstants.BASIC_LOGIN_URL, basicLoginURL.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.SYSTEM_URL, systemURL.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.HOST_URL, hostURL.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.CLIENT_ID, clientId.text.toString())
@@ -168,6 +176,10 @@ class SettingsActivity : AppCompatActivity() {
         )
         CyberArkPreferenceUtil.putString(PreferenceConstants.HOST, host.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.SCHEME, scheme.text.toString())
+
+        CyberArkPreferenceUtil.putString(PreferenceConstants.NATIVE_LOGIN_URL, nativeLoginURL.text.toString())
+        CyberArkPreferenceUtil.putString(PreferenceConstants.MFA_WIDGET_URL, mfaWidgetHostUrl.text.toString())
+        CyberArkPreferenceUtil.putString(PreferenceConstants.MFA_WIDGET_ID, mfaWidgetId.text.toString())
 
         CyberArkPreferenceUtil.putBoolean(
             PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH,
@@ -186,10 +198,6 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun verifyAndSaveInSharedPreference() {
-        val basicLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.BASIC_LOGIN_URL, null)
-        if (!basicLoginURLSP.equals(basicLoginURL.text.toString())) {
-            basicLoginURL.setText(basicLoginURLSP)
-        }
         val systemURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.SYSTEM_URL, null)
         if (!systemURLSP.equals(systemURL.text.toString())) {
             systemURL.setText(systemURLSP)
@@ -217,6 +225,19 @@ class SettingsActivity : AppCompatActivity() {
         val schemeSP = CyberArkPreferenceUtil.getString(PreferenceConstants.SCHEME, null)
         if (!schemeSP.equals(scheme.text.toString())) {
             scheme.setText(schemeSP)
+        }
+
+        val nativeLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.NATIVE_LOGIN_URL, null)
+        if (!nativeLoginURLSP.equals(nativeLoginURL.text.toString())) {
+            nativeLoginURL.setText(nativeLoginURLSP)
+        }
+        val mfaWidgetURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_URL, null)
+        if (!mfaWidgetURLSP.equals(mfaWidgetHostUrl.text.toString())) {
+            mfaWidgetHostUrl.setText(mfaWidgetURLSP)
+        }
+        val mfaWidgetID = CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_ID, null)
+        if (!mfaWidgetID.equals(mfaWidgetId.text.toString())) {
+            mfaWidgetId.setText(mfaWidgetID)
         }
     }
 

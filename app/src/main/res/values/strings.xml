@@ -107,7 +107,7 @@
     <string name="enter_your_password">Enter your password:</string>
     <string name="once_the_user_enters_the_amount">Once the user enters the amount and clicks on “Transfer funds” the CyberArk Identity MFA widget is loaded, and the user is asked to clear the challenges.</string>
     <string name="once_user_clears_the_challenges">Once user clears the challenges the user will be able to do the funds transfer successfully.</string>
-    <string name="please_visit_to_get_detailed_instruction_MFA_widget">\nPlease visit <a href="https://identity-developer.cyberark.com/docs/login-widget"><b>here</b></a> to get detailed instructions to create the MFA widget.</string>
+    <string name="please_visit_to_get_detailed_instruction_MFA_widget">\nPlease visit <a href="https://identity-developer.cyberark.com/docs/cyberark-idetity-sdk-for-android/"><b>here</b></a> to get detailed instructions to create the MFA widget.</string>
     <string name="please_visit_to_get_detailed_instruction">\nPlease visit <a href="https://identity-developer.cyberark.com/docs/cyberark-idetity-sdk-for-android/"><b>here</b></a> for details on implementation.</string>
     <string name="transfer_funds">&#160;&#160;Transfer funds&#160;&#160;</string>
     <string name="amount">Amount</string>
@@ -116,6 +116,11 @@
     <string name="dialog_login_error_desc">Invalid username and password, please try again.</string>
     <string name="step_up_authentication">Step-up authentication config:</string>
     <string name="cyberark_hosted_login_configs">CyberArk hosted login config:</string>
-    <string name="basic_login_url">Basic Login URL</string>
+    <string name="native_login_url">Native Login URL</string>
+    <string name="mfa_widget_url">Widget host URL</string>
+    <string name="mfa_widget_id">Widget ID</string>
     <string name="on_transfer_funds">On transfer funds</string>
+    <string name="button_done">Done</string>
+    <string name="transfer_fund_login_success_title">Awesome!</string>
+    <string name="transfer_fund_login_success_desc">Your funds have been transferred successfully</string>
 </resources>

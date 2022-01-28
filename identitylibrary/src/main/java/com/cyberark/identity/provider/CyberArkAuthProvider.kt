@@ -21,14 +21,9 @@ import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.cyberark.identity.builder.CyberArkAccountBuilder
+import com.cyberark.identity.builder.CyberArkWidgetBuilder
 import com.cyberark.identity.data.model.*
-import com.cyberark.identity.provider.manager.CyberArkAuthManager
-import com.cyberark.identity.provider.manager.CyberArkBasicLoginManager
-import com.cyberark.identity.provider.manager.CyberArkEnrollmentManager
-import com.cyberark.identity.provider.manager.CyberArkFCMTokenManager
-import com.cyberark.identity.provider.manager.CyberArkOTPEnrollManager
-import com.cyberark.identity.provider.manager.CyberArkProcessNotification
-import com.cyberark.identity.provider.manager.CyberArkSubmitOTPManager
+import com.cyberark.identity.provider.manager.*
 import com.cyberark.identity.util.ResponseHandler
 import org.json.JSONObject
 
@@ -74,8 +69,8 @@ object CyberArkAuthProvider {
         return SubmitOTPBuilder(account)
     }
 
-    fun basicLogin(account: CyberArkAccountBuilder): BasicLoginBuilder {
-        return BasicLoginBuilder(account)
+    fun nativeLogin(account: CyberArkWidgetBuilder): NativeLoginBuilder {
+        return NativeLoginBuilder(account)
     }
 
     /**
@@ -316,19 +311,19 @@ object CyberArkAuthProvider {
     }
 
     /**
-     * Basic login builder class
+     * Native login builder class
      *
      */
-    class BasicLoginBuilder internal constructor(
-        private val account: CyberArkAccountBuilder
+    class NativeLoginBuilder internal constructor(
+        private val account: CyberArkWidgetBuilder
     ) {
         /**
-         * Basic login using username and password
+         * Native login using username and password
          *
          * @param context: Activity Context
          * @param username: login username
          * @param password: login password
-         * @return LiveData<ResponseHandler<BasicLoginModel>>: LiveData response handler for BasicLoginModel
+         * @return LiveData<ResponseHandler<BasicLoginModel>>: LiveData response handler for NativeLoginModel
          */
         fun start(
             context: Context,

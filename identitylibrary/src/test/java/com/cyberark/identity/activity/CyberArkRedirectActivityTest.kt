@@ -2,6 +2,7 @@ package com.cyberark.identity.activity
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.test.core.app.ApplicationProvider
 import com.cyberark.identity.testUtility.RobolectricBase
 import org.junit.Assert.assertEquals
@@ -19,7 +20,7 @@ class CyberArkRedirectActivityTest : RobolectricBase() {
         activityController.create()
         ApplicationProvider.getApplicationContext<Context>()
         val startedActivity =
-            shadowOf(activityController.get()).getNextStartedActivity().component?.className;
+            shadowOf(activityController.get()).getNextStartedActivity().component?.className
         assertEquals(startedActivity,CyberArkAuthActivity::class.java.name)
     }
 
@@ -31,6 +32,7 @@ class CyberArkRedirectActivityTest : RobolectricBase() {
 
     private fun createIntent(): Intent {
         val intent = Intent()
+        intent.data = Uri.EMPTY
         return intent
     }
 }

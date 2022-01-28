@@ -188,7 +188,7 @@ open class CyberArkQRCodeLoginActivity : AppCompatActivity(), EasyPermissions.Pe
                     // Add QR Code Authentication result in intent bundle
                     intent.putExtra(
                         "QR_CODE_AUTH_RESULT",
-                        "QR Code Authentication is failed"
+                        "QR Code Authentication has failed"
                     )
                     // Set result
                     setResult(RESULT_OK, intent)

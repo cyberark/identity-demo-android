@@ -18,6 +18,7 @@ package com.cyberark.mfa.utils
 
 import android.content.Context
 import com.cyberark.identity.builder.CyberArkAccountBuilder
+import com.cyberark.identity.builder.CyberArkWidgetBuilder
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
 
@@ -108,45 +109,47 @@ object AppConfig {
     }
 
     /**
-     * Set-up account for basic login flow
+     * Set-up account for native login flow
      * update configuration from SharedPreference
      *
      * @param context: Activity/Application context
-     * @return cyberArkAccountBuilder: CyberArkAccountBuilder instance
+     * @return CyberArkWidgetBuilder instance
      */
-    fun setupBasicLoginFromSharedPreference(context: Context): CyberArkAccountBuilder {
-        val basicLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.BASIC_LOGIN_URL, null)
-        if (basicLoginURLSP == null) {
-            saveBasicLoginURLInSharedPreference(context)
+    fun setupNativeLoginFromSharedPreference(context: Context): CyberArkWidgetBuilder{
+        val nativeLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.NATIVE_LOGIN_URL, null)
+        if (nativeLoginURLSP == null) {
+            saveNativeLoginURLInSharedPreference(context)
         }
-        val basicLoginUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.BASIC_LOGIN_URL, null)
+        val nativeLoginUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.NATIVE_LOGIN_URL, null)
         val systemUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.SYSTEM_URL, null)
-        val hostUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.HOST_URL, null)
+        val widgetHostUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_URL, null)
+        val widgetId = CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_ID, null)
 
-        return CyberArkAccountBuilder.Builder()
-            .basicLoginURL(basicLoginUrl.toString())
+        return CyberArkWidgetBuilder.Builder()
+            .nativeLoginURL(nativeLoginUrl.toString())
             .systemURL(systemUrl.toString())
-            .hostURL(hostUrl.toString())
+            .hostURL(widgetHostUrl.toString())
+            .widgetId(widgetId.toString())
             .build()
     }
 
     /**
-     * Save basic login url in shared preference
+     * Save native login url, host url and widget id in shared preference
      *
      * @param context: Activity/Application context
      */
-    private fun saveBasicLoginURLInSharedPreference(context: Context) {
+    private fun saveNativeLoginURLInSharedPreference(context: Context) {
         CyberArkPreferenceUtil.putString(
-            PreferenceConstants.BASIC_LOGIN_URL,
-            context.getString(R.string.cyberark_account_basic_login_url)
+            PreferenceConstants.NATIVE_LOGIN_URL,
+            context.getString(R.string.cyberark_account_native_login_url)
         )
         CyberArkPreferenceUtil.putString(
-            PreferenceConstants.SYSTEM_URL,
-            context.getString(R.string.cyberark_account_system_url)
+            PreferenceConstants.MFA_WIDGET_URL,
+            context.getString(R.string.cyberark_widget_host_url)
         )
         CyberArkPreferenceUtil.putString(
-            PreferenceConstants.HOST_URL,
-            context.getString(R.string.cyberark_account_host_url)
+            PreferenceConstants.MFA_WIDGET_ID,
+            context.getString(R.string.cyberark_widget_id)
         )
     }
 }

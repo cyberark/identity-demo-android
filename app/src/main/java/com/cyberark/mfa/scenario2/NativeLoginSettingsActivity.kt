@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
+ * Copyright (c) 2022 CyberArk Software Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,23 +33,22 @@ import com.cyberark.mfa.utils.PreferenceConstants
 
 class NativeLoginSettingsActivity : AppCompatActivity() {
 
-    private lateinit var basicLoginURL: EditText
+    private lateinit var nativeLoginURL: EditText
+    private lateinit var mfaWidgetHostUrl: EditText
+    private lateinit var mfaWidgetId: EditText
 
     // Device biometrics checkbox variables
     private lateinit var biometricsOnAppLaunchCheckbox: CheckBox
-    private lateinit var biometricsOnTransferFundCheckbox: CheckBox
-
     private var biometricsOnAppLaunchRequested: Boolean = false
-    private var biometricsOnTransferFundRequested: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_basic_login_settings)
+        setContentView(R.layout.activity_native_login_settings)
         supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.BLACK))
         title = getString(R.string.settings)
         invokeUI()
         updateUI()
-        val basicLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.BASIC_LOGIN_URL, null)
+        val basicLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.NATIVE_LOGIN_URL, null)
         if (basicLoginURLSP == null) {
             saveInSharedPreference()
         }
@@ -58,7 +57,6 @@ class NativeLoginSettingsActivity : AppCompatActivity() {
 
     private fun invokeUI() {
         biometricsOnAppLaunchCheckbox = findViewById(R.id.biometrics_on_app_launch_checkbox)
-        biometricsOnTransferFundCheckbox = findViewById(R.id.biometrics_on_transfer_fund_checkbox)
 
         val beforeLoginLayout: LinearLayout = findViewById(R.id.before_login_layout)
         val afterLoginLayout: LinearLayout = findViewById(R.id.after_login_layout)
@@ -78,11 +76,15 @@ class NativeLoginSettingsActivity : AppCompatActivity() {
             }
         }
 
-        basicLoginURL = findViewById(R.id.editTextBasicLoginURL)
+        nativeLoginURL = findViewById(R.id.editTextBasicLoginURL)
+        mfaWidgetHostUrl = findViewById(R.id.editTextMFAWidgetHostURL)
+        mfaWidgetId = findViewById(R.id.editTextMFAWidgetId)
     }
 
     private fun updateUI() {
-        basicLoginURL.setText(getString(R.string.cyberark_account_basic_login_url))
+        nativeLoginURL.setText(getString(R.string.cyberark_account_native_login_url))
+        mfaWidgetHostUrl.setText(getString(R.string.cyberark_widget_host_url))
+        mfaWidgetId.setText(getString(R.string.cyberark_widget_id))
 
         // Get the shared preference status and handle device biometrics on app launch
         biometricsOnAppLaunchCheckbox.isChecked =
@@ -95,40 +97,35 @@ class NativeLoginSettingsActivity : AppCompatActivity() {
             saveBiometricsRequestOnAppLaunch(biometricsOnAppLaunchCheckbox.isChecked)
         }
 
-        // Get the shared preference status and handle device biometrics on fund transfer
-        biometricsOnTransferFundCheckbox.isChecked =
-            CyberArkPreferenceUtil.getBoolean(
-                PreferenceConstants.INVOKE_BIOMETRICS_ON_TRANSFER_FUND_NL,
-                false
-            )
-        biometricsOnTransferFundRequested = biometricsOnTransferFundCheckbox.isChecked
-        biometricsOnTransferFundCheckbox.setOnClickListener {
-            saveBiometricsRequestOnFundTransfer(biometricsOnTransferFundCheckbox.isChecked)
-        }
-
         // Get the shared preference status and update the biometrics selection
         if (!CyberArkPreferenceUtil.contains(PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH_NL)) {
             saveBiometricsRequestOnAppLaunch(true)
-            saveBiometricsRequestOnFundTransfer(true)
         }
     }
 
     private fun saveInSharedPreference() {
-        CyberArkPreferenceUtil.putString(PreferenceConstants.BASIC_LOGIN_URL, basicLoginURL.text.toString())
+        CyberArkPreferenceUtil.putString(PreferenceConstants.NATIVE_LOGIN_URL, nativeLoginURL.text.toString())
+        CyberArkPreferenceUtil.putString(PreferenceConstants.MFA_WIDGET_URL, mfaWidgetHostUrl.text.toString())
+        CyberArkPreferenceUtil.putString(PreferenceConstants.MFA_WIDGET_ID, mfaWidgetId.text.toString())
+
         CyberArkPreferenceUtil.putBoolean(
             PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH_NL,
             biometricsOnAppLaunchRequested
         )
-        CyberArkPreferenceUtil.putBoolean(
-            PreferenceConstants.INVOKE_BIOMETRICS_ON_TRANSFER_FUND_NL,
-            biometricsOnTransferFundRequested
-        )
     }
 
     private fun verifyAndSaveInSharedPreference() {
-        val basicLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.BASIC_LOGIN_URL, null)
-        if (!basicLoginURLSP.equals(basicLoginURL.text.toString())) {
-            basicLoginURL.setText(basicLoginURLSP)
+        val nativeLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.NATIVE_LOGIN_URL, null)
+        if (!nativeLoginURLSP.equals(nativeLoginURL.text.toString())) {
+            nativeLoginURL.setText(nativeLoginURLSP)
+        }
+        val mfaWidgetURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_URL, null)
+        if (!mfaWidgetURLSP.equals(mfaWidgetHostUrl.text.toString())) {
+            mfaWidgetHostUrl.setText(mfaWidgetURLSP)
+        }
+        val mfaWidgetID = CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_ID, null)
+        if (!mfaWidgetID.equals(mfaWidgetId.text.toString())) {
+            mfaWidgetId.setText(mfaWidgetID)
         }
     }
 
@@ -178,19 +175,6 @@ class NativeLoginSettingsActivity : AppCompatActivity() {
             value = true
         }
         biometricsOnAppLaunchRequested = value
-    }
-
-    /**
-     * Save "Invoke biometrics on QR Code launch" status in shared preference
-     *
-     * @param checked: Boolean
-     */
-    private fun saveBiometricsRequestOnFundTransfer(checked: Boolean) {
-        var value = checked
-        if (!CyberArkPreferenceUtil.contains(PreferenceConstants.INVOKE_BIOMETRICS_ON_TRANSFER_FUND_NL)) {
-            value = true
-        }
-        biometricsOnTransferFundRequested = value
     }
     // ************************ Handle biometrics End **************************** //
 

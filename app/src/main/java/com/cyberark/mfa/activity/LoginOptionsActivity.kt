@@ -63,8 +63,8 @@ class LoginOptionsActivity : BaseActivity() {
 
         // Setup CyberArk hosted login account
         account = AppConfig.setupAccountFromSharedPreference(this)
-        // Initialize basic Login
-        AppConfig.setupBasicLoginFromSharedPreference(this)
+        // Setup native Login
+        AppConfig.setupNativeLoginFromSharedPreference(this)
 
         findViewById<CardView>(R.id.cv_redirect_login).setOnClickListener {
             login(account, progressBar)

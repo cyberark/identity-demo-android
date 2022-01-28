@@ -28,21 +28,20 @@
     </queries>
 
     <application>
+        <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing"
+            android:value="true" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
             tools:replace="screenOrientation" />
-
         <activity
-            android:name="com.cyberark.identity.activity.CyberArkAuthActivity"
+            android:name=".activity.CyberArkAuthActivity"
             android:autoRemoveFromRecents="true"
             android:exported="false"
             android:launchMode="singleTask" />
-
-        <activity android:name="com.cyberark.identity.activity.CyberArkQRCodeLoginActivity" />
-
+        <activity android:name=".activity.CyberArkQRCodeLoginActivity" />
         <activity
-            android:name="com.cyberark.identity.activity.CyberArkRedirectActivity"
+            android:name=".activity.CyberArkRedirectActivity"
             android:autoRemoveFromRecents="true"
             android:exported="true">
             <intent-filter
@@ -59,6 +58,5 @@
                     android:scheme="${cyberarkIdentityScheme}" />
             </intent-filter>
         </activity>
-
     </application>
 </manifest>
