@@ -35,7 +35,7 @@ object CyberArkPreferenceUtil {
     private val pref: SharedPreferences
         get() {
             checkNotNull(mContext) { "Please init the Utils with an application context." }
-            return PreferenceManager.getDefaultSharedPreferences(mContext!!.get())
+            return PreferenceManager.getDefaultSharedPreferences(mContext!!.get()!!)
         }
     val all: Map<String, *>
         get() = pref.all
