@@ -60,8 +60,6 @@ copy_aar() {
 delete_sdk_source_code() {
   # Delete sdk source code
   rm -rf $dir/identitylibrary
-   # Clean project
-  gradlew_util clean "Project Cleaned successfully" "Project Cleaned Failed"
 }
 
 global_setup
