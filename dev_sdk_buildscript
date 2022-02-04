@@ -57,15 +57,9 @@ copy_aar() {
   cp -a $dir/identitylibrary/build/outputs/aar/identitylibrary-release.aar $dir/app/libs/$_cyberarkIdentitySDK
 }
 
-delete_sdk_source_code() {
-  # Delete sdk source code
-  rm -rf $dir/identitylibrary
-}
-
 global_setup
 do_clean
 run_unit_tests
 build_version_setup
 build
 copy_aar
-delete_sdk_source_code
