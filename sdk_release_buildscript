@@ -1,4 +1,6 @@
 #!/bin/bash
+# This is required to execute only through jenkins job.
+# Please be careful while executing this script manually as this will be deleting the sdk source code
 
 # Clear terminal window
 clear
