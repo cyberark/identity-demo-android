@@ -1,6 +1,6 @@
 #!/bin/bash
-# This is required to execute only through jenkins job.
-# Please be careful while executing this script manually as this will be deleting the sdk source code
+# This is required to execute bash commands only through jenkins job.
+# Please be careful while executing this script manually as this will be deleting the sdk source code and build scripts
 
 # Clear terminal window
 clear
@@ -36,7 +36,15 @@ delete_sdk_source_code() {
   rm -rf $dir/identitylibrary
 }
 
+delete_build_scripts() {
+  # Delete release build script
+  rm -f sdk_release_buildscript
+    # Delete framework build script
+  rm -f sdk_framework_buildscript
+}
+
 global_setup
 do_clean
 run_unit_tests
 delete_sdk_source_code
+delete_build_scripts
