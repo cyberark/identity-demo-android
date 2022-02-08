@@ -40,7 +40,7 @@ build_version_setup() {
   # Construct build number
   BUILD_NUMBER=$VERSION_CODE.$VERSION_NAME
   # Update aar name with build number
-  _cyberarkIdentitySDK=cyberark_identity-$BUILD_NUMBER.aar
+  _cyberarkIdentitySDK=cyberark_identity_sdk-$BUILD_NUMBER.aar
   echo $_cyberarkIdentitySDK
 }
 
