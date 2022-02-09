@@ -118,6 +118,7 @@ class CyberArkMFAWidgetFragment : Fragment(R.layout.fragment_mfa_widget) {
     }
 
     private fun clearCookies() {
+        WebStorage.getInstance().deleteAllData()
         val cookieManager = CookieManager.getInstance()
         cookieManager.removeAllCookies(null)
         cookieManager.removeSessionCookies(null)

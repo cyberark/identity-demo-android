@@ -1,0 +1,50 @@
+#!/bin/bash
+# This is required to execute bash commands only through jenkins job.
+# Please be careful while executing this script manually as this will be deleting the sdk source code and build scripts
+
+# Clear terminal window
+clear
+
+global_setup() {
+  # Setup present working directory
+  dir=$(pwd)
+  echo $dir
+}
+
+gradlew_util() {
+  # Print gradle task execution logs
+  if ./gradlew $1; then
+    echo $2
+  else
+    echo $3
+    exit 1
+  fi
+}
+
+do_clean() {
+  # Clean project
+  gradlew_util clean "Project Cleaned successfully" "Project Cleaned Failed"
+}
+
+run_unit_tests() {
+  # Run unit tests
+  gradlew_util :identitylibrary:testReleaseUnitTest "Unit Tests passed" "Unit Tests failed"
+}
+
+delete_sdk_source_code() {
+  # Delete sdk source code
+  rm -rf $dir/identitylibrary
+}
+
+delete_build_scripts() {
+  # Delete release build script
+  rm -f sdk_release_buildscript
+    # Delete framework build script
+  rm -f sdk_framework_buildscript
+}
+
+global_setup
+do_clean
+run_unit_tests
+delete_sdk_source_code
+delete_build_scripts
