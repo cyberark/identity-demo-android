@@ -53,8 +53,6 @@ internal class CyberArkProcessNotification {
         bundle.putString(NOTIFY_TIME, remoteMessageData[NOTIFY_TIME])
 
         val decodedBundle = urlDecodeDataValue(bundle)
-        val key = decodedBundle.getString(DATA_KEY)
-        val notifyTime = decodedBundle.getString(NOTIFY_TIME)
         val value = decodedBundle.getString(DATA_VALUE)
 
         return Gson().fromJson(value.toString(), NotificationDataModel::class.java)

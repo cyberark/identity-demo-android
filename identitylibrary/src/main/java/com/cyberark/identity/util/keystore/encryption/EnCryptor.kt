@@ -14,43 +14,26 @@
  * limitations under the License.
  */
 
-package com.cyberark.identity.util.keystore.Encryption
+package com.cyberark.identity.util.keystore.encryption
 
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
 import java.io.IOException
 import java.security.*
 import javax.crypto.*
-import javax.crypto.spec.GCMParameterSpec
-import javax.security.cert.CertificateException
 
 /**
- * DeCryptor class is used to handle Android keystore decryption
+ * EnCryptor class is used to handle Android keystore encryption
  *
  */
-internal class DeCryptor {
-    private var keyStore: KeyStore? = null
+internal class EnCryptor {
 
     /**
-     * Initialize Android keystore
+     * Encrypt data
      *
-     */
-    @Throws(
-        KeyStoreException::class,
-        CertificateException::class,
-        NoSuchAlgorithmException::class,
-        IOException::class
-    )
-    private fun initKeyStore() {
-        keyStore = KeyStore.getInstance(ANDROID_KEY_STORE)
-        keyStore!!.load(null)
-    }
-
-    /**
-     * Decrypt data
-     *
-     * @param alias: alias String
-     * @param encryptedData: encrypted data in byte array
-     * @param encryptionIv: encrypted iv in byte array
-     * @return String
+     * @param alias: alias string
+     * @param textToEncrypt: text need to be encrypted
+     * @return Pair<ByteArray,ByteArray>
      */
     @Throws(
         UnrecoverableEntryException::class,
@@ -60,15 +43,17 @@ internal class DeCryptor {
         NoSuchPaddingException::class,
         InvalidKeyException::class,
         IOException::class,
+        InvalidAlgorithmParameterException::class,
+        SignatureException::class,
         BadPaddingException::class,
-        IllegalBlockSizeException::class,
-        InvalidAlgorithmParameterException::class
+        IllegalBlockSizeException::class
     )
-    fun decryptData(alias: String, encryptedData: ByteArray?, encryptionIv: ByteArray?): String {
+    fun encryptText(alias: String, textToEncrypt: String): Pair<ByteArray, ByteArray> {
         val cipher: Cipher = Cipher.getInstance(TRANSFORMATION)
-        val spec = GCMParameterSpec(128, encryptionIv)
-        cipher.init(Cipher.DECRYPT_MODE, getSecretKey(alias), spec)
-        return String(cipher.doFinal(encryptedData), Charsets.UTF_8)
+        cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(alias))
+        val iv = cipher.iv
+        val encryptedData = cipher.doFinal(textToEncrypt.toByteArray(Charsets.UTF_8))
+        return Pair(iv, encryptedData)
     }
 
     /**
@@ -79,19 +64,26 @@ internal class DeCryptor {
      */
     @Throws(
         NoSuchAlgorithmException::class,
-        UnrecoverableEntryException::class,
-        KeyStoreException::class
+        NoSuchProviderException::class,
+        InvalidAlgorithmParameterException::class
     )
     private fun getSecretKey(alias: String): SecretKey {
-        return (keyStore!!.getEntry(alias, null) as KeyStore.SecretKeyEntry).secretKey
+        val keyGenerator: KeyGenerator = KeyGenerator
+            .getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
+        keyGenerator.init(
+            KeyGenParameterSpec.Builder(
+                alias,
+                KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+            )
+                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                .build()
+        )
+        return keyGenerator.generateKey()
     }
 
     companion object {
         private const val TRANSFORMATION = "AES/GCM/NoPadding"
         private const val ANDROID_KEY_STORE = "AndroidKeyStore"
-    }
-
-    init {
-        initKeyStore()
     }
 }

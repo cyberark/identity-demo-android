@@ -31,10 +31,10 @@ class CustomTabHelper {
 
     companion object {
         var packageName: String? = null
-        val STABLE_PACKAGE = "com.android.chrome"
-        val BETA_PACKAGE = "com.chrome.beta"
-        val DEV_PACKAGE = "com.chrome.dev"
-        val LOCAL_PACKAGE = "com.google.android.apps.chrome"
+        const val STABLE_PACKAGE = "com.android.chrome"
+        const val BETA_PACKAGE = "com.chrome.beta"
+        const val DEV_PACKAGE = "com.chrome.dev"
+        const val LOCAL_PACKAGE = "com.google.android.apps.chrome"
     }
 
     /**
@@ -75,7 +75,7 @@ class CustomTabHelper {
         when {
             packagesSupportingCustomTabs.isEmpty() -> packageName = null
             packagesSupportingCustomTabs.size == 1 -> packageName =
-                packagesSupportingCustomTabs.get(0)
+                packagesSupportingCustomTabs[0]
             !TextUtils.isEmpty(defaultViewHandlerPackageName)
                     && !hasSpecializedHandlerIntents(context, activityIntent)
                     && packagesSupportingCustomTabs.contains(defaultViewHandlerPackageName) ->

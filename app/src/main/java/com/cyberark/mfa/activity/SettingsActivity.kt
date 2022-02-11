@@ -78,19 +78,23 @@ class SettingsActivity : AppCompatActivity() {
 
         val beforeLoginLayout: LinearLayout = findViewById(R.id.before_login_layout)
         val afterLoginLayout: LinearLayout = findViewById(R.id.after_login_layout)
+        var basicLoginLayout: LinearLayout = findViewById(R.id.basicLoginLayout)
         val activityIntent = intent
         when {
             activityIntent.getStringExtra("from_activity").equals("LoginOptionsActivity") -> {
                 beforeLoginLayout.visibility = View.VISIBLE
                 afterLoginLayout.visibility = View.GONE
+                basicLoginLayout.visibility = View.VISIBLE
             }
             activityIntent.getStringExtra("from_activity").equals("MFAActivity") -> {
                 beforeLoginLayout.visibility = View.GONE
                 afterLoginLayout.visibility = View.VISIBLE
+                basicLoginLayout.visibility = View.GONE
             }
             else -> {
                 beforeLoginLayout.visibility = View.GONE
                 afterLoginLayout.visibility = View.GONE
+                basicLoginLayout.visibility = View.GONE
             }
         }
 

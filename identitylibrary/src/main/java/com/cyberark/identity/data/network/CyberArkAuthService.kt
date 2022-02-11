@@ -18,7 +18,6 @@ package com.cyberark.identity.data.network
 
 import com.cyberark.identity.data.model.*
 import com.cyberark.identity.util.endpoint.EndpointUrls
-import com.cyberark.identity.util.endpoint.EndpointUrls.URL_BASIC_LOGIN
 import com.cyberark.identity.util.endpoint.EndpointUrls.URL_FAST_ENROLL_V3
 import com.cyberark.identity.util.endpoint.EndpointUrls.URL_SUBMIT_OTP_CODE
 import com.cyberark.identity.util.endpoint.EndpointUrls.URL_UPDATE_DEV_SETTINGS
@@ -143,15 +142,4 @@ interface CyberArkAuthService {
         @Query(EndpointUrls.QUERY_OTP_CHALLENGE_ANSWER) otpChallengeAnswer: String,
         @Query(EndpointUrls.QUERY_OTP_OATH_PROFILE_UUID) udid: String,
     ): SubmitOTPModel
-
-    /**
-     * Basic login
-     *
-     * @param payload: request body
-     * @return EnrollmentModel
-     */
-    @POST(URL_BASIC_LOGIN)
-    suspend fun basicLogin(
-        @Body payload: RequestBody
-    ): BasicLoginModel
 }

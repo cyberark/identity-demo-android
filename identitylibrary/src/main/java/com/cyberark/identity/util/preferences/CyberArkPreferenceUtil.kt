@@ -69,7 +69,7 @@ object CyberArkPreferenceUtil {
         return pref.contains(key)
     }
 
-    val editor: SharedPreferences.Editor
+    private val editor: SharedPreferences.Editor
         get() = pref.edit()
 
     fun registerOnSharedPreferenceChangeListener(listener: OnSharedPreferenceChangeListener?) {

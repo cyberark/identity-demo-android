@@ -17,8 +17,8 @@
 package com.cyberark.identity.util.keystore
 
 import android.util.Base64
-import com.cyberark.identity.util.keystore.Encryption.DeCryptor
-import com.cyberark.identity.util.keystore.Encryption.EnCryptor
+import com.cyberark.identity.util.keystore.encryption.DeCryptor
+import com.cyberark.identity.util.keystore.encryption.EnCryptor
 import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import java.io.IOException

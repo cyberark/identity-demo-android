@@ -156,16 +156,4 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
         otpChallengeAnswer,
         udid
     )
-
-    /**
-     * Basic login
-     *
-     * @param payload: request body
-     * @return EnrollmentModel
-     */
-    suspend fun basicLogin(
-        body: RequestBody
-    ): BasicLoginModel = cyberArkAuthService.basicLogin(
-        body
-    )
 }

@@ -120,17 +120,29 @@ object AppConfig {
         if (nativeLoginURLSP == null) {
             saveNativeLoginURLInSharedPreference(context)
         }
-        val nativeLoginUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.NATIVE_LOGIN_URL, null)
         val systemUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.SYSTEM_URL, null)
         val widgetHostUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_URL, null)
         val widgetId = CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_ID, null)
 
         return CyberArkWidgetBuilder.Builder()
-            .nativeLoginURL(nativeLoginUrl.toString())
             .systemURL(systemUrl.toString())
             .hostURL(widgetHostUrl.toString())
             .widgetId(widgetId.toString())
             .build()
+    }
+
+    /**
+     * Get native login URL
+     *
+     * @param context: Activity/Application context
+     * @return Native Login URL string
+     */
+     fun getNativeLoginURL(context: Context): String? {
+        val nativeLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.NATIVE_LOGIN_URL, null)
+        if (nativeLoginURLSP == null) {
+            saveNativeLoginURLInSharedPreference(context)
+        }
+        return CyberArkPreferenceUtil.getString(PreferenceConstants.NATIVE_LOGIN_URL, null)
     }
 
     /**

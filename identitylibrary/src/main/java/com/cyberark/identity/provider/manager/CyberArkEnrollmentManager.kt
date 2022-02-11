@@ -66,7 +66,7 @@ internal class CyberArkEnrollmentManager(
         viewModel = ViewModelProvider(
             appContext,
             CyberArkViewModelFactory(CyberArkAuthHelper(cyberArkAuthService))
-        ).get(EnrollmentViewModel::class.java)
+        )[EnrollmentViewModel::class.java]
     }
 
     /**

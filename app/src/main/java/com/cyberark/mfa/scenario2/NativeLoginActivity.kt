@@ -18,6 +18,7 @@ package com.cyberark.mfa.scenario2
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -28,18 +29,26 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.LiveData
-import com.cyberark.identity.builder.CyberArkWidgetBuilder
-import com.cyberark.identity.data.model.BasicLoginModel
-import com.cyberark.identity.provider.CyberArkAuthProvider
-import com.cyberark.identity.util.*
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import com.cyberark.identity.util.dialog.AlertButton
+import com.cyberark.identity.util.dialog.AlertButtonType
+import com.cyberark.identity.util.dialog.AlertDialogButtonCallback
+import com.cyberark.identity.util.dialog.AlertDialogHandler
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
 import com.cyberark.mfa.utils.AppConfig
 import com.cyberark.mfa.utils.PreferenceConstants
+import org.json.JSONObject
 
 class NativeLoginActivity : AppCompatActivity() {
+
+    companion object {
+        const val TAG = "NativeLoginActivity"
+    }
 
     // Progress indicator variable
     private lateinit var progressBar: ProgressBar
@@ -70,7 +79,7 @@ class NativeLoginActivity : AppCompatActivity() {
             if (username.text.isBlank() || password.text.isBlank()) {
                 showLoginErrorAlert()
             } else {
-                basicLogin(username.text.toString(), password.text.toString())
+                performLogin(username.text.toString(), password.text.toString())
             }
         }
     }
@@ -92,45 +101,74 @@ class NativeLoginActivity : AppCompatActivity() {
      * @param username: login username
      * @param password: login password
      */
-    private fun basicLogin(username: String, password: String) {
-        val account: CyberArkWidgetBuilder = AppConfig.setupNativeLoginFromSharedPreference(this)
-        val authResponseHandler: LiveData<ResponseHandler<BasicLoginModel>> =
-            CyberArkAuthProvider.nativeLogin(account)
-                .start(this, username, password)
-        // Verify if there is any active observer, if not then add observer to get API response
-        if (!authResponseHandler.hasActiveObservers()) {
-            authResponseHandler.observe(this, {
-                when (it.status) {
-                    ResponseStatus.SUCCESS -> {
+    private fun performLogin(username: String, password: String) {
+        // Show progress indicator
+        progressBar.visibility = View.VISIBLE
+
+        val baseUrl = AppConfig.getNativeLoginURL(this)
+        // Native login URL
+        val url = "$baseUrl/api/BasicLogin"
+
+        // Body params
+        val bodyParams = JSONObject()
+        bodyParams.put("Username", username)
+        bodyParams.put("Password", password)
+        val requestBody = bodyParams.toString()
+
+        // Network request object
+        val request: JsonObjectRequest = object : JsonObjectRequest(
+            Method.POST, url, null,
+            Response.Listener { response ->
+                try {
+                    Log.d(TAG, response.toString())
+                    if (response.getBoolean("Success")) {
+                        // Get sessionUuid and username from response object
+                        val result = response.getJSONObject("Result")
+                        val sessionUuid = result.getString("SessionUuid")
+                        val username = result.getString("MFAUserName")
+
                         // Save session token
-                        KeyStoreProvider.get().saveSessionToken(it.data!!.Result.SessionUuid)
+                        KeyStoreProvider.get().saveSessionToken(sessionUuid)
                         // Save mfa widget username
                         CyberArkPreferenceUtil.putString(
                             PreferenceConstants.MFA_WIDGET_USERNAME,
-                            it.data!!.Result.MFAUserName
+                            username
                         )
                         // Hide progress indicator
                         progressBar.visibility = View.GONE
+
                         // Start TransferFundActivity
                         val intent = Intent(this, TransferFundActivity::class.java)
-                        intent.flags =
-                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
                         finish()
                     }
-                    ResponseStatus.ERROR -> {
-                        // Hide progress indicator
-                        progressBar.visibility = View.GONE
-                        // Show login error message using Toast
-                        showLoginErrorAlert()
-                    }
-                    ResponseStatus.LOADING -> {
-                        // Show progress indicator
-                        progressBar.visibility = View.VISIBLE
-                    }
+                } catch (ex: Exception) {
+                    // Hide progress indicator
+                    progressBar.visibility = View.GONE
+                    Log.d(TAG, "Error message: " + ex.message)
+                    // Show login error message using Toast
+                    showLoginErrorAlert()
                 }
-            })
+            },
+            Response.ErrorListener { error ->
+                // Hide progress indicator
+                progressBar.visibility = View.GONE
+                Log.d(TAG, "Error message: $error")
+                // Show login error message using Toast
+                showLoginErrorAlert()
+            }) {
+
+            override fun getBody(): ByteArray {
+                return requestBody.encodeToByteArray()
+            }
         }
+        request.retryPolicy = DefaultRetryPolicy(
+            50000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+        Volley.newRequestQueue(this).add(request)
     }
 
     // **************** Handle menu settings click action Start *********************** //

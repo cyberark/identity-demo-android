@@ -25,7 +25,6 @@ internal object EndpointUrls {
     const val URL_FAST_ENROLL_V3 = "/Device/EnrollAndroidDevice"
     const val URL_UPDATE_DEV_SETTINGS = "/IosAppRest/UpdateDevSettings"
     const val URL_SUBMIT_OTP_CODE = "/IosAppRest/SubmitOtpCode"
-    const val URL_BASIC_LOGIN = "/api/BasicLogin"
 
     const val HEADER_X_IDAP_NATIVE_CLIENT = "X-IDAP-NATIVE-CLIENT"
     const val HEADER_ACCEPT_LANGUAGE = "Accept-Language"

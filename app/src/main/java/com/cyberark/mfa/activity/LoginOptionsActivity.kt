@@ -33,6 +33,7 @@ import com.cyberark.mfa.R
 import com.cyberark.mfa.activity.base.BaseActivity
 import com.cyberark.mfa.scenario1.MFAActivity
 import com.cyberark.mfa.scenario2.NativeLoginActivity
+import com.cyberark.mfa.scenario2.NativeSignupActivity
 import com.cyberark.mfa.utils.AppConfig
 
 class LoginOptionsActivity : BaseActivity() {
@@ -73,6 +74,8 @@ class LoginOptionsActivity : BaseActivity() {
         findViewById<CardView>(R.id.cv_mfa_widget_login).setOnClickListener {
             val intent = Intent(this, NativeLoginActivity::class.java)
             startActivity(intent)
+//            val intent = Intent(this, NativeSignupActivity::class.java)
+//            startActivity(intent)
         }
     }
 
@@ -88,6 +91,8 @@ class LoginOptionsActivity : BaseActivity() {
                         2 -> {
                             val intent = Intent(this, NativeLoginActivity::class.java)
                             startActivity(intent)
+//                            val intent = Intent(this, NativeSignupActivity::class.java)
+//                            startActivity(intent)
                         }
                     }
                 }

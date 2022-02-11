@@ -21,7 +21,6 @@ import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.cyberark.identity.builder.CyberArkAccountBuilder
-import com.cyberark.identity.builder.CyberArkWidgetBuilder
 import com.cyberark.identity.data.model.*
 import com.cyberark.identity.provider.manager.*
 import com.cyberark.identity.util.ResponseHandler
@@ -67,10 +66,6 @@ object CyberArkAuthProvider {
 
     fun submitOTP(account: CyberArkAccountBuilder): SubmitOTPBuilder {
         return SubmitOTPBuilder(account)
-    }
-
-    fun nativeLogin(account: CyberArkWidgetBuilder): NativeLoginBuilder {
-        return NativeLoginBuilder(account)
     }
 
     /**
@@ -307,35 +302,6 @@ object CyberArkAuthProvider {
             )
 
             return cyberArkOTPEnrollManager.submitOTP()
-        }
-    }
-
-    /**
-     * Native login builder class
-     *
-     */
-    class NativeLoginBuilder internal constructor(
-        private val account: CyberArkWidgetBuilder
-    ) {
-        /**
-         * Native login using username and password
-         *
-         * @param context: Activity Context
-         * @param username: login username
-         * @param password: login password
-         * @return LiveData<ResponseHandler<BasicLoginModel>>: LiveData response handler for NativeLoginModel
-         */
-        fun start(
-            context: Context,
-            username: String,
-            password: String
-        ): LiveData<ResponseHandler<BasicLoginModel>> {
-            Log.i(TAG, "Start basic login")
-            val cyberArkBasicLoginManager =
-                CyberArkBasicLoginManager(context, username, password, account)
-            cyberArkBasicLoginManager.basicLogin()
-
-            return cyberArkBasicLoginManager.getViewModelInstance.getBasicLoginData()
         }
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.identity.util
+package com.cyberark.identity.util.dialog
 
 import android.app.Activity
 import android.content.DialogInterface
