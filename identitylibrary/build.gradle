@@ -73,9 +73,9 @@ dependencies {
     implementation 'com.google.guava:guava:30.1.1-android'
 
     //LifeCycle libs
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
 
     //Custom tab support browser plugin
     implementation "androidx.browser:browser:1.4.0"

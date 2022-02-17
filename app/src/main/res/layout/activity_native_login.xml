@@ -90,7 +90,8 @@
                     android:singleLine="true"
                     android:inputType="text"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"/>
+                    android:layout_marginEnd="20dp"
+                    tools:ignore="Autofill,LabelFor" />
 
                 <TextView
                     android:id="@+id/api_doc"
@@ -110,7 +111,8 @@
                     android:singleLine="true"
                     android:inputType="textPassword"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"/>
+                    android:layout_marginEnd="20dp"
+                    tools:ignore="Autofill,LabelFor" />
 
                 <Button
                     android:id="@+id/button_login"
@@ -129,7 +131,7 @@
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/progressBar_home_activity"
+        android:id="@+id/progressBar_native_login_activity"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

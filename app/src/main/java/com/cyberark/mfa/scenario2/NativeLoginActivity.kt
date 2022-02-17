@@ -68,7 +68,7 @@ class NativeLoginActivity : AppCompatActivity() {
      */
     private fun updateUI() {
         // Invoke UI element
-        progressBar = findViewById(R.id.progressBar_home_activity)
+        progressBar = findViewById(R.id.progressBar_native_login_activity)
 
         val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
@@ -125,14 +125,14 @@ class NativeLoginActivity : AppCompatActivity() {
                         // Get sessionUuid and username from response object
                         val result = response.getJSONObject("Result")
                         val sessionUuid = result.getString("SessionUuid")
-                        val username = result.getString("MFAUserName")
+                        val usernameString = result.getString("MFAUserName")
 
                         // Save session token
                         KeyStoreProvider.get().saveSessionToken(sessionUuid)
                         // Save mfa widget username
                         CyberArkPreferenceUtil.putString(
                             PreferenceConstants.MFA_WIDGET_USERNAME,
-                            username
+                            usernameString
                         )
                         // Hide progress indicator
                         progressBar.visibility = View.GONE

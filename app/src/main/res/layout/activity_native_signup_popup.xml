@@ -15,12 +15,12 @@
   -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
-    tools:context=".activity.PopupActivity">
+    tools:context=".scenario1.NativeSignupPopupActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -41,81 +41,76 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:id="@+id/content_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="10dp">
-
-                        <ImageButton
-                            android:id="@+id/button_login"
-                            android:layout_width="55dp"
-                            android:layout_height="55dp"
-                            android:background="@drawable/circle_shape_approve"
-                            android:textColor="@color/white"
-                            android:contentDescription="@string/login"/>
-
-                        <ImageView
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/notification_accept"
-                            android:contentDescription="@string/notification_action_approve"/>
-
-                    </FrameLayout>
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
                     <TextView
-                        android:id="@+id/header_text"
+                        android:id="@+id/signup_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:text="@string/not_registered_yet"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:layout_marginTop="18dp"/>
+
+                    <Button
+                        android:id="@+id/button_signup"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="20dp"
+                        android:backgroundTint="@color/purple_500"
+                        android:text="@string/signup"
+                        android:textAllCaps="false"
+                        android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/content_text"
+                        android:id="@+id/login_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@string/have_you_already_registered"
                         android:textAlignment="center"
                         android:textColor="@color/white"
+                        android:textSize="18sp" />
+
+                    <Button
+                        android:id="@+id/button_login"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp"
+                        android:backgroundTint="@color/purple_500"
+                        android:text="@string/login"
+                        android:textAllCaps="false"
                         android:textSize="16sp" />
+
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/cancel_dialog"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/content_layout"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    android:layout_alignParentEnd="true"
+                    android:orientation="horizontal"
+                    android:padding="7dp">
 
-                    <Button
-                        android:id="@+id/button_confirm"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="10dp"
-                        android:paddingStart="30dp"
-                        android:paddingEnd="30dp"
-                        android:backgroundTint="@color/purple_500"
-                        android:text="@string/button_done"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
+                        android:src="@android:drawable/ic_menu_close_clear_cancel"
+                        android:contentDescription="@string/cancel"/>
                 </LinearLayout>
+
             </RelativeLayout>
+
         </androidx.cardview.widget.CardView>
 
     </ScrollView>

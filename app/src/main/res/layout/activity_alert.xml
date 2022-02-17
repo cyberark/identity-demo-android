@@ -37,13 +37,13 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:id="@+id/content_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                   android:layout_margin="12dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -55,7 +55,8 @@
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:layout_marginTop="28dp"/>
 
                     <TextView
                         android:id="@+id/content_text"
@@ -79,11 +80,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/content_layout"
+                    android:gravity="center_horizontal"
                     android:orientation="horizontal"
+                    android:paddingBottom="12dp"
                     android:weightSum="1">
 
                     <Button
-                        android:id="@+id/button_cancel"
+                        android:id="@+id/button_signup"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -91,10 +94,11 @@
                         android:layout_marginEnd="10dp"
                         android:layout_weight="0.5"
                         android:backgroundTint="@color/purple_500"
-                        android:text="@string/cancel"
+                        android:text="@string/signup"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        style="?android:attr/buttonBarButtonStyle" />
 
                     <Button
                         android:id="@+id/button_login"
@@ -108,8 +112,25 @@
                         android:text="@string/button_log_in"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        style="?android:attr/buttonBarButtonStyle" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cancel_dialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:orientation="horizontal"
+                    android:padding="7dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@android:drawable/ic_menu_close_clear_cancel"
+                        android:contentDescription="@string/cancel"/>
+                </LinearLayout>
+
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
