@@ -98,7 +98,7 @@
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="16sp"
-                        style="?android:attr/buttonBarButtonStyle" />
+                        tools:ignore="ButtonStyle" />
 
                     <Button
                         android:id="@+id/button_login"
@@ -113,7 +113,7 @@
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="16sp"
-                        style="?android:attr/buttonBarButtonStyle" />
+                        tools:ignore="ButtonStyle" />
                 </LinearLayout>
 
                 <LinearLayout

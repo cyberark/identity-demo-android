@@ -183,7 +183,9 @@ class TransferFundActivity : AppCompatActivity() {
             true
         }
         R.id.action_logout -> {
-            performLogout()
+            // Perform clean-up and logout
+            cleanUp()
+//            performLogout()
             true
         }
         else -> {
@@ -200,6 +202,7 @@ class TransferFundActivity : AppCompatActivity() {
         // Native logout URL
         val url = "$baseUrl/api/auth/logoutSession"
 
+        // TODO.. need to update header params based on api updates
         // Header params
         val headerParams: MutableMap<String, String> = HashMap()
         headerParams["Cookie"] = "cookie"

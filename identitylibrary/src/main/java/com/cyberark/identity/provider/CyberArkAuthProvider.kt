@@ -35,6 +35,9 @@ object CyberArkAuthProvider {
     private val TAG: String? = CyberArkAuthProvider::class.simpleName
     internal var cyberArkAuthInterface: CyberArkAuthInterface? = null
 
+    fun signupWithCaptcha(account: CyberArkAccountBuilder): SignupWithCaptchaBuilder {
+        return SignupWithCaptchaBuilder(account)
+    }
 
     fun login(account: CyberArkAccountBuilder): LoginBuilder {
         return LoginBuilder(account)
@@ -92,6 +95,33 @@ object CyberArkAuthProvider {
      */
     internal fun cleanUp() {
         cyberArkAuthInterface = null
+    }
+
+    /**
+     * Signup with captcha builder class
+     *
+     * @property account: CyberArkAccountBuilder instance
+     */
+    class SignupWithCaptchaBuilder internal constructor(
+        private val account: CyberArkAccountBuilder
+    ) {
+        /**
+         * Signup user
+         *
+         * @param context: Activity Context
+         * @return LiveData<ResponseHandler<SignupCaptchaModel>>: LiveData response handler for SignupCaptchaModel
+         */
+        fun start(
+            context: Context,
+            signupData: JSONObject,
+            siteKey: String
+        ): LiveData<ResponseHandler<SignupCaptchaModel>> {
+            Log.i(TAG, "Start signup with captcha flow")
+            val cyberArkSignupManager = CyberArkSignupManager(context, signupData, siteKey, account)
+            cyberArkSignupManager.signupWithCaptcha()
+
+            return cyberArkSignupManager.getViewModelInstance.getSignupWithCaptchaData()
+        }
     }
 
     /**

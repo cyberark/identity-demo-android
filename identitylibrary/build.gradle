@@ -95,4 +95,7 @@ dependencies {
 
     //Webkit lib
     implementation 'androidx.webkit:webkit:1.4.0'
+
+    //Google reCAPTCHA V2 (safetynet) lib
+    implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
 }

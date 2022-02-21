@@ -36,8 +36,7 @@
             android:theme="@style/AppTheme.WithActionBar" />
         <activity
             android:name=".scenario1.NativeSignupActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme.WithActionBar"/>
+            android:exported="false" />
         <activity
             android:name=".scenario1.NativeSignupPopupActivity"
             android:exported="false"

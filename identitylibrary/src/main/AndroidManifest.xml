@@ -17,7 +17,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.cyberark.identity"
     android:versionCode="1"
-    android:versionName="1.0.0">
+    android:versionName="1.0.1">
 
     <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 

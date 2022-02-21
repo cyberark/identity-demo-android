@@ -18,98 +18,133 @@ package com.cyberark.mfa.scenario1
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.RequestQueue
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
+import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.LiveData
+import com.cyberark.identity.builder.CyberArkAccountBuilder
+import com.cyberark.identity.data.model.SignupCaptchaModel
+import com.cyberark.identity.provider.CyberArkAuthProvider
+import com.cyberark.identity.util.*
 import com.cyberark.identity.util.dialog.AlertButton
 import com.cyberark.identity.util.dialog.AlertButtonType
 import com.cyberark.identity.util.dialog.AlertDialogButtonCallback
 import com.cyberark.identity.util.dialog.AlertDialogHandler
-import com.cyberark.identity.util.keystore.KeyStoreProvider
-import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
-import com.cyberark.mfa.scenario2.NativeLoginActivity
-import com.cyberark.mfa.scenario2.TransferFundActivity
+import com.cyberark.mfa.activity.SettingsActivity
 import com.cyberark.mfa.utils.AppConfig
-import com.cyberark.mfa.utils.PreferenceConstants
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.CommonStatusCodes
-import com.google.android.gms.safetynet.SafetyNet
 import org.json.JSONObject
 
-class NativeSignupActivity : AppCompatActivity(), View.OnClickListener {
+class NativeSignupActivity : AppCompatActivity() {
 
     companion object {
         const val TAG = "NativeSignupActivity"
+        // Google reCaptcha V2 Site Key
         const val SITE_KEY = "6Lf9noAeAAAAAHDfOkMTljFc3uDC1HNu0zy1iPcP"
-        const val SITE_SECRET_KEY = "6Lf9noAeAAAAAHjidiyCpgEfn_4ghsDkzEKuAaiz"
     }
 
-    private lateinit var tvVerify: TextView
-    private lateinit var btnverifyCaptcha: Button
-    private lateinit var queue: RequestQueue
-
-    private lateinit var username: EditText
-    private lateinit var password: EditText
-    private lateinit var confirmPassword: EditText
-    private lateinit var emailAddress: EditText
-    private lateinit var mobileNumber: EditText
-    private lateinit var signupButton: Button
     private lateinit var loginErrorAlert: AlertDialog
     private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_native_signup1)
-
-        tvVerify = findViewById(R.id.textView)
-        btnverifyCaptcha = findViewById(R.id.button)
-        btnverifyCaptcha.setOnClickListener(this)
-        queue = Volley.newRequestQueue(this)
-
-//        invokeUI()
-//        updateUI()
+        setContentView(R.layout.activity_native_signup)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        updateUI()
     }
 
-    private fun invokeUI() {
-        username = findViewById(R.id.username)
-        password = findViewById(R.id.password)
-        confirmPassword = findViewById(R.id.confirm_password)
-        emailAddress = findViewById(R.id.email_address)
-        mobileNumber = findViewById(R.id.mobile_number)
-        signupButton = findViewById(R.id.button_signup)
-        progressBar = findViewById(R.id.progressBar_native_signup_activity)
-    }
-
+    /**
+     * Update UI components
+     *
+     */
     private fun updateUI() {
+
+        val username = findViewById<EditText>(R.id.username)
+        val password = findViewById<EditText>(R.id.password)
+        val confirmPassword = findViewById<EditText>(R.id.confirm_password)
+        val emailAddress = findViewById<EditText>(R.id.email_address)
+        val mobileNumber = findViewById<EditText>(R.id.mobile_number)
+        val signupButton = findViewById<Button>(R.id.button_signup)
+        progressBar = findViewById(R.id.progressBar_native_signup_activity)
+
         signupButton.setOnClickListener {
             hideKeyboard(signupButton)
             if (username.text.isBlank() || password.text.isBlank() || confirmPassword.text.isBlank()
                 || emailAddress.text.isBlank() || mobileNumber.text.isBlank()) {
                 showLoginErrorAlert()
             } else {
-                performSignup(username.text.toString(), password.text.toString(),
-                    confirmPassword.text.toString(), emailAddress.text.toString(),
-                    mobileNumber.text.toString())
+                val signupData = JSONObject()
+                signupData.put("Name", username.text.toString())
+                signupData.put("Password", password.text.toString())
+                signupData.put("ConfirmPassword", confirmPassword.text.toString())
+                signupData.put("Mail", emailAddress.text.toString())
+                signupData.put("MobileNumber", mobileNumber.text.toString())
+                // Setup account
+                val account =  AppConfig.setupAccountFromSharedPreference(this)
+                performSignup(account, signupData)
             }
         }
     }
 
-    private fun performSignup(username: String, password: String, confirmPassword: String,
-                              emailAddress: String, mobileNumber: String) {
-      
+    /**
+     * Perform signup
+     *
+     * @param cyberArkAccountBuilder: CyberArkAccountBuilder instance
+     * @param signupData: signup form data
+     */
+    private fun performSignup(cyberArkAccountBuilder: CyberArkAccountBuilder, signupData: JSONObject) {
+        val signupResponseHandler: LiveData<ResponseHandler<SignupCaptchaModel>> =
+            CyberArkAuthProvider.signupWithCaptcha(cyberArkAccountBuilder).start(this, signupData, SITE_KEY)
+
+        // Verify if there is any active observer, if not then add observer to get API response
+        if (!signupResponseHandler.hasActiveObservers()) {
+            signupResponseHandler.observe(this, {
+                when (it.status) {
+                    ResponseStatus.SUCCESS -> {
+                        // Show enrollment success message using Toast
+                        if(it.data!!.success) {
+                            Toast.makeText(
+                                this,
+                                "Signup has completed successfully",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            finish()
+                        } else {
+                            Toast.makeText(
+                                this,
+                                "Signup has failed :: " + it.data!!.Message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        // Hide progress indicator
+                        progressBar.visibility = View.GONE
+                    }
+                    ResponseStatus.ERROR -> {
+                        // Show enrollment error message using Toast
+                        Toast.makeText(
+                            this,
+                            "Error: Unable to complete signup",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        // Hide progress indicator
+                        progressBar.visibility = View.GONE
+                    }
+                    ResponseStatus.LOADING -> {
+                        // Show progress indicator
+                        progressBar.visibility = View.VISIBLE
+                    }
+                }
+            })
+        }
     }
 
     /**
@@ -123,6 +158,10 @@ class NativeSignupActivity : AppCompatActivity(), View.OnClickListener {
         inputMethodManager.hideSoftInputFromWindow(view.applicationWindowToken, 0)
     }
 
+    /**
+     * Show login error alert
+     *
+     */
     private fun showLoginErrorAlert() {
 
         val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
@@ -135,80 +174,32 @@ class NativeSignupActivity : AppCompatActivity(), View.OnClickListener {
         })
         loginErrorAlert = enrollFingerPrintDlg.displayAlert(
             this,
-            this.getString(R.string.dialog_login_error_header_text),
-            this.getString(R.string.dialog_login_error_desc), true,
+            this.getString(R.string.dialog_signup_error_header_text),
+            this.getString(R.string.dialog_signup_error_desc), true,
             mutableListOf(
                 AlertButton("OK", AlertButtonType.POSITIVE)
             )
         )
     }
 
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.button -> {
-                SafetyNet.getClient(this).verifyWithRecaptcha(SITE_KEY)
-                    .addOnSuccessListener(this) { response ->
-                        // Indicates communication with reCAPTCHA service was
-                        // successful.
-                        val userResponseToken = response.tokenResult
-                        Log.e("response", userResponseToken!!)
-                        if (userResponseToken.isNotEmpty()) {
-                            Log.i(TAG, userResponseToken.toString())
-                            // Validate the user response token using the
-                            // reCAPTCHA siteverify API.
-//                            handleVerify(response.tokenResult!!)
-                        }
-                    }
-                    .addOnFailureListener(this) { e ->
-                        if (e is ApiException) {
-                            // An error occurred when communicating with the
-                            // reCAPTCHA service. Refer to the status code to
-                            // handle the error appropriately.
-                            Log.d(
-                                TAG,
-                                ("Error message: " + CommonStatusCodes.getStatusCodeString(e.statusCode))
-                            )
-                        } else {
-                            // A different, unknown type of error occurred.
-                            Log.d(TAG, "Unknown type of error: " + e.message)
-                        }
-                    }
-            }
-        }
+    // **************** Handle menu settings click action Start *********************** //
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.settings_menu, menu)
+        return true
     }
 
-    private fun handleVerify(responseToken: String) {
-        //it is google recaptcha site verify server
-        //you can place your server url
-        val url = "https://www.google.com/recaptcha/api/siteverify"
-
-        val params: MutableMap<String, String> = HashMap()
-        params["secret"] = SITE_SECRET_KEY
-        params["response"] = responseToken
-
-        val request: StringRequest = object : StringRequest(
-            Method.POST, url,
-            Response.Listener { response ->
-                try {
-                    val jsonObject = JSONObject(response)
-                    if (jsonObject.getBoolean("success")) {
-                        tvVerify.text = "You're not a Robot"
-                    }
-                } catch (ex: Exception) {
-                    Log.d(TAG, "Error message: " + ex.message)
-                }
-            },
-            Response.ErrorListener { error -> Log.d(TAG, "Error message: " + error.message) }) {
-
-            override fun getParams(): MutableMap<String, String> {
-                return params
-            }
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_settings -> {
+            //Start Settings activity
+            val intent = Intent(this, SettingsActivity::class.java)
+            intent.putExtra("from_activity", "NativeSignupActivity")
+            startActivity(intent)
+            true
         }
-        request.retryPolicy = DefaultRetryPolicy(
-            50000,
-            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-        )
-        queue.add(request)
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
     }
+    // **************** Handle menu settings click action End *********************** //
 }

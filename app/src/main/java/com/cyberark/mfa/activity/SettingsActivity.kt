@@ -30,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
 import com.cyberark.mfa.scenario1.MFAActivity
+import com.cyberark.mfa.scenario1.NativeSignupActivity
 import com.cyberark.mfa.utils.PreferenceConstants
 
 class SettingsActivity : AppCompatActivity() {
@@ -78,7 +79,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val beforeLoginLayout: LinearLayout = findViewById(R.id.before_login_layout)
         val afterLoginLayout: LinearLayout = findViewById(R.id.after_login_layout)
-        var basicLoginLayout: LinearLayout = findViewById(R.id.basicLoginLayout)
+        val basicLoginLayout: LinearLayout = findViewById(R.id.basicLoginLayout)
         val activityIntent = intent
         when {
             activityIntent.getStringExtra("from_activity").equals("LoginOptionsActivity") -> {
@@ -90,6 +91,11 @@ class SettingsActivity : AppCompatActivity() {
                 beforeLoginLayout.visibility = View.GONE
                 afterLoginLayout.visibility = View.VISIBLE
                 basicLoginLayout.visibility = View.GONE
+            }
+            activityIntent.getStringExtra("from_activity").equals("NativeSignupActivity") -> {
+                beforeLoginLayout.visibility = View.VISIBLE
+                afterLoginLayout.visibility = View.GONE
+                basicLoginLayout.visibility = View.VISIBLE
             }
             else -> {
                 beforeLoginLayout.visibility = View.GONE
@@ -271,6 +277,10 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         } else if (activityIntent.getStringExtra("from_activity").equals("MFAActivity")) {
             val intent = Intent(this, MFAActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+        } else if (activityIntent.getStringExtra("from_activity").equals("NativeSignupActivity")) {
+            val intent = Intent(this, NativeSignupActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         }

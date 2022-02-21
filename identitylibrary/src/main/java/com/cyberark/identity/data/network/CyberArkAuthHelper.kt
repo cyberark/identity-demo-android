@@ -156,4 +156,19 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
         otpChallengeAnswer,
         udid
     )
+
+    /**
+     * Signup with captcha
+     *
+     * @param idapNativeClient: idaptive native client
+     * @param body: request body
+     * @return SignupCaptchaModel
+     */
+    suspend fun signupWithCaptcha(
+        idapNativeClient: Boolean,
+        body: RequestBody
+    ): SignupCaptchaModel = cyberArkAuthService.signupWithCaptcha(
+        idapNativeClient,
+        body
+    )
 }
