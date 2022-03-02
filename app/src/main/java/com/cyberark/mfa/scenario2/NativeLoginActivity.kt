@@ -30,7 +30,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.android.volley.DefaultRetryPolicy
+import com.android.volley.NetworkResponse
+import com.android.volley.ParseError
 import com.android.volley.Response
+import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.cyberark.identity.util.dialog.AlertButton
@@ -42,7 +45,14 @@ import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
 import com.cyberark.mfa.utils.AppConfig
 import com.cyberark.mfa.utils.PreferenceConstants
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import org.json.JSONObject
+import java.io.UnsupportedEncodingException
+import java.nio.charset.Charset
+import org.json.JSONException
+
+import org.json.JSONArray
 
 class NativeLoginActivity : AppCompatActivity() {
 
@@ -121,6 +131,8 @@ class NativeLoginActivity : AppCompatActivity() {
             Response.Listener { response ->
                 try {
                     Log.d(TAG, response.toString())
+//                    val headers = response.getJSONObject("headers")
+//                    Log.d(TAG, "headers: $headers")
                     if (response.getBoolean("Success")) {
                         // Get sessionUuid and username from response object
                         val result = response.getJSONObject("Result")
@@ -162,6 +174,27 @@ class NativeLoginActivity : AppCompatActivity() {
             override fun getBody(): ByteArray {
                 return requestBody.encodeToByteArray()
             }
+
+//            override fun parseNetworkResponse(response: NetworkResponse?): Response<JSONObject> {
+//                val token = response!!.headers!!["set-cookie"]
+//                Log.d(TAG, "token: $token")
+//
+//                return try {
+//                    val json = String(
+//                        response?.data ?: ByteArray(0),
+//                        Charset.forName(HttpHeaderParser.parseCharset(response?.headers)))
+//                    val jsonResponse = JSONObject()
+//                    jsonResponse.put("headers", JSONObject(json))
+//
+//                    Response.success(
+//                        jsonResponse,
+//                        HttpHeaderParser.parseCacheHeaders(response))
+//                } catch (e: UnsupportedEncodingException) {
+//                    Response.error(ParseError(e))
+//                } catch (e: JsonSyntaxException) {
+//                    Response.error(ParseError(e))
+//                }
+//            }
         }
         request.retryPolicy = DefaultRetryPolicy(
             50000,

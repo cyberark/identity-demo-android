@@ -19,7 +19,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
+    android:padding="20dp"
     tools:context=".scenario1.NativeSignupPopupActivity">
 
     <ScrollView
@@ -41,7 +41,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -49,6 +50,17 @@
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="20dp">
+
+                    <Button
+                        android:id="@+id/button_login"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="18dp"
+                        android:backgroundTint="@color/purple_500"
+                        android:text="@string/login"
+                        android:textAllCaps="false"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/signup_text"
@@ -58,37 +70,15 @@
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="18sp"
-                        android:layout_marginTop="18dp"/>
+                        android:layout_marginTop="15dp"/>
 
                     <Button
                         android:id="@+id/button_signup"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="20dp"
                         android:backgroundTint="@color/purple_500"
                         android:text="@string/signup"
-                        android:textAllCaps="false"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/login_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/have_you_already_registered"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                    <Button
-                        android:id="@+id/button_login"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="5dp"
-                        android:backgroundTint="@color/purple_500"
-                        android:text="@string/login"
                         android:textAllCaps="false"
                         android:textSize="16sp" />
 

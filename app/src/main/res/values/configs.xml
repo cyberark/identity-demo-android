@@ -72,6 +72,8 @@
     <string name="cyberark_account_redirect_uri">demo://acme/android/com.cyberark.mfa/callback</string>
     <string name="cyberark_account_host">acme</string>
     <string name="cyberark_account_scheme">demo</string>
+    // ReCaptcha V2 Settings
+    <string name="recaptcha_v2_site_key">6Lf9noAeAAAAAHDfOkMTljFc3uDC1HNu0zy1iPcP</string>
 
     // Step-up authentication using MFA widget
     <string name="cyberark_account_native_login_url">https://ciam.cyberarklab.com</string>
@@ -79,6 +81,7 @@
     <string name="cyberark_widget_id" translatable="false">2dd4e08d-a554-4146-adaa-9aa1f1a55d15</string>
 </resources>-->
 
+<!--
 <resources>
     // CyberArk hosted login
     <string name="cyberark_account_system_url">aaj7536.my.dev.idaptive.app</string>
@@ -95,4 +98,25 @@
     <string name="cyberark_account_native_login_url">https://ciam.cyberarklab.com</string>
     <string name="cyberark_widget_host_url">https://auth.cyberarklab.com</string>
     <string name="cyberark_widget_id" translatable="false">2dd4e08d-a554-4146-adaa-9aa1f1a55d15</string>
+</resources>-->
+
+<resources>
+    // CyberArk hosted login
+    <string name="cyberark_account_system_url">aak7796.my.dev.idaptive.app</string>
+    <string name="cyberark_account_host_url">aak7796.my.dev.idaptive.app</string>
+    <string name="cyberark_account_client_id">acme</string>
+    <string name="cyberark_account_app_id">AcmeAndroidApp</string>
+    <string name="cyberark_account_response_type">code</string>
+    <string name="cyberark_account_scope">All</string>
+    <string name="cyberark_account_redirect_uri">demo://acme/android/com.cyberark.mfa/callback</string>
+    <string name="cyberark_account_host">acme</string>
+    <string name="cyberark_account_scheme">demo</string>
+    // ReCaptcha V2 Settings
+    <string name="recaptcha_v2_site_key">6Lf9noAeAAAAAHDfOkMTljFc3uDC1HNu0zy1iPcP</string>
+
+    // Step-up authentication using MFA widget
+    <string name="cyberark_account_native_login_url">https://ciam.cyberarklab.com</string>
+    <string name="cyberark_widget_host_url">https://auth.cyberarklab.com</string>
+    <string name="cyberark_widget_id" translatable="false">2dd4e08d-a554-4146-adaa-9aa1f1a55d15</string>
 </resources>
+

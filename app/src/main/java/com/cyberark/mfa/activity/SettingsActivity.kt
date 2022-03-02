@@ -44,6 +44,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var redirectUri: EditText
     private lateinit var host: EditText
     private lateinit var scheme: EditText
+    private lateinit var siteKey: EditText
 
     private lateinit var nativeLoginURL: EditText
     private lateinit var mfaWidgetHostUrl: EditText
@@ -114,6 +115,7 @@ class SettingsActivity : AppCompatActivity() {
         redirectUri = findViewById(R.id.editTextRedirectURI)
         host = findViewById(R.id.editTextHost)
         scheme = findViewById(R.id.editTextScheme)
+        siteKey = findViewById(R.id.editTextSiteKey)
 
         nativeLoginURL = findViewById(R.id.editTextBasicLoginURL)
         mfaWidgetHostUrl = findViewById(R.id.editTextMFAWidgetHostURL)
@@ -130,6 +132,7 @@ class SettingsActivity : AppCompatActivity() {
         redirectUri.setText(getString(R.string.cyberark_account_redirect_uri))
         host.setText(getString(R.string.cyberark_account_host))
         scheme.setText(getString(R.string.cyberark_account_scheme))
+        siteKey.setText(getString(R.string.recaptcha_v2_site_key))
 
         nativeLoginURL.setText(getString(R.string.cyberark_account_native_login_url))
         mfaWidgetHostUrl.setText(getString(R.string.cyberark_widget_host_url))
@@ -186,6 +189,7 @@ class SettingsActivity : AppCompatActivity() {
         )
         CyberArkPreferenceUtil.putString(PreferenceConstants.HOST, host.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.SCHEME, scheme.text.toString())
+        CyberArkPreferenceUtil.putString(PreferenceConstants.SITE_KEY, siteKey.text.toString())
 
         CyberArkPreferenceUtil.putString(PreferenceConstants.NATIVE_LOGIN_URL, nativeLoginURL.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.MFA_WIDGET_URL, mfaWidgetHostUrl.text.toString())
@@ -235,6 +239,10 @@ class SettingsActivity : AppCompatActivity() {
         val schemeSP = CyberArkPreferenceUtil.getString(PreferenceConstants.SCHEME, null)
         if (!schemeSP.equals(scheme.text.toString())) {
             scheme.setText(schemeSP)
+        }
+        val siteKeySP = CyberArkPreferenceUtil.getString(PreferenceConstants.SITE_KEY, null)
+        if (!siteKeySP.equals(siteKey.text.toString())) {
+            siteKey.setText(siteKeySP)
         }
 
         val nativeLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.NATIVE_LOGIN_URL, null)

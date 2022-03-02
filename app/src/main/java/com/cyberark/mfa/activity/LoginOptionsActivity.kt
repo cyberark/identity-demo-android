@@ -122,8 +122,8 @@ class LoginOptionsActivity : BaseActivity() {
         when (view.id) {
             R.id.tv_redirect_login -> {
                 val intent = Intent(this, AlertActivity::class.java)
-                intent.putExtra("title", getString(R.string.cyberark_hosted_login_title))
-                intent.putExtra("desc", getString(R.string.cyberark_hosted_login_description))
+                intent.putExtra("title", getString(R.string.signup_and_login_using_cyberArk_identity))
+                intent.putExtra("desc", getString(R.string.signup_and_login_using_cyberArk_identity_desc))
                 intent.putExtra("scenario", 1)
                 startForResult.launch(intent)
             }

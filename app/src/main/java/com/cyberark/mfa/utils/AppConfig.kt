@@ -106,6 +106,24 @@ object AppConfig {
             PreferenceConstants.SCHEME,
             context.getString(R.string.cyberark_account_scheme)
         )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.SITE_KEY,
+            context.getString(R.string.recaptcha_v2_site_key)
+        )
+    }
+
+    /**
+     * Get Google reCaptcha V2 site key
+     *
+     * @param context: Activity/Application context
+     * @return Native Login URL string
+     */
+    fun getSiteKey(context: Context): String {
+        val siteKeySP = CyberArkPreferenceUtil.getString(PreferenceConstants.SITE_KEY, null)
+        if (siteKeySP == null) {
+            saveConfigInSharedPreference(context)
+        }
+        return CyberArkPreferenceUtil.getString(PreferenceConstants.SITE_KEY, null).toString()
     }
 
     /**

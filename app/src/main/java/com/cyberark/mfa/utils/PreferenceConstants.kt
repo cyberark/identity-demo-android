@@ -29,6 +29,7 @@ object PreferenceConstants {
     const val REDIRECT_URI = "redirect_uri"
     const val HOST = "host"
     const val SCHEME = "scheme"
+    const val SITE_KEY = "site_key"
 
     const val NATIVE_LOGIN_URL = "native_login_url"
     const val MFA_WIDGET_URL = "mfa_widget_url"

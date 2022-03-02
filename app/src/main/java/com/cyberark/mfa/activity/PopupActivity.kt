@@ -16,29 +16,83 @@
 
 package com.cyberark.mfa.activity
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.Window
-import android.widget.Button
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.*
+import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.mfa.R
+import com.cyberark.mfa.activity.base.BaseActivity
+import com.cyberark.mfa.scenario1.NativeSignupActivity
+import com.cyberark.mfa.utils.AppConfig
 
-class PopupActivity : AppCompatActivity() {
+class PopupActivity : BaseActivity() {
+
+    // Progress indicator variable
+    private lateinit var progressBar: ProgressBar
+
+    private lateinit var account: CyberArkAccountBuilder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.activity_popup)
         window.setBackgroundDrawableResource(android.R.color.transparent)
+        updateUI()
+    }
 
-        val headerText: TextView? = findViewById(R.id.header_text)
-        headerText?.text = intent.extras?.getString("title")
-        val contentText: TextView? = findViewById(R.id.content_text)
-        contentText?.text = intent.extras?.getString("desc")
+    /**
+     * Update UI components
+     *
+     */
+    private fun updateUI() {
+        // Invoke UI element
+        progressBar = findViewById(R.id.progressBar_popup_activity)
+
+        // Setup CyberArk hosted login account
+        account = AppConfig.setupAccountFromSharedPreference(this)
 
         val confirmButton: Button = findViewById(R.id.button_confirm)
-        confirmButton.setOnClickListener {
+        val iconSuccessLayout = findViewById<FrameLayout>(R.id.success_layout)
+        val iconFailureLayout = findViewById<FrameLayout>(R.id.failure_layout)
+
+        val cancelDialog = findViewById<LinearLayout>(R.id.cancel_dialog)
+        cancelDialog.setOnClickListener {
             finish()
         }
+
+        val activityIntent = intent
+        when {
+            activityIntent.getStringExtra("from_activity").equals("NativeSignupActivity") -> {
+                if(activityIntent.extras?.getBoolean("success") == true) {
+                    iconSuccessLayout.visibility = View.VISIBLE
+                    iconFailureLayout.visibility = View.GONE
+                    confirmButton.text = getString(R.string.login)
+                    confirmButton.setOnClickListener {
+                        login(account, progressBar)
+                        finish()
+                    }
+                } else {
+                    iconSuccessLayout.visibility = View.GONE
+                    iconFailureLayout.visibility = View.VISIBLE
+                    confirmButton.text = getString(R.string.button_retry)
+                    confirmButton.setOnClickListener {
+                        val intent = Intent(this, NativeSignupActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+            }
+            else -> {
+                confirmButton.setOnClickListener {
+                    finish()
+                }
+            }
+        }
+        val headerText: TextView? = findViewById(R.id.header_text)
+        headerText?.text = activityIntent.extras?.getString("title")
+        val contentText: TextView? = findViewById(R.id.content_text)
+        contentText?.text = activityIntent.extras?.getString("desc")
     }
 }
