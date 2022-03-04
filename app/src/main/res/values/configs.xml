@@ -102,8 +102,8 @@
 
 <resources>
     // CyberArk hosted login
-    <string name="cyberark_account_system_url">aak7796.my.dev.idaptive.app</string>
-    <string name="cyberark_account_host_url">aak7796.my.dev.idaptive.app</string>
+    <string name="cyberark_account_system_url">aar5203.my.idaptive.qa</string>
+    <string name="cyberark_account_host_url">auth.cyberarklab.com</string>
     <string name="cyberark_account_client_id">acme</string>
     <string name="cyberark_account_app_id">AcmeAndroidApp</string>
     <string name="cyberark_account_response_type">code</string>

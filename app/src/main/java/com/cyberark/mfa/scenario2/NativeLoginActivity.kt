@@ -111,6 +111,7 @@ class NativeLoginActivity : AppCompatActivity() {
      * @param username: login username
      * @param password: login password
      */
+    // TODO.. need to update header params based on api updates
     private fun performLogin(username: String, password: String) {
         // Show progress indicator
         progressBar.visibility = View.VISIBLE

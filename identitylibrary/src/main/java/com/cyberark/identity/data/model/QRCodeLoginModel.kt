@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
+ * Copyright (c) 2022 CyberArk Software Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,84 +16,30 @@
 
 package com.cyberark.identity.data.model
 
-import androidx.annotation.Keep
-import com.google.gson.annotations.SerializedName
-
 /**
- * QR code login model class
- * handle QR authenticator response
+ * QR Code Login model class
+ *
+ * @property success: QR Code login status true/false
+ * @property Result: QR Code login result
+ * @property Message: message
+ * @property MessageID: message ID
+ * @property Exception: OTP enroll exception
+ * @property ErrorID: error ID
+ * @property ErrorCode: error code
+ * @property IsSoftError: soft error, true/false
+ * @property InnerExceptions: inner exceptions
+ * @property plainResult: plain result
  *
  */
-@Keep
-class QRCodeLoginModel {
-    var success = false
-
-    @SerializedName("Result")
-    var result: Result? = null
-
-    @SerializedName("Message")
-    var message: String? = null
-
-    @SerializedName("MessageID")
-    var messageID: String? = null
-
-    @SerializedName("Exception")
-    var exception: String? = null
-
-    @SerializedName("ErrorID")
-    var errorID: String? = null
-
-    @SerializedName("ErrorCode")
-    var errorCode: String? = null
-
-    @SerializedName("IsSoftError")
-    var isSoftError: Boolean? = null
-
-    @SerializedName("InnerExceptions")
-    var innerExceptions: String? = null
-
-    @SerializedName("PlainResult")
-    var plainResult: String? = null
-
-    /**
-     * Result class
-     *
-     */
-    inner class Result {
-        @SerializedName("AuthLevel")
-        var authLevel: String? = null
-
-        @SerializedName("DisplayName")
-        var displayName: String? = null
-
-        @SerializedName("Auth")
-        var auth: String? = null
-
-        @SerializedName("UserId")
-        var userId: String? = null
-
-        @SerializedName("EmailAddress")
-        var emailAddress: String? = null
-
-        @SerializedName("UserDirectory")
-        var userDirectory: String? = null
-
-        @SerializedName("PodFqdn")
-        var podFqdn: String? = null
-
-        @SerializedName("User")
-        var user: String? = null
-
-        @SerializedName("CustomerID")
-        var customerID: String? = null
-
-        @SerializedName("SystemID")
-        var systemID: String? = null
-
-        @SerializedName("SourceDsType")
-        var sourceDsType: String? = null
-
-        @SerializedName("Summary")
-        var summary: String? = null
-    }
-}
+data class QRCodeLoginModel(
+    val success: Boolean?,
+    val Result: QRCodeLoginResult?,
+    val Message: String?,
+    val MessageID: String?,
+    val Exception: String?,
+    val ErrorID: String?,
+    val ErrorCode: String?,
+    val IsSoftError: Boolean?,
+    val InnerExceptions: String?,
+    val plainResult: String?
+)
