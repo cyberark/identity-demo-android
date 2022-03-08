@@ -33,13 +33,13 @@ object AppConfig {
      */
     fun setupAccount(context: Context): CyberArkAccountBuilder {
         return CyberArkAccountBuilder.Builder()
-            .systemURL(context.getString(R.string.cyberark_account_system_url))
-            .hostURL(context.getString(R.string.cyberark_account_host_url))
-            .clientId(context.getString(R.string.cyberark_account_client_id))
-            .appId(context.getString(R.string.cyberark_account_app_id))
-            .responseType(context.getString(R.string.cyberark_account_response_type))
-            .scope(context.getString(R.string.cyberark_account_scope))
-            .redirectUri(context.getString(R.string.cyberark_account_redirect_uri))
+            .systemURL(context.getString(R.string.cyberark_auth_system_url))
+            .hostURL(context.getString(R.string.cyberark_auth_host_url))
+            .clientId(context.getString(R.string.cyberark_auth_client_id))
+            .appId(context.getString(R.string.cyberark_auth_app_id))
+            .responseType(context.getString(R.string.cyberark_auth_response_type))
+            .scope(context.getString(R.string.cyberark_auth_scope))
+            .redirectUri(context.getString(R.string.cyberark_auth_redirect_uri))
             .build()
     }
 
@@ -66,8 +66,8 @@ object AppConfig {
             .hostURL(hostUrl.toString())
             .clientId(clientId.toString())
             .appId(appId.toString())
-            .responseType(context.getString(R.string.cyberark_account_response_type))
-            .scope(context.getString(R.string.cyberark_account_scope))
+            .responseType(context.getString(R.string.cyberark_auth_response_type))
+            .scope(context.getString(R.string.cyberark_auth_scope))
             .redirectUri(redirectUri.toString())
             .build()
     }
@@ -80,31 +80,31 @@ object AppConfig {
     private fun saveConfigInSharedPreference(context: Context) {
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.SYSTEM_URL,
-            context.getString(R.string.cyberark_account_system_url)
+            context.getString(R.string.cyberark_auth_system_url)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.HOST_URL,
-            context.getString(R.string.cyberark_account_host_url)
+            context.getString(R.string.cyberark_auth_host_url)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.CLIENT_ID,
-            context.getString(R.string.cyberark_account_client_id)
+            context.getString(R.string.cyberark_auth_client_id)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.APP_ID,
-            context.getString(R.string.cyberark_account_app_id)
+            context.getString(R.string.cyberark_auth_app_id)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.REDIRECT_URI,
-            context.getString(R.string.cyberark_account_redirect_uri)
+            context.getString(R.string.cyberark_auth_redirect_uri)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.HOST,
-            context.getString(R.string.cyberark_account_host)
+            context.getString(R.string.cyberark_auth_host)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.SCHEME,
-            context.getString(R.string.cyberark_account_scheme)
+            context.getString(R.string.cyberark_auth_scheme)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.SITE_KEY,
@@ -171,7 +171,7 @@ object AppConfig {
     private fun saveNativeLoginURLInSharedPreference(context: Context) {
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.NATIVE_LOGIN_URL,
-            context.getString(R.string.cyberark_account_native_login_url)
+            context.getString(R.string.acme_native_login_url)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.MFA_WIDGET_URL,

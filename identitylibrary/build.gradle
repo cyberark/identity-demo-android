@@ -37,7 +37,7 @@ android {
 }
 
 dependencies {
-
+    //Default libs
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
@@ -88,9 +88,11 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
 
-    //External libs
+    //zxing lib
     implementation('com.journeyapps:zxing-android-embedded:4.2.0') { transitive = false }
     implementation 'com.google.zxing:core:3.4.1'
+
+    //Permission lib
     implementation 'pub.devrel:easypermissions:3.0.0'
 
     //Webkit lib

@@ -123,18 +123,18 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun updateUI() {
-        systemURL.setText(getString(R.string.cyberark_account_system_url))
-        hostURL.setText(getString(R.string.cyberark_account_host_url))
-        clientId.setText(getString(R.string.cyberark_account_client_id))
-        appId.setText(getString(R.string.cyberark_account_app_id))
-        responseType.setText(getString(R.string.cyberark_account_response_type))
-        scope.setText(getString(R.string.cyberark_account_scope))
-        redirectUri.setText(getString(R.string.cyberark_account_redirect_uri))
-        host.setText(getString(R.string.cyberark_account_host))
-        scheme.setText(getString(R.string.cyberark_account_scheme))
+        systemURL.setText(getString(R.string.cyberark_auth_system_url))
+        hostURL.setText(getString(R.string.cyberark_auth_host_url))
+        clientId.setText(getString(R.string.cyberark_auth_client_id))
+        appId.setText(getString(R.string.cyberark_auth_app_id))
+        responseType.setText(getString(R.string.cyberark_auth_response_type))
+        scope.setText(getString(R.string.cyberark_auth_scope))
+        redirectUri.setText(getString(R.string.cyberark_auth_redirect_uri))
+        host.setText(getString(R.string.cyberark_auth_host))
+        scheme.setText(getString(R.string.cyberark_auth_scheme))
         siteKey.setText(getString(R.string.recaptcha_v2_site_key))
 
-        nativeLoginURL.setText(getString(R.string.cyberark_account_native_login_url))
+        nativeLoginURL.setText(getString(R.string.acme_native_login_url))
         mfaWidgetHostUrl.setText(getString(R.string.cyberark_widget_host_url))
         mfaWidgetId.setText(getString(R.string.cyberark_widget_id))
 
