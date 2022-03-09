@@ -17,7 +17,7 @@
 package com.cyberark.identity.data.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * OTP enroll model class

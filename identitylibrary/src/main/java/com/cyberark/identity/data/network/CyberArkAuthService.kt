@@ -18,8 +18,8 @@ package com.cyberark.identity.data.network
 
 import com.cyberark.identity.data.model.*
 import com.cyberark.identity.util.endpoint.EndpointUrls
-import com.cyberark.identity.util.endpoint.EndpointUrls.URL_BASIC_LOGIN
 import com.cyberark.identity.util.endpoint.EndpointUrls.URL_FAST_ENROLL_V3
+import com.cyberark.identity.util.endpoint.EndpointUrls.URL_SIGNUP_USER
 import com.cyberark.identity.util.endpoint.EndpointUrls.URL_SUBMIT_OTP_CODE
 import com.cyberark.identity.util.endpoint.EndpointUrls.URL_UPDATE_DEV_SETTINGS
 import okhttp3.RequestBody
@@ -145,13 +145,15 @@ interface CyberArkAuthService {
     ): SubmitOTPModel
 
     /**
-     * Basic login
+     * Signup with captcha
      *
+     * @param idapNativeClient: idaptive native client
      * @param payload: request body
-     * @return EnrollmentModel
+     * @return SignupCaptchaModel
      */
-    @POST(URL_BASIC_LOGIN)
-    suspend fun basicLogin(
+    @POST(URL_SIGNUP_USER)
+    suspend fun signupWithCaptcha(
+        @Header(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT) idapNativeClient: Boolean,
         @Body payload: RequestBody
-    ): BasicLoginModel
+    ): SignupCaptchaModel
 }

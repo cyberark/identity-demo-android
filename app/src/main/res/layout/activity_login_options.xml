@@ -56,7 +56,8 @@
                         android:text="@string/cyberark_hosted_login"
                         android:textColor="@android:color/white"
                         android:textSize="19sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:gravity="center"/>
 
                     <ImageView
                         android:layout_width="30dp"

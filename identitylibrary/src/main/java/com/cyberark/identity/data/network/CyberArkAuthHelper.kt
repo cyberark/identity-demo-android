@@ -158,14 +158,17 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
     )
 
     /**
-     * Basic login
+     * Signup with captcha
      *
-     * @param payload: request body
-     * @return EnrollmentModel
+     * @param idapNativeClient: idaptive native client
+     * @param body: request body
+     * @return SignupCaptchaModel
      */
-    suspend fun basicLogin(
+    suspend fun signupWithCaptcha(
+        idapNativeClient: Boolean,
         body: RequestBody
-    ): BasicLoginModel = cyberArkAuthService.basicLogin(
+    ): SignupCaptchaModel = cyberArkAuthService.signupWithCaptcha(
+        idapNativeClient,
         body
     )
 }

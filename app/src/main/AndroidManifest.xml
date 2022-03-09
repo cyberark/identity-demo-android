@@ -35,6 +35,13 @@
             android:exported="false"
             android:theme="@style/AppTheme.WithActionBar" />
         <activity
+            android:name=".scenario1.NativeSignupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".scenario1.NativeSignupPopupActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Dialog" />
+        <activity
             android:name=".scenario2.MFAWidgetActivity"
             android:exported="false"
             android:theme="@style/AppTheme.WithActionBar"/>

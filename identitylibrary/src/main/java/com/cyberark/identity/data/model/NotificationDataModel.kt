@@ -17,15 +17,26 @@
 package com.cyberark.identity.data.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
- * Refresh token model class
+ * Notification data model
  *
- * @property access_token: access token
- * @property token_type: token type
- * @property expires_in: access token expires time
- * @property scope: application access scope
+ * @property Title: notification title
+ * @property AppIconUrl: application iocn url
+ * @property IpAddress: IP Address
+ * @property ChallengeAnswer: notification challenge answer
+ * @property Location: location
+ * @property Message: notification body message
+ * @property CollapseId: collapse id
+ * @property TargetAuthUser: target user
+ * @property LoginType: login type
+ * @property ExpiryDate: expiry date
+ * @property AppName: application name
+ * @property AuthRequestDate: authentication requested date
+ * @property CommandUuid: command uuid
+ * @property CountryCode: country code
+ * @property CountryName: country name
  *
  */
 @Parcelize

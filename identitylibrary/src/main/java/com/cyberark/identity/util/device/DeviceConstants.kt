@@ -26,11 +26,7 @@ internal object DeviceConstants {
     const val KEY_DEVICE_VERSION = "version"
     const val KEY_DEVICE_UDID = "udid"
     const val KEY_DEVICE_MANUFACTURER = "Manufacturer"
-    const val KEY_DEVICE_TYPE = "devicetype"
     const val KEY_DEVICE_OS = "os"
     const val KEY_DEVICE_ID = "DeviceID"
     const val KEY_FCM_TOKEN = "Token"
-
-    const val KEY_BASIC_LOGIN_USERNAME = "Username"
-    const val KEY_BASIC_LOGIN_PASSWORD = "Password"
 }

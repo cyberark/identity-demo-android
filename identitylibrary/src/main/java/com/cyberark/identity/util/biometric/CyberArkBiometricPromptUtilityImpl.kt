@@ -22,7 +22,6 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import com.cyberark.identity.R
-import com.cyberark.identity.util.AlertDialogHandler
 
 /**
  * CyberArk Biometric prompt utility implementation
@@ -40,7 +39,6 @@ internal class CyberArkBiometricPromptUtilityImpl(private val callbackCyberArk: 
     private var mPrompt: BiometricPrompt? = null
     private var negitiveButtonText: String? = null
 
-    private lateinit var enrollFingerPrintDlg: AlertDialogHandler
     private var useDevicePin: Boolean = false
 
     /**
@@ -231,7 +229,7 @@ internal class CyberArkBiometricPromptUtilityImpl(private val callbackCyberArk: 
             setDescription(activity.getString(R.string.dialog_biometric_prompt_desc))
             setConfirmationRequired(false)
             setAllowedAuthenticators(getSecurityType())
-            if (useDevicePin == false) {
+            if (!useDevicePin) {
                 setAllowedAuthenticators(getSecurityType())
                 setNegativeButtonText(negitiveButtonText!!)
                 negitiveButtonText = null

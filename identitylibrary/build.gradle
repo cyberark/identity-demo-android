@@ -37,7 +37,7 @@ android {
 }
 
 dependencies {
-
+    //Default libs
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
@@ -68,14 +68,14 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:3.9.0'
 
     //"powermock-classloading-xstream" lib is dependent on "com.thoughtworks.xstream" lib to handle Snyk scan issues
-    implementation 'com.thoughtworks.xstream:xstream:1.4.18'
+    implementation 'com.thoughtworks.xstream:xstream:1.4.19'
     //"org.robolectric:robolectric" lib is dependent on "com.google.guava:guava" lib to handle Snyk scan issues
     implementation 'com.google.guava:guava:30.1.1-android'
 
     //LifeCycle libs
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
 
     //Custom tab support browser plugin
     implementation "androidx.browser:browser:1.4.0"
@@ -88,11 +88,16 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
 
-    //External libs
+    //zxing lib
     implementation('com.journeyapps:zxing-android-embedded:4.2.0') { transitive = false }
     implementation 'com.google.zxing:core:3.4.1'
+
+    //Permission lib
     implementation 'pub.devrel:easypermissions:3.0.0'
 
     //Webkit lib
     implementation 'androidx.webkit:webkit:1.4.0'
+
+    //Google reCAPTCHA V2 (safetynet) lib
+    implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
 }

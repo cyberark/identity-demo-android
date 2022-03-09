@@ -239,6 +239,21 @@
                     android:inputType="none"
                     tools:ignore="LabelFor" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/site_key" />
+
+                <EditText
+                    android:id="@+id/editTextSiteKey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:ems="10"
+                    android:importantForAutofill="no"
+                    android:inputType="none"
+                    tools:ignore="LabelFor" />
+
             </LinearLayout>
 
             <LinearLayout

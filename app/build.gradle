@@ -17,8 +17,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders = [cyberarkIdentityHost: "@string/cyberark_account_host",
-                                cyberarkIdentityScheme: "@string/cyberark_account_scheme"]
+        manifestPlaceholders = [cyberarkIdentityHost: "@string/cyberark_auth_host",
+                                cyberarkIdentityScheme: "@string/cyberark_auth_scheme"]
     }
 
     buildTypes {
@@ -39,7 +39,7 @@ android {
 dependencies {
 
     // CyberArk Identity Android SDK lib
-    implementation files('libs/cyberark_identity_sdk-1.1.0.aar')
+    implementation files('libs/cyberark_identity_sdk-22.3.1.aar')
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -57,12 +57,15 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
     //LifeCycle libs
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-    implementation 'com.google.code.gson:gson:2.8.6'
+
+    //Volley network operations lib
+    implementation 'com.android.volley:volley:1.2.1'
 
 
     // ####################### SDK libraries start ######################### //
+    //Default libs
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
@@ -90,13 +93,13 @@ dependencies {
     testImplementation "org.json:json:20210307"
     testImplementation "org.mockito.kotlin:mockito-kotlin:3.2.0"
     testImplementation 'org.mockito:mockito-core:3.9.0'
-    implementation 'com.thoughtworks.xstream:xstream:1.4.18'
+    implementation 'com.thoughtworks.xstream:xstream:1.4.19'
     implementation 'com.google.guava:guava:30.1.1-android'
 
     //LifeCycle libs
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
 
     //Custom tab support browser plugin
     implementation "androidx.browser:browser:1.4.0"
@@ -109,12 +112,17 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
 
-    //External libs
+    //zxing lib
     implementation('com.journeyapps:zxing-android-embedded:4.2.0') { transitive = false }
     implementation 'com.google.zxing:core:3.4.1'
+
+    //Permission lib
     implementation 'pub.devrel:easypermissions:3.0.0'
 
     //Webkit lib
     implementation 'androidx.webkit:webkit:1.4.0'
+
+    //Google reCAPTCHA V2 (safetynet) lib
+    implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
     // ####################### SDK libraries end ######################### //
 }

@@ -30,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
 import com.cyberark.mfa.scenario1.MFAActivity
+import com.cyberark.mfa.scenario1.NativeSignupActivity
 import com.cyberark.mfa.utils.PreferenceConstants
 
 class SettingsActivity : AppCompatActivity() {
@@ -43,6 +44,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var redirectUri: EditText
     private lateinit var host: EditText
     private lateinit var scheme: EditText
+    private lateinit var siteKey: EditText
 
     private lateinit var nativeLoginURL: EditText
     private lateinit var mfaWidgetHostUrl: EditText
@@ -78,19 +80,28 @@ class SettingsActivity : AppCompatActivity() {
 
         val beforeLoginLayout: LinearLayout = findViewById(R.id.before_login_layout)
         val afterLoginLayout: LinearLayout = findViewById(R.id.after_login_layout)
+        val basicLoginLayout: LinearLayout = findViewById(R.id.basicLoginLayout)
         val activityIntent = intent
         when {
             activityIntent.getStringExtra("from_activity").equals("LoginOptionsActivity") -> {
                 beforeLoginLayout.visibility = View.VISIBLE
                 afterLoginLayout.visibility = View.GONE
+                basicLoginLayout.visibility = View.VISIBLE
             }
             activityIntent.getStringExtra("from_activity").equals("MFAActivity") -> {
                 beforeLoginLayout.visibility = View.GONE
                 afterLoginLayout.visibility = View.VISIBLE
+                basicLoginLayout.visibility = View.GONE
+            }
+            activityIntent.getStringExtra("from_activity").equals("NativeSignupActivity") -> {
+                beforeLoginLayout.visibility = View.VISIBLE
+                afterLoginLayout.visibility = View.GONE
+                basicLoginLayout.visibility = View.VISIBLE
             }
             else -> {
                 beforeLoginLayout.visibility = View.GONE
                 afterLoginLayout.visibility = View.GONE
+                basicLoginLayout.visibility = View.GONE
             }
         }
 
@@ -104,6 +115,7 @@ class SettingsActivity : AppCompatActivity() {
         redirectUri = findViewById(R.id.editTextRedirectURI)
         host = findViewById(R.id.editTextHost)
         scheme = findViewById(R.id.editTextScheme)
+        siteKey = findViewById(R.id.editTextSiteKey)
 
         nativeLoginURL = findViewById(R.id.editTextBasicLoginURL)
         mfaWidgetHostUrl = findViewById(R.id.editTextMFAWidgetHostURL)
@@ -111,17 +123,18 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun updateUI() {
-        systemURL.setText(getString(R.string.cyberark_account_system_url))
-        hostURL.setText(getString(R.string.cyberark_account_host_url))
-        clientId.setText(getString(R.string.cyberark_account_client_id))
-        appId.setText(getString(R.string.cyberark_account_app_id))
-        responseType.setText(getString(R.string.cyberark_account_response_type))
-        scope.setText(getString(R.string.cyberark_account_scope))
-        redirectUri.setText(getString(R.string.cyberark_account_redirect_uri))
-        host.setText(getString(R.string.cyberark_account_host))
-        scheme.setText(getString(R.string.cyberark_account_scheme))
+        systemURL.setText(getString(R.string.cyberark_auth_system_url))
+        hostURL.setText(getString(R.string.cyberark_auth_host_url))
+        clientId.setText(getString(R.string.cyberark_auth_client_id))
+        appId.setText(getString(R.string.cyberark_auth_app_id))
+        responseType.setText(getString(R.string.cyberark_auth_response_type))
+        scope.setText(getString(R.string.cyberark_auth_scope))
+        redirectUri.setText(getString(R.string.cyberark_auth_redirect_uri))
+        host.setText(getString(R.string.cyberark_auth_host))
+        scheme.setText(getString(R.string.cyberark_auth_scheme))
+        siteKey.setText(getString(R.string.recaptcha_v2_site_key))
 
-        nativeLoginURL.setText(getString(R.string.cyberark_account_native_login_url))
+        nativeLoginURL.setText(getString(R.string.acme_native_login_url))
         mfaWidgetHostUrl.setText(getString(R.string.cyberark_widget_host_url))
         mfaWidgetId.setText(getString(R.string.cyberark_widget_id))
 
@@ -176,6 +189,7 @@ class SettingsActivity : AppCompatActivity() {
         )
         CyberArkPreferenceUtil.putString(PreferenceConstants.HOST, host.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.SCHEME, scheme.text.toString())
+        CyberArkPreferenceUtil.putString(PreferenceConstants.SITE_KEY, siteKey.text.toString())
 
         CyberArkPreferenceUtil.putString(PreferenceConstants.NATIVE_LOGIN_URL, nativeLoginURL.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.MFA_WIDGET_URL, mfaWidgetHostUrl.text.toString())
@@ -226,6 +240,10 @@ class SettingsActivity : AppCompatActivity() {
         if (!schemeSP.equals(scheme.text.toString())) {
             scheme.setText(schemeSP)
         }
+        val siteKeySP = CyberArkPreferenceUtil.getString(PreferenceConstants.SITE_KEY, null)
+        if (!siteKeySP.equals(siteKey.text.toString())) {
+            siteKey.setText(siteKeySP)
+        }
 
         val nativeLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.NATIVE_LOGIN_URL, null)
         if (!nativeLoginURLSP.equals(nativeLoginURL.text.toString())) {
@@ -267,6 +285,10 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         } else if (activityIntent.getStringExtra("from_activity").equals("MFAActivity")) {
             val intent = Intent(this, MFAActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+        } else if (activityIntent.getStringExtra("from_activity").equals("NativeSignupActivity")) {
+            val intent = Intent(this, NativeSignupActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         }

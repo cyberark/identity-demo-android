@@ -24,13 +24,11 @@ import java.util.*
 /**
  * CyberArk widget builder
  *
- * @property nativeLoginURL: native login URL
  * @property systemURL: system URL
  * @property hostURL: host URL
  * @property widgetId: widget ID
  */
 class CyberArkWidgetBuilder(
-    private val nativeLoginURL: String?,
     private val systemURL: String?,
     private val hostURL: String?,
     private val widgetId: String?
@@ -46,24 +44,15 @@ class CyberArkWidgetBuilder(
     /**
      * Builder data class
      *
-     * @property nativeLoginURL: native login URL
      * @property systemURL: system URL
      * @property hostURL: host URL
      * @property widgetId: widget ID
      */
     data class Builder(
-        var nativeLoginURL: String? = null,
         var systemURL: String? = null,
         var hostURL: String? = null,
         var widgetId: String? = null
     ) {
-
-        /**
-         * Set native login URL
-         *
-         * @param nativeLoginURL
-         */
-        fun nativeLoginURL(nativeLoginURL: String) = apply { this.nativeLoginURL = nativeLoginURL }
 
         /**
          * Set System URL
@@ -91,7 +80,6 @@ class CyberArkWidgetBuilder(
          *
          */
         fun build() = CyberArkWidgetBuilder(
-            nativeLoginURL,
             systemURL,
             hostURL,
             widgetId
@@ -111,12 +99,6 @@ class CyberArkWidgetBuilder(
             .toString()
         return URLDecoder.decode(widgetURL, "UTF-8")
     }
-
-    /**
-     * Get native login URL
-     */
-    val getNativeLoginURL: String
-        get() = nativeLoginURL.toString()
 
     /**
      * Check valid and secure url

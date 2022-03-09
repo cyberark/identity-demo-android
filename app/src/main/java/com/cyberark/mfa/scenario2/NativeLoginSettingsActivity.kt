@@ -82,7 +82,7 @@ class NativeLoginSettingsActivity : AppCompatActivity() {
     }
 
     private fun updateUI() {
-        nativeLoginURL.setText(getString(R.string.cyberark_account_native_login_url))
+        nativeLoginURL.setText(getString(R.string.acme_native_login_url))
         mfaWidgetHostUrl.setText(getString(R.string.cyberark_widget_host_url))
         mfaWidgetId.setText(getString(R.string.cyberark_widget_id))
 

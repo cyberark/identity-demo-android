@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
+  ~ Copyright (c) 2022 CyberArk Software Ltd. All rights reserved.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,11 +15,12 @@
   -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_gray"
-    tools:context=".activity.AlertActivity">
+    android:padding="20dp"
+    tools:context=".scenario1.NativeSignupPopupActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -33,87 +34,54 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/dark_blue">
+            android:backgroundTint="@color/dark_blue"
+            card_view:cardCornerRadius="20dp"
+            card_view:cardElevation="5dp"
+            card_view:cardUseCompatPadding="true">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:id="@+id/content_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                   android:layout_margin="12dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/header_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="28dp"/>
-
-                    <TextView
-                        android:id="@+id/content_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/end_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/login_hosted_end"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
-                </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/content_layout"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    android:paddingBottom="12dp"
-                    android:weightSum="1">
-
-                    <Button
-                        android:id="@+id/button_signup"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_weight="0.5"
-                        android:backgroundTint="@color/purple_500"
-                        android:text="@string/signup"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        tools:ignore="ButtonStyle" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
                     <Button
                         android:id="@+id/button_login"
-                        android:layout_width="0dp"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_weight="0.5"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="18dp"
                         android:backgroundTint="@color/purple_500"
-                        android:text="@string/button_log_in"
+                        android:text="@string/login"
                         android:textAllCaps="false"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/signup_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/not_registered_yet"
+                        android:textAlignment="center"
                         android:textColor="@color/white"
-                        android:textSize="16sp"
-                        tools:ignore="ButtonStyle" />
+                        android:textSize="18sp"
+                        android:layout_marginTop="15dp"/>
+
+                    <Button
+                        android:id="@+id/button_signup"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="@color/purple_500"
+                        android:text="@string/signup"
+                        android:textAllCaps="false"
+                        android:textSize="16sp" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -132,6 +100,7 @@
                 </LinearLayout>
 
             </RelativeLayout>
+
         </androidx.cardview.widget.CardView>
 
     </ScrollView>

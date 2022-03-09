@@ -32,6 +32,8 @@ import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.mfa.R
 import com.cyberark.mfa.activity.base.BaseActivity
 import com.cyberark.mfa.scenario1.MFAActivity
+import com.cyberark.mfa.scenario1.NativeSignupActivity
+import com.cyberark.mfa.scenario1.NativeSignupPopupActivity
 import com.cyberark.mfa.scenario2.NativeLoginActivity
 import com.cyberark.mfa.utils.AppConfig
 
@@ -67,7 +69,8 @@ class LoginOptionsActivity : BaseActivity() {
         AppConfig.setupNativeLoginFromSharedPreference(this)
 
         findViewById<CardView>(R.id.cv_redirect_login).setOnClickListener {
-            login(account, progressBar)
+            val intent = Intent(this, NativeSignupPopupActivity::class.java)
+            startForResult.launch(intent)
         }
 
         findViewById<CardView>(R.id.cv_mfa_widget_login).setOnClickListener {
@@ -79,15 +82,36 @@ class LoginOptionsActivity : BaseActivity() {
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val data = result.data?.getStringExtra("ALERT_LOGIN_STATUS").toBoolean()
-                if (data) {
+                val alertData = result.data?.getStringExtra("ALERT_STATUS").toBoolean()
+                if (alertData) {
                     when (result.data?.extras?.getInt("scenario")) {
                         1 -> {
-                            login(account, progressBar)
+                            when(result.data?.extras?.getInt("section")) {
+                                1 -> {
+                                    val intent = Intent(this, NativeSignupActivity::class.java)
+                                    startActivity(intent)
+                                }
+                                2 -> {
+                                    login(account, progressBar)
+                                }
+                            }
                         }
                         2 -> {
                             val intent = Intent(this, NativeLoginActivity::class.java)
                             startActivity(intent)
+                        }
+                    }
+                } else {
+                    val popupData = result.data?.getStringExtra("POPUP_STATUS").toBoolean()
+                    if (popupData) {
+                        when (result.data?.extras?.getInt("section")) {
+                            1 -> {
+                                val intent = Intent(this, NativeSignupActivity::class.java)
+                                startActivity(intent)
+                            }
+                            2 -> {
+                                login(account, progressBar)
+                            }
                         }
                     }
                 }
@@ -98,8 +122,8 @@ class LoginOptionsActivity : BaseActivity() {
         when (view.id) {
             R.id.tv_redirect_login -> {
                 val intent = Intent(this, AlertActivity::class.java)
-                intent.putExtra("title", getString(R.string.cyberark_hosted_login_title))
-                intent.putExtra("desc", getString(R.string.cyberark_hosted_login_description))
+                intent.putExtra("title", getString(R.string.signup_and_login_using_cyberArk_identity))
+                intent.putExtra("desc", getString(R.string.signup_and_login_using_cyberArk_identity_desc))
                 intent.putExtra("scenario", 1)
                 startForResult.launch(intent)
             }

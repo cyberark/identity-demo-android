@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
+ * Copyright (c) 2022 CyberArk Software Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,64 +19,65 @@ package com.cyberark.identity.provider.manager
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.cyberark.identity.builder.CyberArkWidgetBuilder
+import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.data.network.CyberArkAuthService
-import com.cyberark.identity.util.device.DeviceConstants
-import com.cyberark.identity.viewmodel.BasicLoginViewModel
+import com.cyberark.identity.util.endpoint.EndpointUrls
+import com.cyberark.identity.viewmodel.SignupWithCaptchaViewModel
 import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
 import org.json.JSONObject
 
 /**
- * CyberArk basic login manager class
+ * CyberArk signup manager class
  *
- * @property context: Activity Context
- * @property username: login user name
- * @property password: login password
+ * @property context: Application / Activity context
+ * @property signupData: signup form data
+ * @property siteKey: siteKey for captcha validation
+ * @property account: CyberArkAccountBuilder
+ *
  */
-internal class CyberArkBasicLoginManager(
+internal class CyberArkSignupManager(
     private val context: Context,
-    private val username: String,
-    private val password: String,
-    widgetBuilder: CyberArkWidgetBuilder
+    private val signupData: JSONObject,
+    private val siteKey: String,
+    private val account: CyberArkAccountBuilder
 ) {
-    private val viewModel: BasicLoginViewModel
+    private val viewModel: SignupWithCaptchaViewModel
 
     /**
-     * Handle basic login
+     * Handle signup with captcha
      */
-    internal fun basicLogin() {
-        viewModel.handleBasicLogin(getBodyPayload())
+    internal fun signupWithCaptcha() {
+        viewModel.handleSignupWithCaptcha(context, getHeaderPayload(), signupData, siteKey)
     }
 
     /**
      * Get view model instance
      */
-    internal val getViewModelInstance: BasicLoginViewModel
+    internal val getViewModelInstance: SignupWithCaptchaViewModel
         get() = viewModel
 
     init {
-        // Initialize BasicLoginViewModel
+        // Initialize SignupWithCaptchaViewModel
         val appContext: AppCompatActivity = context as AppCompatActivity
         val cyberArkAuthService: CyberArkAuthService =
-            CyberArkAuthBuilder.getRetrofit(widgetBuilder.getNativeLoginURL)
+            CyberArkAuthBuilder.getRetrofit(account.getBaseUrl)
                 .create(CyberArkAuthService::class.java)
         viewModel = ViewModelProvider(
             appContext,
             CyberArkViewModelFactory(CyberArkAuthHelper(cyberArkAuthService))
-        )[BasicLoginViewModel::class.java]
+        )[SignupWithCaptchaViewModel::class.java]
     }
 
     /**
-     * Get request body payload
+     * Get header payload
      *
      * @return JSONObject
      */
-    private fun getBodyPayload(): JSONObject {
+    private fun getHeaderPayload(): JSONObject {
         val payload = JSONObject()
-        payload.put(DeviceConstants.KEY_BASIC_LOGIN_USERNAME, username)
-        payload.put(DeviceConstants.KEY_BASIC_LOGIN_PASSWORD, password)
+        payload.put(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT, true)
         return payload
     }
 }

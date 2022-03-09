@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
+ * Copyright (c) 2022 CyberArk Software Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,18 @@
 
 package com.cyberark.identity.data.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 /**
- * Basic login model class
+ * Role integration result
  *
- * @property success: enrollment response, true/false
- * @property Result: basic login result class
- * @property ErrorMessage: error message
+ * @property success: signup role integration result status true/false
+ * @property Message: signup role integration message
  *
  */
-data class BasicLoginModel(
+@Parcelize
+data class SignupRoleIntegrationResult(
     val success: Boolean,
-    val Result: BasicLoginResult,
-    val ErrorMessage: String
-)
+    val Message: String
+) : Parcelable

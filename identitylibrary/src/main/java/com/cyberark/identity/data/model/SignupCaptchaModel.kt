@@ -16,11 +16,14 @@
 
 package com.cyberark.identity.data.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 /**
- * QR Code Login model class
+ * OTP enroll model class
  *
- * @property success: QR Code login status true/false
- * @property Result: QR Code login result
+ * @property success: OTP enroll status true/false
+ * @property Result: Signup captcha result
  * @property Message: message
  * @property MessageID: message ID
  * @property Exception: OTP enroll exception
@@ -28,18 +31,17 @@ package com.cyberark.identity.data.model
  * @property ErrorCode: error code
  * @property IsSoftError: soft error, true/false
  * @property InnerExceptions: inner exceptions
- * @property plainResult: plain result
  *
  */
-data class QRCodeLoginModel(
-    val success: Boolean?,
-    val Result: QRCodeLoginResult?,
-    val Message: String?,
-    val MessageID: String?,
-    val Exception: String?,
-    val ErrorID: String?,
-    val ErrorCode: String?,
-    val IsSoftError: Boolean?,
-    val InnerExceptions: String?,
-    val plainResult: String?
-)
+@Parcelize
+data class SignupCaptchaModel(
+    val success: Boolean,
+    val Result: SignupCaptchaResult,
+    val Message: String,
+    val MessageID: String,
+    val Exception: String,
+    val ErrorID: String,
+    val ErrorCode: String,
+    val IsSoftError: Boolean,
+    val InnerExceptions: String
+) : Parcelable

@@ -141,7 +141,7 @@ internal class CyberArkAuthManager(
         viewModel = ViewModelProvider(
             appContext,
             CyberArkViewModelFactory(CyberArkAuthHelper(cyberArkAuthService))
-        ).get(AuthenticationViewModel::class.java)
+        )[AuthenticationViewModel::class.java]
     }
 
 }

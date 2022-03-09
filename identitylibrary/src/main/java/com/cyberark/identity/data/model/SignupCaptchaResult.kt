@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
+ * Copyright (c) 2022 CyberArk Software Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,18 @@
 
 package com.cyberark.identity.data.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 /**
- * Basic login result class
+ * Signup captcha result
  *
- * @property SessionUuid: session uuid
- * @property MFAUserName: MFA username
+ * @property SignupRoleIntegrationResult : Signup role integration result
+ * @property UserId: user ID
  *
  */
-data class BasicLoginResult(
-    val SessionUuid: String,
-    val MFAUserName: String
-)
+@Parcelize
+data class SignupCaptchaResult(
+    val SignupRoleIntegrationResult: SignupRoleIntegrationResult,
+    val UserId: String
+) : Parcelable

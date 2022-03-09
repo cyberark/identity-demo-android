@@ -19,10 +19,11 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    tools:context=".activity.AlertActivity">
+    android:padding="20dp"
+    tools:context=".activity.PopupActivity">
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/dark_blue"
@@ -42,33 +43,60 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp">
+                android:layout_margin="5dp">
 
                 <LinearLayout
                     android:id="@+id/content_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <FrameLayout
+                        android:id="@+id/success_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="10dp">
 
                         <ImageButton
-                            android:id="@+id/button_login"
                             android:layout_width="55dp"
                             android:layout_height="55dp"
                             android:background="@drawable/circle_shape_approve"
+                            android:contentDescription="@string/login"
                             android:textColor="@color/white" />
 
                         <ImageView
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:layout_gravity="center"
+                            android:contentDescription="@string/notification_action_approve"
                             android:src="@drawable/notification_accept" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/failure_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:visibility="gone">
+
+                        <ImageButton
+                            android:layout_width="55dp"
+                            android:layout_height="55dp"
+                            android:background="@drawable/circle_shape_deny"
+                            android:contentDescription="@string/login"
+                            android:textColor="@color/white" />
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center"
+                            android:contentDescription="@string/notification_action_deny"
+                            android:src="@drawable/notification_deny" />
 
                     </FrameLayout>
 
@@ -96,6 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/content_layout"
                     android:gravity="center_horizontal"
+                    android:paddingBottom="10dp"
                     android:orientation="horizontal">
 
                     <Button
@@ -105,17 +134,44 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="10dp"
+                        android:backgroundTint="@color/purple_500"
                         android:paddingStart="30dp"
                         android:paddingEnd="30dp"
-                        android:backgroundTint="@color/purple_500"
                         android:text="@string/button_done"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="16sp" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cancel_dialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:orientation="horizontal"
+                    android:padding="7dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@android:drawable/ic_menu_close_clear_cancel"
+                        android:contentDescription="@string/cancel"/>
+                </LinearLayout>
+
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
     </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar_popup_activity"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+        app:layout_constraintStart_toStartOf="@+id/scrollView2"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

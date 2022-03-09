@@ -23,7 +23,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import com.cyberark.identity.R
-import com.cyberark.identity.util.AlertDialogHandler
+import com.cyberark.identity.util.dialog.AlertDialogHandler
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito

@@ -22,6 +22,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.Settings
 import android.text.method.LinkMovementMethod
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -30,26 +31,40 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.cyberark.identity.builder.CyberArkWidgetBuilder
 import com.cyberark.identity.util.*
 import com.cyberark.identity.util.biometric.CyberArkBiometricCallback
 import com.cyberark.identity.util.biometric.CyberArkBiometricManager
 import com.cyberark.identity.util.biometric.CyberArkBiometricPromptUtility
+import com.cyberark.identity.util.dialog.AlertButton
+import com.cyberark.identity.util.dialog.AlertButtonType
+import com.cyberark.identity.util.dialog.AlertDialogButtonCallback
+import com.cyberark.identity.util.dialog.AlertDialogHandler
 import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
 import com.cyberark.mfa.activity.WelcomeActivity
 import com.cyberark.mfa.utils.AppConfig
 import com.cyberark.mfa.utils.PreferenceConstants
+import org.json.JSONObject
 
 class TransferFundActivity : AppCompatActivity() {
 
-    private var biometricsOnAppLaunchRequested: Boolean = false
+    companion object {
+        const val TAG = "TransferFundActivity"
+    }
 
+    private var biometricsOnAppLaunchRequested: Boolean = false
     private lateinit var mfaWidgetBuilder: CyberArkWidgetBuilder
     private lateinit var editTextAmount: EditText
     private lateinit var enterAmount: TextView
     private lateinit var mfaWidgetUsername: String
+    private lateinit var queue: RequestQueue
 
     // SDK biometrics utility variable
     private lateinit var cyberArkBiometricPromptUtility: CyberArkBiometricPromptUtility
@@ -57,8 +72,11 @@ class TransferFundActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transfer_fund)
+
         supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.BLACK))
         title = getString(R.string.acme)
+
+        queue = Volley.newRequestQueue(this)
         mfaWidgetBuilder = AppConfig.setupNativeLoginFromSharedPreference(this)
         mfaWidgetUsername =
             CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_USERNAME, null)
@@ -167,11 +185,64 @@ class TransferFundActivity : AppCompatActivity() {
         R.id.action_logout -> {
             // Perform clean-up and logout
             cleanUp()
+//            performLogout()
             true
         }
         else -> {
             super.onOptionsItemSelected(item)
         }
+    }
+
+    /**
+     * Perform native logout
+     *
+     */
+    private fun performLogout() {
+        val baseUrl = AppConfig.getNativeLoginURL(this)
+        // Native logout URL
+        val url = "$baseUrl/api/auth/logoutSession"
+
+        // TODO.. need to update header params based on api updates
+        // Header params
+        val headerParams: MutableMap<String, String> = HashMap()
+        headerParams["Cookie"] = "cookie"
+        headerParams["X-XSRF-TOKEN"] = "token"
+        headerParams["Content-Type"] = "application/json"
+
+        // Body params
+        val bodyParams = JSONObject()
+        bodyParams.put("SessionUuid", "SessionUuid")
+        val requestBody = bodyParams.toString()
+
+        // Network request object
+        val request: JsonObjectRequest = object : JsonObjectRequest(
+            Method.POST, url, null,
+            Response.Listener { response ->
+                try {
+                    if (response.getBoolean("Success")) {
+                        // Perform clean-up and logout
+                        cleanUp()
+                    }
+                } catch (ex: Exception) {
+                    Log.d(TAG, "Error message: " + ex.message)
+                }
+            },
+            Response.ErrorListener { error -> Log.d(TAG, "Error message: $error") }) {
+
+            override fun getHeaders(): MutableMap<String, String> {
+                return headerParams
+            }
+
+            override fun getBody(): ByteArray {
+                return requestBody.encodeToByteArray()
+            }
+        }
+        request.retryPolicy = DefaultRetryPolicy(
+            50000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+        queue.add(request)
     }
     // **************** Handle menu settings click action End *********************** //
 
@@ -187,7 +258,8 @@ class TransferFundActivity : AppCompatActivity() {
             this,
             null,
             "Use App Pin",
-            false)
+            false
+        )
     }
 
     /**

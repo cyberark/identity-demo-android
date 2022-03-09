@@ -62,6 +62,7 @@
     <string name="redirect_uri">Redirect URI</string>
     <string name="host">Host</string>
     <string name="scheme">Scheme</string>
+    <string name="site_key">ReCaptcha V2 Site Key</string>
     <string name="save">Save</string>
     <string name="logout">Logout</string>
     <string name="app_configs">App Configs:</string>
@@ -74,16 +75,16 @@
     <string name="get_started">&#160;&#160;Get Started&#160;&#160;</string>
 
     <!-- CyberArk hosted Login options -->
-    <string name="cyberark_hosted_login">CyberArk Hosted Login</string>
+    <string name="cyberark_hosted_login">Signup and login using \nCyberArk Identity</string>
     <string name="start">Start</string>
     <string name="learn_more"><u>Learn More</u></string>
     <string name="login_widget">Login Widget</string>
     <string name="mfa_widget">MFA Widget</string>
 
     <string name="cancel">Cancel</string>
-    <string name="cyberark_hosted_login_title">CyberArk Hosted Login</string>
-    <string name="cyberark_hosted_login_description">In this scenario the Acme wants to use the MFA provided by CyberArk Identity by authenticating the users with the CyberArk Identity login. \n
-\nThe user will be redirected to the CyberArk Identity Login page and prompted to enter username and the corresponding MFA factors. On successful authentication an access token will be returned for the user.</string>
+    <string name="signup_and_login_using_cyberArk_identity">Signup and login using \nCyberArk Identity</string>
+    <string name="signup_and_login_using_cyberArk_identity_desc">In this scenario, Acme Inc. is using CyberArk Identity as their IDP. Acme Inc. wants to leverage the MFA of CyberArk Identity to authenticate the users. \n
+\nIf the user has not registered before, the user will need to signup. A user account will be created for the user in CyberArk Identity on registration. \n\nOnce the user signup is successful, the user can log in to the Acme Inc. mobile app after completing the corresponding MFA challenges.</string>
     <string name="login_hosted_end">\nPlease visit <a href="https://identity-developer.cyberark.com/docs/cyberark-idetity-sdk-for-android/"><b>here</b></a> for details on implementation.</string>
 
     <string name="click_on_active_mfa">Click on “Opt in for MFA” button to silently enroll the mobile device to CyberArk Identity. The access token retrieved in previous step is used to enroll the user.</string>
@@ -100,11 +101,17 @@
     <string name="mfa_widget_login_description">In this scenario Acme Inc wants to provide step-up authentication to end user when the user tries to do funds transfer. \n
 \nTo satisfy this scenario Acme Inc uses the CyberArk Identity MFA widget and embeds the widget into the Acme mobile app using the CyberArk Identity mobile SDK.</string>
 
-    <!-- Native Login Screen -->
+    <!-- Native Screen -->
     <string name="login_to_acme_inc">Login to Acme Inc !!</string>
+    <string name="signup_to_acme_inc">Signup to Acme Inc !!</string>
     <string name="login">Login</string>
-    <string name="enter_your_username">Enter your username:</string>
-    <string name="enter_your_password">Enter your password:</string>
+    <string name="signup">Sign up</string>
+    <string name="enter_star_sign">*</string>
+    <string name="enter_your_username">Username:</string>
+    <string name="enter_your_password">Password:</string>
+    <string name="confirm_your_password">Confirm Password:</string>
+    <string name="enter_your_email_address">Email Address:</string>
+    <string name="enter_your_mobile_number">Mobile Number:</string>
     <string name="once_the_user_enters_the_amount">Once the user enters the amount and clicks on “Transfer funds” the CyberArk Identity MFA widget is loaded, and the user is asked to clear the challenges.</string>
     <string name="once_user_clears_the_challenges">Once user clears the challenges the user will be able to do the funds transfer successfully.</string>
     <string name="please_visit_to_get_detailed_instruction_MFA_widget">\nPlease visit <a href="https://identity-developer.cyberark.com/docs/cyberark-idetity-sdk-for-android/"><b>here</b></a> to get detailed instructions to create the MFA widget.</string>
@@ -113,7 +120,9 @@
     <string name="amount">Amount</string>
     <string name="please_enter_an_amount">Please enter an amount</string>
     <string name="dialog_login_error_header_text">Login Error</string>
+    <string name="dialog_signup_error_header_text">Signup Error</string>
     <string name="dialog_login_error_desc">Invalid username and password, please try again.</string>
+    <string name="dialog_signup_error_desc">Invalid data, please try again.</string>
     <string name="step_up_authentication">Step-up authentication config:</string>
     <string name="cyberark_hosted_login_configs">CyberArk hosted login config:</string>
     <string name="native_login_url">Native Login URL</string>
@@ -121,6 +130,14 @@
     <string name="mfa_widget_id">Widget ID</string>
     <string name="on_transfer_funds">On transfer funds</string>
     <string name="button_done">Done</string>
+    <string name="button_retry">Retry</string>
     <string name="transfer_fund_login_success_title">Awesome!</string>
     <string name="transfer_fund_login_success_desc">Your funds have been transferred successfully</string>
+    <string name="not_registered_yet">Not registered yet?</string>
+    <string name="have_you_already_registered">Have you already registered? \nConsider login…</string>
+
+    <!-- Popup Screen -->
+    <string name="your_signup_is_successful">Your signup is successful</string>
+    <string name="do_you_want_to_login">Do you want to login?</string>
+    <string name="your_signup_has_failed">Your signup has failed</string>
 </resources>
