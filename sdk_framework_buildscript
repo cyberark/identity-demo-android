@@ -31,35 +31,12 @@ run_unit_tests() {
   gradlew_util :identitylibrary:testReleaseUnitTest "Unit Tests passed" "Unit Tests failed"
 }
 
-build_version_setup() {
-  # Get library manifest file path
-  MANIFEST_FILE='./identitylibrary/src/main/AndroidManifest.xml'
-  # Get Version code & Version Name from library manifest file
-  VERSION_CODE=$(grep versionCode $MANIFEST_FILE | sed 's/.*versionCode="//;s/".*//')
-  VERSION_NAME=$(grep versionName $MANIFEST_FILE | sed 's/.*versionName="//;s/\.[0-9]*".*//')
-  # Construct build number
-  BUILD_NUMBER=$VERSION_CODE.$VERSION_NAME
-  # Update aar name with build number
-  _cyberarkIdentitySDK=cyberark_identity_sdk-$BUILD_NUMBER.aar
-  echo $_cyberarkIdentitySDK
-}
-
 build() {
   # Build release version of CyberArk Identity SDK
   gradlew_util :identitylibrary:assembleRelease "CyberArk Identity SDK Release binary Built Successfully" "CyberArk Identity SDK Release binary Built failed"
 }
 
-copy_aar() {
-  # create libs directory if does not exist
-  mkdir -p $dir/app/libs
-
-  #copy aar from build output folder to app/libs folder and rename aar file
-  cp -a $dir/identitylibrary/build/outputs/aar/identitylibrary-release.aar $dir/app/libs/$_cyberarkIdentitySDK
-}
-
 global_setup
 do_clean
 run_unit_tests
-build_version_setup
 build
-copy_aar

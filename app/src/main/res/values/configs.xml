@@ -16,22 +16,22 @@
   -->
 <resources>
     // CyberArk hosted login
-    <string name="cyberark_auth_system_url">aar5203.my.idaptive.qa</string>
-    <string name="cyberark_auth_host_url">auth.cyberarklab.com</string>
-    <string name="cyberark_auth_client_id">acme</string>
-    <string name="cyberark_auth_app_id">AcmeAndroidApp</string>
+    <string name="cyberark_auth_system_url">{auth_system_url}</string>
+    <string name="cyberark_auth_host_url">{auth_host_url}</string>
+    <string name="cyberark_auth_client_id">{auth_host_url}</string>
+    <string name="cyberark_auth_app_id">{auth_app_id}</string>
     <string name="cyberark_auth_response_type">code</string>
     <string name="cyberark_auth_scope">All</string>
-    <string name="cyberark_auth_redirect_uri">demo://acme/android/com.cyberark.mfa/callback</string>
-    <string name="cyberark_auth_host">acme</string>
-    <string name="cyberark_auth_scheme">demo</string>
+    <string name="cyberark_auth_redirect_uri">{auth_host}://{auth_scheme}/android/com.cyberark.mfa/callback</string>
+    <string name="cyberark_auth_host">{auth_host}</string>
+    <string name="cyberark_auth_scheme">{auth_scheme}</string>
 
     // Google ReCaptcha V2 Settings
-    <string name="recaptcha_v2_site_key">6Lf9noAeAAAAAHDfOkMTljFc3uDC1HNu0zy1iPcP</string>
+    <string name="recaptcha_v2_site_key">{recaptcha_key}</string>
 
     // Step-up authentication using MFA widget
-    <string name="acme_native_login_url">https://ciam.cyberarklab.com</string>
-    <string name="cyberark_widget_host_url">auth.cyberarklab.com</string>
-    <string name="cyberark_widget_id" translatable="false">50a301c8-7066-4f68-9e80-935e27f9f3b3</string>
+    <string name="acme_native_login_url">{native_login_url}</string>
+    <string name="cyberark_widget_host_url">{widget_host_url}</string>
+    <string name="cyberark_widget_id" translatable="false">{widget_id}</string>
 </resources>
 
