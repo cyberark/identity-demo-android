@@ -112,5 +112,5 @@ dependencies {
     implementation 'com.android.volley:volley:1.2.1'
 
     // CyberArk Identity Android SDK lib
-    implementation 'com.cyberark.identity:android-sdk:1.0.1'
+    implementation 'com.cyberark.identity:android-sdk:1.0.2'
 }
