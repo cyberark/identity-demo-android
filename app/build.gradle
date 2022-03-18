@@ -21,9 +21,14 @@ android {
                                 cyberarkIdentityScheme: "@string/cyberark_auth_scheme"]
     }
 
-    // [Option1 - using "local.properties"]
+    // [Option 1 - using "configs.xml"]
+    // Update the res/values/configs.xml with the actual values
+    // and remove "local.properties" keys-values and debug -> resValue keys-values
+
+
+    // [Option 2 - using "local.properties"]
     // Add the following keys and the corresponding values to "local.properties"
-/*    #CyberArk hosted login
+    /* #CyberArk hosted login
     config_auth_system_url={auth_system_url}
     config_auth_host_url={auth_host_url}
     config_auth_client_id={auth_client_id}
@@ -40,11 +45,10 @@ android {
     #Step-up authentication using MFA widget
     config_native_login_url={native_login_url}
     config_widget_host_url={widget_host_url}
-    config_widget_id={widget_id}
-    */
+    config_widget_id={widget_id} */
+    // and update debug -> resValue keys-values
 
-    // [Option2 - using "configs.xnl"]
-    // Alternatively we can directly update the res/values/config.xml with the actual values and remove "local.properties" keys-values and debug -> resValue
+
     def localProperties = new Properties()
     localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
