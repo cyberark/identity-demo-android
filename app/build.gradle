@@ -26,7 +26,7 @@ android {
     // and remove "local.properties" keys-values and debug -> resValue keys-values
 
 
-    // [Option 2 - using "local.properties"]
+    // [Option 2(debug mode only) - using "local.properties"]
     // Add the following keys and the corresponding values to "local.properties"
     /* #CyberArk hosted login
     config_auth_system_url={auth_system_url}
