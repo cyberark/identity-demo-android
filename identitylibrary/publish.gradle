@@ -2,7 +2,7 @@ apply plugin: 'maven-publish'
 
 def LIB_GROUP_ID = 'com.cyberark.identity'
 def LIB_ARTIFACT_ID = 'android-sdk'
-def LIB_VERSION = '1.0.1'
+def LIB_VERSION = '1.0.2'
 
 publishing {
     repositories {
