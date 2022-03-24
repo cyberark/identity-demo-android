@@ -21,7 +21,58 @@ android {
                                 cyberarkIdentityScheme: "@string/cyberark_auth_scheme"]
     }
 
+    // [Option 1 - using "configs.xml"]
+    // Update the res/values/configs.xml with the actual values
+    // and remove "local.properties" keys-values and debug -> resValue keys-values
+
+
+    // [Option 2(debug mode only) - using "local.properties"]
+    // Add the following keys and the corresponding values to "local.properties"
+    /* #CyberArk hosted login
+    config_auth_system_url={auth_system_url}
+    config_auth_host_url={auth_host_url}
+    config_auth_client_id={auth_client_id}
+    config_auth_app_id={auth_app_id}
+    config_auth_response_type=code
+    config_auth_scope=All
+    config_auth_redirect_uri={auth_host}://{auth_scheme}/android/com.cyberark.mfa/callback
+    config_auth_host={auth_host}
+    config_auth_scheme={auth_scheme}
+
+    #Google ReCaptcha V2 Settings
+    config_recaptcha_key={recaptcha_key}
+
+    #Step-up authentication using MFA widget
+    config_native_login_url={native_login_url}
+    config_widget_host_url={widget_host_url}
+    config_widget_id={widget_id} */
+    // and update debug -> resValue keys-values
+
+
+    def localProperties = new Properties()
+    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
     buildTypes {
+        debug {
+            // CyberArk hosted login
+            resValue("string", "config_auth_system_url", localProperties['config_auth_system_url'])
+            resValue("string", "config_auth_host_url", localProperties['config_auth_host_url'])
+            resValue("string", "config_auth_client_id", localProperties['config_auth_client_id'])
+            resValue("string", "config_auth_app_id", localProperties['config_auth_app_id'])
+            resValue("string", "config_auth_response_type", localProperties['config_auth_response_type'])
+            resValue("string", "config_auth_scope", localProperties['config_auth_scope'])
+            resValue("string", "config_auth_redirect_uri", localProperties['config_auth_redirect_uri'])
+            resValue("string", "config_auth_host", localProperties['config_auth_host'])
+            resValue("string", "config_auth_scheme", localProperties['config_auth_scheme'])
+
+            // Google ReCaptcha V2 Settings
+            resValue("string", "config_recaptcha_key", localProperties['config_recaptcha_key'])
+
+            // Step-up authentication using MFA widget
+            resValue("string", "config_native_login_url", localProperties['config_native_login_url'])
+            resValue("string", "config_widget_host_url", localProperties['config_widget_host_url'])
+            resValue("string", "config_widget_id", localProperties['config_widget_id'])
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -37,10 +88,6 @@ android {
 }
 
 dependencies {
-
-    // CyberArk Identity Android SDK lib
-    implementation files('libs/cyberark_identity_sdk-22.3.1.aar')
-
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
@@ -59,70 +106,11 @@ dependencies {
     //LifeCycle libs
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    implementation 'com.google.code.gson:gson:2.8.9'
 
     //Volley network operations lib
     implementation 'com.android.volley:volley:1.2.1'
 
-
-    // ####################### SDK libraries start ######################### //
-    //Default libs
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation "androidx.preference:preference-ktx:1.2.0"
-
-    //In-build unit test framework libs
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'androidx.test:core:1.4.0'
-    testImplementation "androidx.arch.core:core-testing:2.1.0"
-    testImplementation "com.android.support.test:monitor:1.0.2"
-
-    //In-build android test framework libs
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    androidTestImplementation('androidx.test.espresso:espresso-intents:3.4.0')
-
-    //External test framework libs
-    testImplementation 'org.powermock:powermock-module-junit4:2.0.9'
-    testImplementation 'org.powermock:powermock-module-junit4-rule:2.0.9'
-    testImplementation 'org.powermock:powermock-classloading-xstream:2.0.9'
-    testImplementation 'org.powermock:powermock-api-mockito2:2.0.9'
-    testImplementation 'org.robolectric:robolectric:4.6.1'
-    testImplementation 'net.bytebuddy:byte-buddy:1.11.15'
-    testImplementation "org.json:json:20210307"
-    testImplementation "org.mockito.kotlin:mockito-kotlin:3.2.0"
-    testImplementation 'org.mockito:mockito-core:3.9.0'
-    implementation 'com.thoughtworks.xstream:xstream:1.4.19'
-    implementation 'com.google.guava:guava:30.1.1-android'
-
-    //LifeCycle libs
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
-
-    //Custom tab support browser plugin
-    implementation "androidx.browser:browser:1.4.0"
-
-    //Biometrics support libs
-    implementation "androidx.biometric:biometric:1.2.0-alpha04"
-
-    //Retrofit network libs
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
-
-    //zxing lib
-    implementation('com.journeyapps:zxing-android-embedded:4.2.0') { transitive = false }
-    implementation 'com.google.zxing:core:3.4.1'
-
-    //Permission lib
-    implementation 'pub.devrel:easypermissions:3.0.0'
-
-    //Webkit lib
-    implementation 'androidx.webkit:webkit:1.4.0'
-
-    //Google reCAPTCHA V2 (safetynet) lib
-    implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
-    // ####################### SDK libraries end ######################### //
+    // CyberArk Identity Android SDK lib
+    implementation 'com.cyberark.identity:android-sdk:1.0.2'
 }

@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-parcelize'
 }
+apply from: file('publish.gradle')
 
 android {
     compileSdkVersion 31
