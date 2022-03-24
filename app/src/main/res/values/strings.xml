@@ -140,4 +140,12 @@
     <string name="your_signup_is_successful">Your signup is successful</string>
     <string name="do_you_want_to_login">Do you want to login?</string>
     <string name="your_signup_has_failed">Your signup has failed</string>
+
+    <!-- Authentication Widgets -->
+    <string name="authentication_widgets">Authentication Widgets</string>
+    <string name="authentication_widgets_title">Authentication Widgets</string>
+    <string name="authentication_widgets_description">The admin of Acme Inc. creates the authentication widget on the CyberArk Identity portal and uses the page URL to embed the widget into the mobile app. The widget adds sign up and sign in capabilities to your website or mobile app.
+        \n\nEnd-users who sign up are added to the CyberArk Cloud Directory. You can leverage CyberArk Identity\'s authentication and authorization features to secure their accounts. Once the end-user signs up, they are re-directed to the sign in form in the widget to securely sign in using multi-factor authentication.
+        \n\nThe same widget prompts end-users to authenticate to your website with MFA. The widget can be integrated with sign in protocols such as OIDC/SAML to authorize a user.</string>
+    <string name="authentication_widgets_proceed">Proceed</string>
 </resources>

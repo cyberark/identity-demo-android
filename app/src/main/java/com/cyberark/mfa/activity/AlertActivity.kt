@@ -57,6 +57,12 @@ class AlertActivity : AppCompatActivity(), View.OnClickListener {
         if(scenarioNo == 2) {
             buttonSignup.visibility = View.GONE
         }
+        if(scenarioNo == 3) {
+            buttonSignup.visibility = View.GONE
+            val headerText: TextView? = findViewById(R.id.end_text)
+            headerText?.visibility = View.GONE
+            buttonLogin.text = getString(R.string.authentication_widgets_proceed)
+        }
     }
 
     private fun setupHyperlink() {
@@ -75,12 +81,23 @@ class AlertActivity : AppCompatActivity(), View.OnClickListener {
                 finish()
             }
             R.id.button_login -> {
-                val intent = Intent()
-                intent.putExtra("ALERT_STATUS", "true")
-                intent.putExtra("scenario", scenarioNo)
-                intent.putExtra("section", 2)
-                setResult(RESULT_OK, intent)
-                finish()
+                when (scenarioNo) {
+                    1,2 -> {
+                        val intent = Intent()
+                        intent.putExtra("ALERT_STATUS", "true")
+                        intent.putExtra("scenario", scenarioNo)
+                        intent.putExtra("section", 2)
+                        setResult(RESULT_OK, intent)
+                        finish()
+                    }
+                    3 -> {
+                        val intent = Intent()
+                        intent.putExtra("ALERT_STATUS", "true")
+                        intent.putExtra("scenario", scenarioNo)
+                        setResult(RESULT_OK, intent)
+                        finish()
+                    }
+                }
             }
             R.id.cancel_dialog -> {
                 val intent = Intent()

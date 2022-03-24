@@ -77,6 +77,11 @@ class LoginOptionsActivity : BaseActivity() {
             val intent = Intent(this, NativeLoginActivity::class.java)
             startActivity(intent)
         }
+
+        findViewById<CardView>(R.id.authentication_widget).setOnClickListener {
+            val intent = Intent(this, NativeLoginActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private val startForResult =
@@ -97,6 +102,10 @@ class LoginOptionsActivity : BaseActivity() {
                             }
                         }
                         2 -> {
+                            val intent = Intent(this, NativeLoginActivity::class.java)
+                            startActivity(intent)
+                        }
+                        3 -> {
                             val intent = Intent(this, NativeLoginActivity::class.java)
                             startActivity(intent)
                         }
@@ -132,6 +141,13 @@ class LoginOptionsActivity : BaseActivity() {
                 intent.putExtra("title", getString(R.string.mfa_widget_login_title))
                 intent.putExtra("desc", getString(R.string.mfa_widget_login_description))
                 intent.putExtra("scenario", 2)
+                startForResult.launch(intent)
+            }
+            R.id.tv_authentication_widgets -> {
+                val intent = Intent(this, AlertActivity::class.java)
+                intent.putExtra("title", getString(R.string.authentication_widgets_title))
+                intent.putExtra("desc", getString(R.string.authentication_widgets_description))
+                intent.putExtra("scenario", 3)
                 startForResult.launch(intent)
             }
         }
