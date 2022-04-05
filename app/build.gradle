@@ -35,7 +35,7 @@ android {
     config_auth_app_id={auth_app_id}
     config_auth_response_type=code
     config_auth_scope=All
-    config_auth_redirect_uri={auth_host}://{auth_scheme}/android/com.cyberark.mfa/callback
+    config_auth_redirect_uri={auth_scheme}://{auth_host}/android/com.cyberark.mfa/callback
     config_auth_host={auth_host}
     config_auth_scheme={auth_scheme}
 
