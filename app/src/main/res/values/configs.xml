@@ -22,9 +22,9 @@
     <string name="cyberark_auth_app_id">{auth_app_id}</string>
     <string name="cyberark_auth_response_type">code</string>
     <string name="cyberark_auth_scope">All</string>
-    <string name="cyberark_auth_redirect_uri">{auth_host}://{auth_scheme}/android/com.cyberark.mfa/callback</string>
-    <string name="cyberark_auth_host">{auth_host}</string>
-    <string name="cyberark_auth_scheme">{auth_scheme}</string>
+    <string name="cyberark_auth_redirect_uri">demo://acme/android/com.cyberark.mfa/callback</string>
+    <string name="cyberark_auth_host">acme</string>
+    <string name="cyberark_auth_scheme">demo</string>
 
     // Google ReCaptcha V2 Settings
     <string name="recaptcha_v2_site_key">{recaptcha_key}</string>
