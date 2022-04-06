@@ -70,7 +70,7 @@ class PopupActivity : BaseActivity() {
                     iconFailureLayout.visibility = View.GONE
                     confirmButton.text = getString(R.string.login)
                     confirmButton.setOnClickListener {
-                        login(account, progressBar)
+                        performCyberArkHostedLogin(account, progressBar)
                         finish()
                     }
                 } else {

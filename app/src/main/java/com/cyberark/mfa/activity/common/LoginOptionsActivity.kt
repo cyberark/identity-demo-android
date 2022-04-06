@@ -92,7 +92,7 @@ class LoginOptionsActivity : BaseActivity() {
                                     startActivity(intent)
                                 }
                                 2 -> {
-                                    login(account, progressBar)
+                                    performCyberArkHostedLogin(account, progressBar)
                                 }
                             }
                         }
@@ -110,7 +110,7 @@ class LoginOptionsActivity : BaseActivity() {
                                 startActivity(intent)
                             }
                             2 -> {
-                                login(account, progressBar)
+                                performCyberArkHostedLogin(account, progressBar)
                             }
                         }
                     }

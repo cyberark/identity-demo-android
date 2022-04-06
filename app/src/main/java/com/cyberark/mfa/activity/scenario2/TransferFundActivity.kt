@@ -22,17 +22,11 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.Settings
 import android.text.method.LinkMovementMethod
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.cyberark.identity.builder.CyberArkWidgetBuilder
 import com.cyberark.identity.util.*
@@ -43,16 +37,13 @@ import com.cyberark.identity.util.dialog.AlertButton
 import com.cyberark.identity.util.dialog.AlertButtonType
 import com.cyberark.identity.util.dialog.AlertDialogButtonCallback
 import com.cyberark.identity.util.dialog.AlertDialogHandler
-import com.cyberark.identity.util.keystore.KeyStoreProvider
-import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
-import com.cyberark.mfa.activity.WelcomeActivity
+import com.cyberark.mfa.activity.base.BaseActivity
 import com.cyberark.mfa.utils.AppConfig
 import com.cyberark.mfa.utils.PreferenceConstants
-import org.json.JSONObject
 
-class TransferFundActivity : AppCompatActivity() {
+class TransferFundActivity : BaseActivity() {
 
     companion object {
         const val TAG = "TransferFundActivity"
@@ -67,7 +58,6 @@ class TransferFundActivity : AppCompatActivity() {
 
     // Progress indicator variable
     private lateinit var progressBar: ProgressBar
-    private lateinit var logoutErrorAlert: AlertDialog
 
     // SDK biometrics utility variable
     private lateinit var cyberArkBiometricPromptUtility: CyberArkBiometricPromptUtility
@@ -97,27 +87,6 @@ class TransferFundActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         editTextAmount.text = null
-    }
-
-    private fun cleanUp() {
-        //Remove session token
-        CyberArkPreferenceUtil.remove(Constants.SESSION_TOKEN)
-        CyberArkPreferenceUtil.remove(Constants.SESSION_TOKEN_IV)
-        //Remove header token
-        CyberArkPreferenceUtil.remove(Constants.HEADER_TOKEN)
-        CyberArkPreferenceUtil.remove(Constants.HEADER_TOKEN_IV)
-        // Remove biometrics settings status
-        CyberArkPreferenceUtil.remove(PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH_NL)
-        CyberArkPreferenceUtil.remove(PreferenceConstants.MFA_WIDGET_USERNAME)
-        CyberArkPreferenceUtil.apply()
-
-        // Hide progress indicator
-        progressBar.visibility = View.GONE
-
-        // Start HomeActivity
-        val intent = Intent(this, WelcomeActivity::class.java)
-        startActivity(intent)
-        finish()
     }
 
     /**
@@ -196,88 +165,15 @@ class TransferFundActivity : AppCompatActivity() {
         }
         R.id.action_logout -> {
             // Perform clean-up and logout
-            performLogout()
+            performNativeLogout(progressBar)
             true
         }
         else -> {
             super.onOptionsItemSelected(item)
         }
     }
-
-    /**
-     * Perform native logout
-     *
-     */
-    private fun performLogout() {
-        // Show progress indicator
-        progressBar.visibility = View.VISIBLE
-
-        val baseUrl = AppConfig.getNativeLoginURL(this)
-        // Native Logout URL
-        val url = "$baseUrl/api/auth/logoutSession"
-
-        // Get header token and session token using KeyStoreProvider
-        val headerToken: String? = KeyStoreProvider.get().getHeaderToken()
-        val sessionUuid = KeyStoreProvider.get().getSessionToken()
-
-        // Header params
-        val headerParams: MutableMap<String, String> = HashMap()
-        headerParams["Cookie"] = "flow=flow3;XSRF-TOKEN=$headerToken;"
-        headerParams["X-XSRF-TOKEN"] = headerToken!!
-        headerParams["Content-Type"] = "application/json"
-
-        // Body params
-        val bodyParams = JSONObject()
-        bodyParams.put("SessionUuid", sessionUuid)
-        val requestBody = bodyParams.toString()
-
-        // Network request object
-        val request: JsonObjectRequest = object : JsonObjectRequest(
-            Method.POST, url, null,
-            Response.Listener { response ->
-                try {
-                    if (response.getBoolean("Success")) {
-                        // Perform clean-up and logout
-                        cleanUp()
-                    } else {
-                        // Hide progress indicator
-                        progressBar.visibility = View.GONE
-                        // Show logout error message
-                        showLogoutErrorAlert()
-                    }
-
-                } catch (ex: Exception) {
-                    // Hide progress indicator
-                    progressBar.visibility = View.GONE
-                    Log.d(TAG, "Error message: " + ex.message)
-                    // Show logout error message
-                    showLogoutErrorAlert()
-                }
-            },
-            Response.ErrorListener { error ->
-                // Hide progress indicator
-                progressBar.visibility = View.GONE
-                Log.d(TAG, "Error message: $error")
-                // Show logout error message
-                showLogoutErrorAlert()
-            }) {
-
-            override fun getHeaders(): MutableMap<String, String> {
-                return headerParams
-            }
-
-            override fun getBody(): ByteArray {
-                return requestBody.encodeToByteArray()
-            }
-        }
-        request.retryPolicy = DefaultRetryPolicy(
-            50000,
-            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-        )
-        queue.add(request)
-    }
     // **************** Handle menu settings click action End *********************** //
+
 
     // ************************ Handle biometrics Start **************************** //
     /**
@@ -398,24 +294,4 @@ class TransferFundActivity : AppCompatActivity() {
         this.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
     }
     // ************************ Handle biometrics End ******************************** //
-
-    private fun showLogoutErrorAlert() {
-
-        val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
-            override fun tappedButtonType(buttonType: AlertButtonType) {
-                if (buttonType == AlertButtonType.POSITIVE) {
-                    // User cancels dialog
-                    logoutErrorAlert.dismiss()
-                }
-            }
-        })
-        logoutErrorAlert = enrollFingerPrintDlg.displayAlert(
-            this,
-            this.getString(R.string.dialog_logout_error_header_text),
-            this.getString(R.string.dialog_logout_error_desc), true,
-            mutableListOf(
-                AlertButton("OK", AlertButtonType.POSITIVE)
-            )
-        )
-    }
 }
