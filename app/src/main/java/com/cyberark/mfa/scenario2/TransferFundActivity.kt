@@ -26,10 +26,8 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
@@ -45,6 +43,7 @@ import com.cyberark.identity.util.dialog.AlertButton
 import com.cyberark.identity.util.dialog.AlertButtonType
 import com.cyberark.identity.util.dialog.AlertDialogButtonCallback
 import com.cyberark.identity.util.dialog.AlertDialogHandler
+import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
@@ -65,6 +64,10 @@ class TransferFundActivity : AppCompatActivity() {
     private lateinit var enterAmount: TextView
     private lateinit var mfaWidgetUsername: String
     private lateinit var queue: RequestQueue
+
+    // Progress indicator variable
+    private lateinit var progressBar: ProgressBar
+    private lateinit var logoutErrorAlert: AlertDialog
 
     // SDK biometrics utility variable
     private lateinit var cyberArkBiometricPromptUtility: CyberArkBiometricPromptUtility
@@ -100,10 +103,16 @@ class TransferFundActivity : AppCompatActivity() {
         //Remove session token
         CyberArkPreferenceUtil.remove(Constants.SESSION_TOKEN)
         CyberArkPreferenceUtil.remove(Constants.SESSION_TOKEN_IV)
+        //Remove header token
+        CyberArkPreferenceUtil.remove(Constants.HEADER_TOKEN)
+        CyberArkPreferenceUtil.remove(Constants.HEADER_TOKEN_IV)
         // Remove biometrics settings status
         CyberArkPreferenceUtil.remove(PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH_NL)
         CyberArkPreferenceUtil.remove(PreferenceConstants.MFA_WIDGET_USERNAME)
         CyberArkPreferenceUtil.apply()
+
+        // Hide progress indicator
+        progressBar.visibility = View.GONE
 
         // Start HomeActivity
         val intent = Intent(this, WelcomeActivity::class.java)
@@ -116,6 +125,9 @@ class TransferFundActivity : AppCompatActivity() {
      *
      */
     private fun updateUI() {
+        // Invoke UI element
+        progressBar = findViewById(R.id.progressBar_transfer_fund_activity)
+
         // Get the shared preference status and update the biometrics selection
         if (!CyberArkPreferenceUtil.contains(PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH_NL)) {
             CyberArkPreferenceUtil.putBoolean(
@@ -184,8 +196,7 @@ class TransferFundActivity : AppCompatActivity() {
         }
         R.id.action_logout -> {
             // Perform clean-up and logout
-            cleanUp()
-//            performLogout()
+            performLogout()
             true
         }
         else -> {
@@ -198,20 +209,26 @@ class TransferFundActivity : AppCompatActivity() {
      *
      */
     private fun performLogout() {
+        // Show progress indicator
+        progressBar.visibility = View.VISIBLE
+
         val baseUrl = AppConfig.getNativeLoginURL(this)
-        // Native logout URL
+        // Native Logout URL
         val url = "$baseUrl/api/auth/logoutSession"
 
-        // TODO.. need to update header params based on api updates
+        // Get header token and session token using KeyStoreProvider
+        val headerToken: String? = KeyStoreProvider.get().getHeaderToken()
+        val sessionUuid = KeyStoreProvider.get().getSessionToken()
+
         // Header params
         val headerParams: MutableMap<String, String> = HashMap()
-        headerParams["Cookie"] = "cookie"
-        headerParams["X-XSRF-TOKEN"] = "token"
+        headerParams["Cookie"] = "flow=flow3;XSRF-TOKEN=$headerToken;"
+        headerParams["X-XSRF-TOKEN"] = headerToken!!
         headerParams["Content-Type"] = "application/json"
 
         // Body params
         val bodyParams = JSONObject()
-        bodyParams.put("SessionUuid", "SessionUuid")
+        bodyParams.put("SessionUuid", sessionUuid)
         val requestBody = bodyParams.toString()
 
         // Network request object
@@ -222,12 +239,28 @@ class TransferFundActivity : AppCompatActivity() {
                     if (response.getBoolean("Success")) {
                         // Perform clean-up and logout
                         cleanUp()
+                    } else {
+                        // Hide progress indicator
+                        progressBar.visibility = View.GONE
+                        // Show logout error message
+                        showLogoutErrorAlert()
                     }
+
                 } catch (ex: Exception) {
+                    // Hide progress indicator
+                    progressBar.visibility = View.GONE
                     Log.d(TAG, "Error message: " + ex.message)
+                    // Show logout error message
+                    showLogoutErrorAlert()
                 }
             },
-            Response.ErrorListener { error -> Log.d(TAG, "Error message: $error") }) {
+            Response.ErrorListener { error ->
+                // Hide progress indicator
+                progressBar.visibility = View.GONE
+                Log.d(TAG, "Error message: $error")
+                // Show logout error message
+                showLogoutErrorAlert()
+            }) {
 
             override fun getHeaders(): MutableMap<String, String> {
                 return headerParams
@@ -365,4 +398,24 @@ class TransferFundActivity : AppCompatActivity() {
         this.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
     }
     // ************************ Handle biometrics End ******************************** //
+
+    private fun showLogoutErrorAlert() {
+
+        val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
+            override fun tappedButtonType(buttonType: AlertButtonType) {
+                if (buttonType == AlertButtonType.POSITIVE) {
+                    // User cancels dialog
+                    logoutErrorAlert.dismiss()
+                }
+            }
+        })
+        logoutErrorAlert = enrollFingerPrintDlg.displayAlert(
+            this,
+            this.getString(R.string.dialog_logout_error_header_text),
+            this.getString(R.string.dialog_logout_error_desc), true,
+            mutableListOf(
+                AlertButton("OK", AlertButtonType.POSITIVE)
+            )
+        )
+    }
 }

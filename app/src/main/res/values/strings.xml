@@ -121,7 +121,9 @@
     <string name="please_enter_an_amount">Please enter an amount</string>
     <string name="dialog_login_error_header_text">Login Error</string>
     <string name="dialog_signup_error_header_text">Signup Error</string>
+    <string name="dialog_logout_error_header_text">Logout Error</string>
     <string name="dialog_login_error_desc">Invalid username and password, please try again.</string>
+    <string name="dialog_logout_error_desc">Unable to perform logout.</string>
     <string name="dialog_signup_error_desc">Invalid data, please try again.</string>
     <string name="step_up_authentication">Step-up authentication config:</string>
     <string name="cyberark_hosted_login_configs">CyberArk hosted login config:</string>

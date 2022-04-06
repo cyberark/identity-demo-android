@@ -144,7 +144,7 @@
     </ScrollView>
 
     <ProgressBar
-        android:id="@+id/progressBar_mfa_activity"
+        android:id="@+id/progressBar_transfer_fund_activity"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -31,9 +31,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.NetworkResponse
-import com.android.volley.ParseError
 import com.android.volley.Response
-import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.cyberark.identity.util.dialog.AlertButton
@@ -45,14 +43,7 @@ import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
 import com.cyberark.mfa.utils.AppConfig
 import com.cyberark.mfa.utils.PreferenceConstants
-import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
 import org.json.JSONObject
-import java.io.UnsupportedEncodingException
-import java.nio.charset.Charset
-import org.json.JSONException
-
-import org.json.JSONArray
 
 class NativeLoginActivity : AppCompatActivity() {
 
@@ -111,13 +102,12 @@ class NativeLoginActivity : AppCompatActivity() {
      * @param username: login username
      * @param password: login password
      */
-    // TODO.. need to update header params based on api updates
     private fun performLogin(username: String, password: String) {
         // Show progress indicator
         progressBar.visibility = View.VISIBLE
 
         val baseUrl = AppConfig.getNativeLoginURL(this)
-        // Native login URL
+        // Native Login URL
         val url = "$baseUrl/api/BasicLogin"
 
         // Body params
@@ -126,14 +116,14 @@ class NativeLoginActivity : AppCompatActivity() {
         bodyParams.put("Password", password)
         val requestBody = bodyParams.toString()
 
+        // Native Login Response header token
+        var headerToken: String? = null
+
         // Network request object
         val request: JsonObjectRequest = object : JsonObjectRequest(
             Method.POST, url, null,
             Response.Listener { response ->
                 try {
-                    Log.d(TAG, response.toString())
-//                    val headers = response.getJSONObject("headers")
-//                    Log.d(TAG, "headers: $headers")
                     if (response.getBoolean("Success")) {
                         // Get sessionUuid and username from response object
                         val result = response.getJSONObject("Result")
@@ -142,6 +132,8 @@ class NativeLoginActivity : AppCompatActivity() {
 
                         // Save session token
                         KeyStoreProvider.get().saveSessionToken(sessionUuid)
+                        // Save header token
+                        KeyStoreProvider.get().saveHeaderToken(headerToken!!)
                         // Save mfa widget username
                         CyberArkPreferenceUtil.putString(
                             PreferenceConstants.MFA_WIDGET_USERNAME,
@@ -152,15 +144,21 @@ class NativeLoginActivity : AppCompatActivity() {
 
                         // Start TransferFundActivity
                         val intent = Intent(this, TransferFundActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
                         finish()
+                    } else {
+                        // Hide progress indicator
+                        progressBar.visibility = View.GONE
+                        // Show login error message
+                        showLoginErrorAlert()
                     }
                 } catch (ex: Exception) {
                     // Hide progress indicator
                     progressBar.visibility = View.GONE
                     Log.d(TAG, "Error message: " + ex.message)
-                    // Show login error message using Toast
+                    // Show login error message
                     showLoginErrorAlert()
                 }
             },
@@ -168,7 +166,7 @@ class NativeLoginActivity : AppCompatActivity() {
                 // Hide progress indicator
                 progressBar.visibility = View.GONE
                 Log.d(TAG, "Error message: $error")
-                // Show login error message using Toast
+                // Show login error message
                 showLoginErrorAlert()
             }) {
 
@@ -176,26 +174,12 @@ class NativeLoginActivity : AppCompatActivity() {
                 return requestBody.encodeToByteArray()
             }
 
-//            override fun parseNetworkResponse(response: NetworkResponse?): Response<JSONObject> {
-//                val token = response!!.headers!!["set-cookie"]
-//                Log.d(TAG, "token: $token")
-//
-//                return try {
-//                    val json = String(
-//                        response?.data ?: ByteArray(0),
-//                        Charset.forName(HttpHeaderParser.parseCharset(response?.headers)))
-//                    val jsonResponse = JSONObject()
-//                    jsonResponse.put("headers", JSONObject(json))
-//
-//                    Response.success(
-//                        jsonResponse,
-//                        HttpHeaderParser.parseCacheHeaders(response))
-//                } catch (e: UnsupportedEncodingException) {
-//                    Response.error(ParseError(e))
-//                } catch (e: JsonSyntaxException) {
-//                    Response.error(ParseError(e))
-//                }
-//            }
+            override fun parseNetworkResponse(response: NetworkResponse?): Response<JSONObject> {
+                // Parse network response and capture "XSRF-TOKEN" from response header
+                val token = response!!.headers!!["set-cookie"]
+                headerToken = token?.removePrefix("XSRF-TOKEN=")?.removeSuffix("; Path=/")
+                return super.parseNetworkResponse(response)
+            }
         }
         request.retryPolicy = DefaultRetryPolicy(
             50000,
