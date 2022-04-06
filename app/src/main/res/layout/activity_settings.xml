@@ -18,7 +18,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="20dp"
-    tools:context=".activity.SettingsActivity">
+    tools:context=".activity.common.SettingsActivity">
 
     <ScrollView
         android:layout_width="match_parent"

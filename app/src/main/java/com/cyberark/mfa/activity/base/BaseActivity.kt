@@ -31,7 +31,7 @@ import com.cyberark.identity.util.ResponseHandler
 import com.cyberark.identity.util.ResponseStatus
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.mfa.R
-import com.cyberark.mfa.scenario1.MFAActivity
+import com.cyberark.mfa.activity.scenario1.MFAActivity
 
 open class BaseActivity : AppCompatActivity() {
 

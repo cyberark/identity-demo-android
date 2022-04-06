@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa.scenario1
+package com.cyberark.mfa.activity.scenario1
 
 import android.app.Activity
 import android.content.Intent
@@ -55,7 +55,7 @@ import com.cyberark.identity.util.notification.NotificationConstants
 import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
-import com.cyberark.mfa.activity.SettingsActivity
+import com.cyberark.mfa.activity.common.SettingsActivity
 import com.cyberark.mfa.activity.WelcomeActivity
 import com.cyberark.mfa.fcm.FCMTokenInterface
 import com.cyberark.mfa.fcm.FCMTokenUtil

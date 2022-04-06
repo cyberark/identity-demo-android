@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa.scenario2
+package com.cyberark.mfa.activity.scenario2
 
 import android.content.Intent
 import android.graphics.Color
