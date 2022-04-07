@@ -26,6 +26,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
 import com.cyberark.identity.builder.CyberArkWidgetBuilder
@@ -37,8 +38,10 @@ import com.cyberark.identity.util.dialog.AlertButton
 import com.cyberark.identity.util.dialog.AlertButtonType
 import com.cyberark.identity.util.dialog.AlertDialogButtonCallback
 import com.cyberark.identity.util.dialog.AlertDialogHandler
+import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
+import com.cyberark.mfa.activity.WelcomeActivity
 import com.cyberark.mfa.activity.base.BaseActivity
 import com.cyberark.mfa.utils.AppConfig
 import com.cyberark.mfa.utils.PreferenceConstants
@@ -47,6 +50,9 @@ class TransferFundActivity : BaseActivity() {
 
     companion object {
         const val TAG = "TransferFundActivity"
+        const val ON_APP_RESUME = "ON_APP_RESUME"
+        const val ON_SETTINGS_CLICK = "ON_SETTINGS_CLICK"
+        const val ON_TRANSFER_FUND = "ON_TRANSFER_FUND"
     }
 
     private var biometricsOnAppLaunchRequested: Boolean = false
@@ -58,6 +64,7 @@ class TransferFundActivity : BaseActivity() {
 
     // Progress indicator variable
     private lateinit var progressBar: ProgressBar
+    private lateinit var sessionTimeoutErrorAlert: AlertDialog
 
     // SDK biometrics utility variable
     private lateinit var cyberArkBiometricPromptUtility: CyberArkBiometricPromptUtility
@@ -82,6 +89,8 @@ class TransferFundActivity : BaseActivity() {
         if (biometricsOnAppLaunchRequested) {
             showBiometrics()
         }
+        // Verify session timeout using HeartBeat API
+        callHeartBeatAPI(ON_APP_RESUME)
     }
 
     override fun onStop() {
@@ -127,17 +136,8 @@ class TransferFundActivity : BaseActivity() {
             }
         }
         findViewById<Button>(R.id.button_transfer_funds).setOnClickListener {
-            if (editTextAmount.text.trim().isEmpty()) {
-                enterAmount.visibility = View.VISIBLE
-            } else {
-                val intent = Intent(this, MFAWidgetActivity::class.java)
-                intent.putExtra(
-                    "MFA_WIDGET_URL",
-                    mfaWidgetBuilder.getMFAWidgetBaseURL(mfaWidgetUsername)
-                )
-                startActivity(intent)
-            }
-            editTextAmount.clearFocus()
+            // Verify session timeout using HeartBeat API
+            callHeartBeatAPI(ON_TRANSFER_FUND)
         }
     }
 
@@ -157,10 +157,8 @@ class TransferFundActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_settings -> {
-            //Start Settings activity
-            val intent = Intent(this, NativeLoginSettingsActivity::class.java)
-            intent.putExtra("from_activity", "TransferFundActivity")
-            startActivity(intent)
+            // Verify session timeout using HeartBeat API
+            callHeartBeatAPI(ON_SETTINGS_CLICK)
             true
         }
         R.id.action_logout -> {
@@ -294,4 +292,98 @@ class TransferFundActivity : BaseActivity() {
         this.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
     }
     // ************************ Handle biometrics End ******************************** //
+
+    /**
+     * Call heart beat API to get active session status
+     *
+     * @param actionName: action initiated name
+     */
+    private fun callHeartBeatAPI(actionName: String) {
+        handleSessionTimeout(this, progressBar, actionName)
+    }
+
+    /**
+     * Notify session timeout status using HeartBeat API Response,
+     * show error alert if the session is expired, and perform the clean-up and logout
+     *
+     * @param status: session timeout status
+     * @param actionName: action name
+     */
+    fun notifySessionTimeoutStatus(status: Boolean, actionName: String) {
+        if(!status) {
+            showSessionTimeoutErrorAlert()
+        } else {
+            when {
+                actionName.equals(ON_APP_RESUME) -> {
+                    // do nothing
+                }
+                actionName.equals(ON_SETTINGS_CLICK) -> {
+                    //Start Settings activity
+                    val intent = Intent(this, NativeLoginSettingsActivity::class.java)
+                    intent.putExtra("from_activity", "TransferFundActivity")
+                    startActivity(intent)
+                }
+                actionName.equals(ON_TRANSFER_FUND) -> {
+                    if (editTextAmount.text.trim().isEmpty()) {
+                        enterAmount.visibility = View.VISIBLE
+                    } else {
+                        val intent = Intent(this, MFAWidgetActivity::class.java)
+                        intent.putExtra(
+                            "MFA_WIDGET_URL",
+                            mfaWidgetBuilder.getMFAWidgetBaseURL(mfaWidgetUsername)
+                        )
+                        startActivity(intent)
+                    }
+                    editTextAmount.clearFocus()
+                }
+            }
+        }
+    }
+
+    /**
+     * Show session timeout error alert
+     *
+     */
+    private fun showSessionTimeoutErrorAlert() {
+
+        val enrollFingerPrintDlg = AlertDialogHandler(object : AlertDialogButtonCallback {
+            override fun tappedButtonType(buttonType: AlertButtonType) {
+                if (buttonType == AlertButtonType.POSITIVE) {
+                    // User cancels dialog
+                    sessionTimeoutErrorAlert.dismiss()
+                    cleanUpForSessionTimeout()
+                }
+            }
+        })
+        sessionTimeoutErrorAlert = enrollFingerPrintDlg.displayAlert(
+            this,
+            this.getString(R.string.dialog_session_timeout_error_header_text),
+            this.getString(R.string.dialog_session_timeout_error_desc), false,
+            mutableListOf(
+                AlertButton("OK", AlertButtonType.POSITIVE)
+            )
+        )
+    }
+
+    /**
+     * Perform clean-up for Session Timeout
+     *
+     */
+    private fun cleanUpForSessionTimeout() {
+        //Remove session token
+        CyberArkPreferenceUtil.remove(Constants.SESSION_TOKEN)
+        CyberArkPreferenceUtil.remove(Constants.SESSION_TOKEN_IV)
+        //Remove header token
+        CyberArkPreferenceUtil.remove(Constants.HEADER_TOKEN)
+        CyberArkPreferenceUtil.remove(Constants.HEADER_TOKEN_IV)
+        // Remove biometrics settings status
+        CyberArkPreferenceUtil.remove(PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH_NL)
+        CyberArkPreferenceUtil.remove(PreferenceConstants.MFA_WIDGET_USERNAME)
+        CyberArkPreferenceUtil.apply()
+
+        // Start HomeActivity
+        val intent = Intent(this, WelcomeActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
 }

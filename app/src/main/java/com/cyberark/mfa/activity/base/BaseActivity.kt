@@ -16,6 +16,7 @@
 
 package com.cyberark.mfa.activity.base
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -66,6 +67,7 @@ open class BaseActivity : AppCompatActivity() {
      * and handle API response using active observer
      *
      * @param cyberArkAccountBuilder: CyberArkAccountBuilder instance
+     * @param progressBar: ProgressBar instance
      */
     protected fun performCyberArkHostedLogin(
         cyberArkAccountBuilder: CyberArkAccountBuilder,
@@ -131,6 +133,7 @@ open class BaseActivity : AppCompatActivity() {
      *
      * @param username: login username
      * @param password: login password
+     * @param progressBar: ProgressBar instance
      */
     protected fun performNativeLogin(username: String, password: String, progressBar: ProgressBar) {
         // Show progress indicator
@@ -222,6 +225,7 @@ open class BaseActivity : AppCompatActivity() {
     /**
      * Perform native logout
      *
+     * @param progressBar: ProgressBar instance
      */
     protected fun performNativeLogout(progressBar: ProgressBar) {
         // Show progress indicator
@@ -293,6 +297,84 @@ open class BaseActivity : AppCompatActivity() {
         Volley.newRequestQueue(this).add(request)
     }
 
+    /**
+     * Handle session timeout
+     *
+     * @param context: Activity Context
+     * @param progressBar: ProgressBar instance
+     * @param actionName: action name
+     */
+    protected fun handleSessionTimeout(
+        context: Context,
+        progressBar: ProgressBar,
+        actionName: String
+    ) {
+        progressBar.visibility = View.VISIBLE
+
+        val baseUrl = AppConfig.getNativeLoginURL(this)
+        // Native Logout URL
+        val url = "$baseUrl/api/HeartBeat"
+
+        // Get header token and session token using KeyStoreProvider
+        val headerToken: String? = KeyStoreProvider.get().getHeaderToken()
+        val sessionUuid = KeyStoreProvider.get().getSessionToken()
+
+        // Header params
+        val headerParams: MutableMap<String, String> = HashMap()
+        headerParams["Cookie"] = "flow=flow3;XSRF-TOKEN=$headerToken;"
+        headerParams["X-XSRF-TOKEN"] = headerToken!!
+        headerParams["Content-Type"] = "application/json"
+
+        // Body params
+        val bodyParams = JSONObject()
+        bodyParams.put("SessionUuid", sessionUuid)
+        val requestBody = bodyParams.toString()
+
+        // Network request object
+        val request: JsonObjectRequest = object : JsonObjectRequest(
+            Method.POST, url, null,
+            Response.Listener { response ->
+                try {
+                    val sessionTimeoutStatus = response.getBoolean("Success")
+                    (context as TransferFundActivity?)!!.notifySessionTimeoutStatus(
+                        sessionTimeoutStatus,
+                        actionName
+                    )
+                    // Hide progress indicator
+                    progressBar.visibility = View.GONE
+
+                } catch (ex: Exception) {
+                    // Hide progress indicator
+                    progressBar.visibility = View.GONE
+                    Log.d(TransferFundActivity.TAG, "Error message: " + ex.message)
+                    (context as TransferFundActivity?)!!.notifySessionTimeoutStatus(
+                        false,
+                        actionName
+                    )
+                }
+            },
+            Response.ErrorListener { error ->
+                // Hide progress indicator
+                progressBar.visibility = View.GONE
+                Log.d(TransferFundActivity.TAG, "Error message: $error")
+                (context as TransferFundActivity?)!!.notifySessionTimeoutStatus(false, actionName)
+            }) {
+
+            override fun getHeaders(): MutableMap<String, String> {
+                return headerParams
+            }
+
+            override fun getBody(): ByteArray {
+                return requestBody.encodeToByteArray()
+            }
+        }
+        request.retryPolicy = DefaultRetryPolicy(
+            50000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+        Volley.newRequestQueue(this).add(request)
+    }
 
     /**
      * Show login error alert
