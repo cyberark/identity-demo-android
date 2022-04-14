@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
+ * Copyright (c) 2022 CyberArk Software Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,25 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa.activity
+package com.cyberark.mfa.activity.scenario1
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.cyberark.mfa.R
 
-class AlertActivity : AppCompatActivity(), View.OnClickListener {
-
-    private var scenarioNo: Int = 0
+class NativeSignupPopupActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.activity_alert)
-
-        val headerText: TextView? = findViewById(R.id.header_text)
-        headerText?.text = intent.extras?.getString("title")
-        val contentText: TextView? = findViewById(R.id.content_text)
-        contentText?.text = intent.extras?.getString("desc")
-        scenarioNo = intent.extras?.getInt("scenario")!!
-
+        setContentView(R.layout.activity_native_signup_popup)
+        window.setBackgroundDrawableResource(android.R.color.transparent)
         invokeUI()
-        setupHyperlink()
     }
 
     private fun invokeUI() {
@@ -53,38 +42,27 @@ class AlertActivity : AppCompatActivity(), View.OnClickListener {
         buttonLogin.setOnClickListener(this)
         val cancelDialog = findViewById<LinearLayout>(R.id.cancel_dialog)
         cancelDialog.setOnClickListener(this)
-
-        if(scenarioNo == 2) {
-            buttonSignup.visibility = View.GONE
-        }
     }
 
-    private fun setupHyperlink() {
-        val linkTextView: TextView = findViewById(R.id.end_text)
-        linkTextView.movementMethod = LinkMovementMethod.getInstance()
-    }
-
-    override fun onClick(view: View?) {
-        when(view?.id) {
+    override fun onClick(view: View) {
+        when (view.id) {
             R.id.button_signup -> {
                 val intent = Intent()
-                intent.putExtra("ALERT_STATUS", "true")
-                intent.putExtra("scenario", scenarioNo)
+                intent.putExtra("POPUP_STATUS", "true")
                 intent.putExtra("section", 1)
                 setResult(RESULT_OK, intent)
                 finish()
             }
             R.id.button_login -> {
                 val intent = Intent()
-                intent.putExtra("ALERT_STATUS", "true")
-                intent.putExtra("scenario", scenarioNo)
+                intent.putExtra("POPUP_STATUS", "true")
                 intent.putExtra("section", 2)
                 setResult(RESULT_OK, intent)
                 finish()
             }
             R.id.cancel_dialog -> {
                 val intent = Intent()
-                intent.putExtra("ALERT_STATUS", "false")
+                intent.putExtra("POPUP_STATUS", "false")
                 setResult(RESULT_CANCELED, intent)
                 finish()
             }

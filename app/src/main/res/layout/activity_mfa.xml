@@ -20,7 +20,7 @@
     android:layout_height="match_parent"
     android:background="@color/light_gray"
     android:padding="10dp"
-    tools:context=".scenario1.MFAActivity">
+    tools:context=".activity.scenario1.MFAActivity">
 
     <ScrollView
         android:layout_width="match_parent"

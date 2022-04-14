@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa.scenario1
+package com.cyberark.mfa.activity.scenario1
 
 import android.content.Intent
 import android.os.Bundle
@@ -36,8 +36,8 @@ import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.ResponseHandler
 import com.cyberark.identity.util.ResponseStatus
 import com.cyberark.mfa.R
-import com.cyberark.mfa.activity.PopupActivity
-import com.cyberark.mfa.activity.SettingsActivity
+import com.cyberark.mfa.activity.common.PopupActivity
+import com.cyberark.mfa.activity.common.SettingsActivity
 import com.cyberark.mfa.utils.AppConfig
 import org.json.JSONObject
 import java.util.regex.Matcher

@@ -20,7 +20,7 @@
     android:layout_height="match_parent"
     android:background="@color/light_gray"
     android:padding="10dp"
-    tools:context=".scenario1.MFAActivity">
+    tools:context=".activity.scenario1.MFAActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -144,7 +144,7 @@
     </ScrollView>
 
     <ProgressBar
-        android:id="@+id/progressBar_mfa_activity"
+        android:id="@+id/progressBar_transfer_fund_activity"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

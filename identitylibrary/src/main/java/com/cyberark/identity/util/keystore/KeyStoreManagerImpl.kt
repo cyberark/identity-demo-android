@@ -113,6 +113,28 @@ private class KeyStoreManagerImpl : KeyStoreManager {
     }
 
     /**
+     * Save header token in shared preference
+     *
+     * @param headerToken: header token data
+     * @return Boolean: true if the session token is encrypted successfully, else false
+     */
+    override fun saveHeaderToken(headerToken: String): Boolean {
+        val returnValues = encryptText(Constants.HEADER_ALIAS, headerToken)
+        if (returnValues != null) {
+            CyberArkPreferenceUtil.putString(
+                Constants.HEADER_TOKEN_IV,
+                Base64.encodeToString(returnValues.first, Base64.DEFAULT)
+            )
+            CyberArkPreferenceUtil.putString(
+                Constants.HEADER_TOKEN,
+                Base64.encodeToString(returnValues.second, Base64.DEFAULT)
+            )
+            return true
+        }
+        return false
+    }
+
+    /**
      * Get auth token from Android keystore
      *
      * @return String: decrypted auth token
@@ -170,6 +192,25 @@ private class KeyStoreManagerImpl : KeyStoreManager {
     }
 
     /**
+     * Get header token from Android keystore
+     *
+     * @return String: decrypted header token
+     */
+    private fun getHeaderTokenKeyStore(): String? {
+        var decryptedToken: String? = null
+        val headerTokenIV = CyberArkPreferenceUtil.getString(Constants.HEADER_TOKEN_IV, null)
+        val headerToken = CyberArkPreferenceUtil.getString(Constants.HEADER_TOKEN, null)
+        if (headerTokenIV != null || headerToken != null) {
+            decryptedToken = decryptText(
+                Constants.HEADER_ALIAS,
+                Base64.decode(headerToken!!, Base64.DEFAULT),
+                Base64.decode(headerTokenIV!!, Base64.DEFAULT)
+            )
+        }
+        return decryptedToken
+    }
+
+    /**
      * Get auth token from Android keystore
      *
      * @return String: decrypted auth token
@@ -194,6 +235,15 @@ private class KeyStoreManagerImpl : KeyStoreManager {
      */
     override fun getSessionToken(): String? {
         return getSessionTokenKeyStore()
+    }
+
+    /**
+     * Get header token from Android keystore
+     *
+     * @return String: decrypted header token
+     */
+    override fun getHeaderToken(): String? {
+        return getHeaderTokenKeyStore()
     }
 
     /**

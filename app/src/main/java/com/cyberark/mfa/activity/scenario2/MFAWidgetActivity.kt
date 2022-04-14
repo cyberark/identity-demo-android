@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa.scenario2
+package com.cyberark.mfa.activity.scenario2
 
 import android.content.Intent
 import android.graphics.Color
@@ -23,7 +23,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.cyberark.identity.activity.view.CyberArkMFAWidgetFragment
 import com.cyberark.identity.util.widget.WidgetConstants
-import com.cyberark.mfa.activity.PopupActivity
+import com.cyberark.mfa.activity.common.PopupActivity
 import com.cyberark.mfa.R
 
 class MFAWidgetActivity : AppCompatActivity(), CyberArkMFAWidgetFragment.LoginSuccessListener {

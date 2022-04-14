@@ -24,7 +24,7 @@ import com.cyberark.identity.data.model.SendFCMTokenModel
 import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
-import com.cyberark.mfa.activity.NotificationActivity
+import com.cyberark.mfa.activity.common.NotificationActivity
 import com.cyberark.mfa.utils.AppConfig
 import com.cyberark.mfa.utils.AppUtils
 import com.cyberark.mfa.utils.PreferenceConstants

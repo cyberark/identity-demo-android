@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyberark.mfa.activity
+package com.cyberark.mfa.activity.common
 
 import android.content.Intent
 import android.os.Bundle
@@ -24,7 +24,7 @@ import android.widget.*
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.mfa.R
 import com.cyberark.mfa.activity.base.BaseActivity
-import com.cyberark.mfa.scenario1.NativeSignupActivity
+import com.cyberark.mfa.activity.scenario1.NativeSignupActivity
 import com.cyberark.mfa.utils.AppConfig
 
 class PopupActivity : BaseActivity() {
@@ -70,7 +70,7 @@ class PopupActivity : BaseActivity() {
                     iconFailureLayout.visibility = View.GONE
                     confirmButton.text = getString(R.string.login)
                     confirmButton.setOnClickListener {
-                        login(account, progressBar)
+                        performCyberArkHostedLogin(account, progressBar)
                         finish()
                     }
                 } else {

@@ -31,7 +31,7 @@ import com.cyberark.identity.util.jwt.JWTUtils
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.identity.util.notification.NotificationConstants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
-import com.cyberark.mfa.activity.NotificationActivity
+import com.cyberark.mfa.activity.common.NotificationActivity
 import com.cyberark.mfa.utils.AppConfig
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers

@@ -24,8 +24,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.cyberark.identity.util.keystore.KeyStoreProvider
 import com.cyberark.mfa.R
-import com.cyberark.mfa.scenario1.MFAActivity
-import com.cyberark.mfa.scenario2.TransferFundActivity
+import com.cyberark.mfa.activity.common.LoginOptionsActivity
+import com.cyberark.mfa.activity.scenario1.MFAActivity
+import com.cyberark.mfa.activity.scenario2.TransferFundActivity
 
 class WelcomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

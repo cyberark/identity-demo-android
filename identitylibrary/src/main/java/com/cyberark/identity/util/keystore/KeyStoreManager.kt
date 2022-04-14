@@ -39,13 +39,23 @@ interface KeyStoreManager {
 
     /**
      * Save the session token by encrypting using android Keystore
-     * and saving the encrypted value of refreshToken and generated crypto IV into Shared preferences
+     * and saving the encrypted value of sessionToken and generated crypto IV into Shared preferences
      *
      * @param sessionToken token need to be encrypted and saved
      *
      * @return boolean to indicate if the token successfully encrypted and saved
      */
     fun saveSessionToken(sessionToken: String): Boolean
+
+    /**
+     * Save the header token by encrypting using android Keystore
+     * and saving the encrypted value of headerToken and generated crypto IV into Shared preferences
+     *
+     * @param headerToken token need to be encrypted and saved
+     *
+     * @return boolean to indicate if the token successfully encrypted and saved
+     */
+    fun saveHeaderToken(headerToken: String): Boolean
 
     /**
      * Get the auth token saved using @see saveAuthToken(authKey:String)
@@ -64,4 +74,10 @@ interface KeyStoreManager {
      * @return string value if the encrypted token exists previously otherwise null
      */
     fun getSessionToken(): String?
+
+    /**
+     * Get the header token saved using @see saveHeaderToken(headerToken:String)
+     * @return string value if the encrypted token exists previously otherwise null
+     */
+    fun getHeaderToken(): String?
 }

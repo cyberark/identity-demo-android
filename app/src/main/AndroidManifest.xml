@@ -31,52 +31,52 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".scenario1.MFAActivity"
+            android:name="com.cyberark.mfa.activity.scenario1.MFAActivity"
             android:exported="false"
             android:theme="@style/AppTheme.WithActionBar" />
         <activity
-            android:name=".scenario1.NativeSignupActivity"
+            android:name="com.cyberark.mfa.activity.scenario1.NativeSignupActivity"
             android:exported="false" />
         <activity
-            android:name=".scenario1.NativeSignupPopupActivity"
+            android:name="com.cyberark.mfa.activity.scenario1.NativeSignupPopupActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
-            android:name=".scenario2.MFAWidgetActivity"
+            android:name="com.cyberark.mfa.activity.scenario2.MFAWidgetActivity"
             android:exported="false"
             android:theme="@style/AppTheme.WithActionBar"/>
         <activity
-            android:name=".scenario2.NativeLoginActivity"
+            android:name="com.cyberark.mfa.activity.scenario2.NativeLoginActivity"
             android:exported="false" />
         <activity
-            android:name=".scenario2.NativeLoginSettingsActivity"
+            android:name="com.cyberark.mfa.activity.scenario2.NativeLoginSettingsActivity"
             android:exported="false"
             android:theme="@style/AppTheme.WithActionBar" />
         <activity
-            android:name=".scenario2.TransferFundActivity"
+            android:name="com.cyberark.mfa.activity.scenario2.TransferFundActivity"
             android:exported="false"
             android:theme="@style/AppTheme.WithActionBar" />
         <activity
-            android:name=".activity.AlertActivity"
+            android:name=".activity.common.AlertActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
-            android:name=".activity.PopupActivity"
+            android:name=".activity.common.PopupActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".activity.base.BaseActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name=".activity.common.SettingsActivity"
             android:exported="false"
             android:theme="@style/AppTheme.WithActionBar" />
         <activity
-            android:name=".activity.NotificationActivity"
+            android:name=".activity.common.NotificationActivity"
             android:exported="false"
             android:theme="@style/AppTheme.WithActionBar" />
         <activity
-            android:name=".activity.LoginOptionsActivity"
+            android:name=".activity.common.LoginOptionsActivity"
             android:exported="false"
             android:theme="@style/AppTheme.WithActionBar" />
         <activity
