@@ -22,13 +22,13 @@ import java.net.URLDecoder
 import java.util.*
 
 /**
- * CyberArk widget builder
+ * CyberArk authentication widget builder
  *
  * @property systemURL: system URL
  * @property hostURL: host URL
  * @property widgetId: widget ID
  */
-class CyberArkWidgetBuilder(
+class CyberArkAuthWidgetBuilder(
     private val systemURL: String?,
     private val hostURL: String?,
     private val widgetId: String?
@@ -38,7 +38,6 @@ class CyberArkWidgetBuilder(
 
     companion object {
         const val KEY_WIDGET_ID = "id"
-        const val KEY_USER_NAME = "username"
     }
 
     /**
@@ -79,7 +78,7 @@ class CyberArkWidgetBuilder(
          * Create CyberArk widget Builder
          *
          */
-        fun build() = CyberArkWidgetBuilder(
+        fun build() = CyberArkAuthWidgetBuilder(
             systemURL,
             hostURL,
             widgetId
@@ -89,12 +88,11 @@ class CyberArkWidgetBuilder(
     /**
      * Get MFA Widget base URL
      */
-    fun getMFAWidgetBaseURL(username: String): String {
+    fun getAuthWidgetBaseURL(username: String): String {
         val widgetURL = baseURL!!.newBuilder()
             .addPathSegment("Authenticationwidgets")
             .addPathSegment("WidgetPage")
             .addQueryParameter(KEY_WIDGET_ID, widgetId)
-            .addQueryParameter(KEY_USER_NAME, username)
             .build()
             .toString()
         return URLDecoder.decode(widgetURL, "UTF-8")

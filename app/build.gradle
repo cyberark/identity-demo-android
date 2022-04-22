@@ -17,7 +17,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders = [cyberarkIdentityHost: "@string/cyberark_auth_host",
+        manifestPlaceholders = [cyberarkIdentityHost  : "@string/cyberark_auth_host",
                                 cyberarkIdentityScheme: "@string/cyberark_auth_scheme"]
     }
 
@@ -44,8 +44,12 @@ android {
 
     #Step-up authentication using MFA widget
     config_native_login_url={native_login_url}
-    config_widget_host_url={widget_host_url}
-    config_widget_id={widget_id} */
+    config_mfa_widget_host_url={mfa_widget_host_url}
+    config_mfa_widget_id={mfa_widget_id}
+
+    #Authentication widget
+    config_auth_widget_host_url={auth_widget_host_url}
+    config_auth_widget_host_id={auth_widget_id}*/
     // and update debug -> resValue keys-values
 
 
@@ -70,8 +74,12 @@ android {
 
             // Step-up authentication using MFA widget
             resValue("string", "config_native_login_url", localProperties['config_native_login_url'])
-            resValue("string", "config_widget_host_url", localProperties['config_widget_host_url'])
-            resValue("string", "config_widget_id", localProperties['config_widget_id'])
+            resValue("string", "config_mfa_widget_host_url", localProperties['config_mfa_widget_host_url'])
+            resValue("string", "config_mfa_widget_id", localProperties['config_mfa_widget_id'])
+
+            // Authentication Widget
+            resValue("string", "config_auth_widget_host_url", localProperties['config_auth_widget_host_url'])
+            resValue("string", "config_auth_widget_id", localProperties['config_auth_widget_id'])
         }
         release {
             minifyEnabled false
@@ -112,5 +120,6 @@ dependencies {
     implementation 'com.android.volley:volley:1.2.1'
 
     // CyberArk Identity Android SDK lib
-    implementation 'com.cyberark.identity:android-sdk:1.0.2'
+//    implementation 'com.cyberark.identity:android-sdk:1.0.2'
+    implementation project(path: ':identitylibrary')
 }

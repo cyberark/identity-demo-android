@@ -29,7 +29,7 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
-import com.cyberark.identity.builder.CyberArkWidgetBuilder
+import com.cyberark.identity.builder.CyberArkMFAWidgetBuilder
 import com.cyberark.identity.util.*
 import com.cyberark.identity.util.biometric.CyberArkBiometricCallback
 import com.cyberark.identity.util.biometric.CyberArkBiometricManager
@@ -56,7 +56,7 @@ class TransferFundActivity : BaseActivity() {
     }
 
     private var biometricsOnAppLaunchRequested: Boolean = false
-    private lateinit var mfaWidgetBuilder: CyberArkWidgetBuilder
+    private lateinit var mfaMFAWidgetBuilder: CyberArkMFAWidgetBuilder
     private lateinit var editTextAmount: EditText
     private lateinit var enterAmount: TextView
     private lateinit var mfaWidgetUsername: String
@@ -77,7 +77,7 @@ class TransferFundActivity : BaseActivity() {
         title = getString(R.string.acme)
 
         queue = Volley.newRequestQueue(this)
-        mfaWidgetBuilder = AppConfig.setupNativeLoginFromSharedPreference(this)
+        mfaMFAWidgetBuilder = AppConfig.setupNativeLoginFromSharedPreference(this)
         mfaWidgetUsername =
             CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_USERNAME, null)
                 .toString()
@@ -330,7 +330,7 @@ class TransferFundActivity : BaseActivity() {
                         val intent = Intent(this, MFAWidgetActivity::class.java)
                         intent.putExtra(
                             "MFA_WIDGET_URL",
-                            mfaWidgetBuilder.getMFAWidgetBaseURL(mfaWidgetUsername)
+                            mfaMFAWidgetBuilder.getMFAWidgetBaseURL(mfaWidgetUsername)
                         )
                         startActivity(intent)
                     }

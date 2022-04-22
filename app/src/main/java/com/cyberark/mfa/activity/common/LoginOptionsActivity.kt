@@ -67,6 +67,8 @@ class LoginOptionsActivity : BaseActivity() {
         account = AppConfig.setupAccountFromSharedPreference(this)
         // Setup native Login
         AppConfig.setupNativeLoginFromSharedPreference(this)
+        // Setup Authentication Widget Login
+        AppConfig.setupAuthWidgetFromSharedPreference(this)
 
         findViewById<CardView>(R.id.cv_redirect_login).setOnClickListener {
             val intent = Intent(this, NativeSignupPopupActivity::class.java)

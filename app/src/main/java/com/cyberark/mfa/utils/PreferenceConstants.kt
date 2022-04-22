@@ -36,6 +36,9 @@ object PreferenceConstants {
     const val MFA_WIDGET_ID = "mfa_widget_id"
     const val MFA_WIDGET_USERNAME = "mfa_widget_username"
 
+    const val AUTH_WIDGET_URL = "auth_widget_url"
+    const val AUTH_WIDGET_ID = "auth_widget_id"
+
     const val INVOKE_BIOMETRICS_ON_APP_LAUNCH = "INVOKE_BIOMETRICS_ON_APP_LAUNCH"
     const val INVOKE_BIOMETRICS_ON_QR_CODE_LAUNCH = "INVOKE_BIOMETRICS_ON_QR_CODE_LAUNCH"
     const val INVOKE_BIOMETRICS_ON_TOKEN_EXPIRES = "INVOKE_BIOMETRICS_ON_TOKEN_EXPIRES"

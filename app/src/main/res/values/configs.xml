@@ -31,7 +31,11 @@
 
     // Step-up authentication using MFA widget
     <string name="acme_native_login_url">{native_login_url}</string>
-    <string name="cyberark_widget_host_url">{widget_host_url}</string>
-    <string name="cyberark_widget_id" translatable="false">{widget_id}</string>
+    <string name="cyberark_mfa_widget_host_url">{mfa_widget_host_url}</string>
+    <string name="cyberark_mfa_widget_id" translatable="false">{mfa_widget_id}</string>
+
+    // Authentication widget
+    <string name="cyberark_auth_widget_host_url">{auth_widget_host_url}</string>
+    <string name="cyberark_auth_widget_id" translatable="false">{auth_widget_id}</string>
 </resources>
 
