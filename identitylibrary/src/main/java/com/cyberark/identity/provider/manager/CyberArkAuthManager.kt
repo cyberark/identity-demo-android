@@ -28,7 +28,7 @@ import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.data.network.CyberArkAuthService
-import com.cyberark.identity.provider.CyberArkAuthInterface
+import com.cyberark.identity.provider.callback.CyberArkAuthInterface
 import com.cyberark.identity.viewmodel.AuthenticationViewModel
 import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
 

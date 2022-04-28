@@ -142,8 +142,8 @@
     <string name="mfa_widget_login_title">Step-up authentication using MFA widget</string>
     <string name="mfa_widget_login_description">In this scenario Acme Inc wants to provide step-up authentication to end user when the user tries to do funds transfer. \n
 \nTo satisfy this scenario Acme Inc uses the CyberArk Identity MFA widget and embeds the widget into the Acme mobile app using the CyberArk Identity mobile SDK.</string>
-    <string name="mfa_widget_url">Widget host URL</string>
-    <string name="mfa_widget_id">Widget ID</string>
+    <string name="mfa_widget_url">MFA Widget host URL</string>
+    <string name="mfa_widget_id">MFA Widget ID</string>
 
     <!-- Authentication Widgets -->
     <string name="authentication_widgets">Authentication Widgets</string>
@@ -153,6 +153,7 @@
         \n\nThe same widget prompts end-users to authenticate to your website with MFA. The widget can be integrated with sign in protocols such as OIDC/SAML to authorize a user.</string>
     <string name="authentication_widgets_proceed">Proceed</string>
     <string name="authentication_widget_configs">Authentication widget config:</string>
-    <string name="authentication_widget_url">Widget host URL</string>
-    <string name="authentication_widget_id">Widget ID</string>
+    <string name="authentication_widget_url">Auth Widget host URL</string>
+    <string name="authentication_widget_id">Auth Widget ID</string>
+    <string name="authentication_widget_resource_url">Resource URL</string>
 </resources>

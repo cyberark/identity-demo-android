@@ -280,11 +280,13 @@ object AppConfig {
         val systemUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.SYSTEM_URL, null)
         val widgetHostUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.AUTH_WIDGET_URL, null)
         val widgetId = CyberArkPreferenceUtil.getString(PreferenceConstants.AUTH_WIDGET_ID, null)
+        val resourceUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.RESOURCE_URL, null)
 
         return CyberArkAuthWidgetBuilder.Builder()
             .systemURL(systemUrl.toString())
             .hostURL(widgetHostUrl.toString())
             .widgetId(widgetId.toString())
+            .resourceURL(resourceUrl.toString())
             .build()
     }
 
@@ -302,6 +304,10 @@ object AppConfig {
             PreferenceConstants.AUTH_WIDGET_ID,
             context.getString(R.string.cyberark_auth_widget_id)
         )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.RESOURCE_URL,
+            context.getString(R.string.cyberark_auth_resource_url)
+        )
     }
 
     /**
@@ -317,6 +323,10 @@ object AppConfig {
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.AUTH_WIDGET_ID,
             context.getString(R.string.config_auth_widget_id)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.RESOURCE_URL,
+            context.getString(R.string.config_auth_resource_url)
         )
     }
 }

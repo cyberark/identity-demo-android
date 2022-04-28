@@ -27,11 +27,13 @@ import java.util.*
  * @property systemURL: system URL
  * @property hostURL: host URL
  * @property widgetId: widget ID
+ * @property resourceURL: resource URL
  */
 class CyberArkAuthWidgetBuilder(
     private val systemURL: String?,
     private val hostURL: String?,
-    private val widgetId: String?
+    private val widgetId: String?,
+    private val resourceURL: String?
 ) {
     private val baseSystemURL: HttpUrl?
     private val baseURL: HttpUrl?
@@ -46,11 +48,13 @@ class CyberArkAuthWidgetBuilder(
      * @property systemURL: system URL
      * @property hostURL: host URL
      * @property widgetId: widget ID
+     * @property resourceURL: resource URL
      */
     data class Builder(
         var systemURL: String? = null,
         var hostURL: String? = null,
-        var widgetId: String? = null
+        var widgetId: String? = null,
+        var resourceURL: String? = null
     ) {
 
         /**
@@ -75,20 +79,28 @@ class CyberArkAuthWidgetBuilder(
         fun widgetId(widgetId: String) = apply { this.widgetId = widgetId }
 
         /**
+         * Set Resource URL
+         *
+         * @param resourceURL
+         */
+        fun resourceURL(resourceURL: String) = apply { this.resourceURL = resourceURL }
+
+        /**
          * Create CyberArk widget Builder
          *
          */
         fun build() = CyberArkAuthWidgetBuilder(
             systemURL,
             hostURL,
-            widgetId
+            widgetId,
+            resourceURL
         )
     }
 
     /**
-     * Get MFA Widget base URL
+     * Get Authentication Widget base URL
      */
-    fun getAuthWidgetBaseURL(username: String): String {
+    fun getAuthWidgetBaseURL(): String {
         val widgetURL = baseURL!!.newBuilder()
             .addPathSegment("Authenticationwidgets")
             .addPathSegment("WidgetPage")
@@ -97,6 +109,12 @@ class CyberArkAuthWidgetBuilder(
             .toString()
         return URLDecoder.decode(widgetURL, "UTF-8")
     }
+
+    /**
+     * Get resource application callback URL
+     */
+    val getResourceURL: String
+        get() = resourceURL.toString()
 
     /**
      * Check valid and secure url

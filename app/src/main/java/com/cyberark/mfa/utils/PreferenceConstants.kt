@@ -38,6 +38,7 @@ object PreferenceConstants {
 
     const val AUTH_WIDGET_URL = "auth_widget_url"
     const val AUTH_WIDGET_ID = "auth_widget_id"
+    const val RESOURCE_URL = "resource_url"
 
     const val INVOKE_BIOMETRICS_ON_APP_LAUNCH = "INVOKE_BIOMETRICS_ON_APP_LAUNCH"
     const val INVOKE_BIOMETRICS_ON_QR_CODE_LAUNCH = "INVOKE_BIOMETRICS_ON_QR_CODE_LAUNCH"

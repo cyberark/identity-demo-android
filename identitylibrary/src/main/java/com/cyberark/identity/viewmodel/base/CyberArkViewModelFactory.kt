@@ -19,7 +19,9 @@ package com.cyberark.identity.viewmodel.base
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cyberark.identity.data.network.CyberArkAuthHelper
+import com.cyberark.identity.viewmodel.*
 import com.cyberark.identity.viewmodel.AuthenticationViewModel
+import com.cyberark.identity.viewmodel.AuthenticationWidgetViewModel
 import com.cyberark.identity.viewmodel.EnrollmentViewModel
 import com.cyberark.identity.viewmodel.ScanQRCodeViewModel
 import com.cyberark.identity.viewmodel.SignupWithCaptchaViewModel
@@ -46,6 +48,9 @@ class CyberArkViewModelFactory(private val cyberArkAuthHelper: CyberArkAuthHelpe
             }
             modelClass.isAssignableFrom(SignupWithCaptchaViewModel::class.java) -> {
                 SignupWithCaptchaViewModel(cyberArkAuthHelper) as T
+            }
+            modelClass.isAssignableFrom(AuthenticationWidgetViewModel::class.java) -> {
+                AuthenticationWidgetViewModel(cyberArkAuthHelper) as T
             }
             else -> throw IllegalArgumentException("Unknown class name")
         }

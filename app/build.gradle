@@ -35,7 +35,7 @@ android {
     config_auth_app_id={auth_app_id}
     config_auth_response_type=code
     config_auth_scope=All
-    config_auth_redirect_uri={auth_scheme}://{auth_host}/android/com.cyberark.mfa/callback
+    config_auth_redirect_uri={auth_scheme}://{auth_host}/android/com.cyberark.mfa/redirectURICallback
     config_auth_host={auth_host}
     config_auth_scheme={auth_scheme}
 
@@ -49,7 +49,8 @@ android {
 
     #Authentication widget
     config_auth_widget_host_url={auth_widget_host_url}
-    config_auth_widget_host_id={auth_widget_id}*/
+    config_auth_widget_host_id={auth_widget_id}
+    config_auth_resource_url={auth_scheme}://{auth_host}/android/com.cyberark.mfa/resourceURLCallback*/
     // and update debug -> resValue keys-values
 
 
@@ -80,6 +81,7 @@ android {
             // Authentication Widget
             resValue("string", "config_auth_widget_host_url", localProperties['config_auth_widget_host_url'])
             resValue("string", "config_auth_widget_id", localProperties['config_auth_widget_id'])
+            resValue("string", "config_auth_resource_url", localProperties['config_auth_resource_url'])
         }
         release {
             minifyEnabled false

@@ -22,7 +22,7 @@
     <string name="cyberark_auth_app_id">{auth_app_id}</string>
     <string name="cyberark_auth_response_type">code</string>
     <string name="cyberark_auth_scope">All</string>
-    <string name="cyberark_auth_redirect_uri">demo://acme/android/com.cyberark.mfa/callback</string>
+    <string name="cyberark_auth_redirect_uri">demo://acme/android/com.cyberark.mfa/redirectURICallback</string>
     <string name="cyberark_auth_host">acme</string>
     <string name="cyberark_auth_scheme">demo</string>
 
@@ -37,5 +37,6 @@
     // Authentication widget
     <string name="cyberark_auth_widget_host_url">{auth_widget_host_url}</string>
     <string name="cyberark_auth_widget_id" translatable="false">{auth_widget_id}</string>
+    <string name="cyberark_auth_resource_url">demo://acme/android/com.cyberark.mfa/resourceURLCallback</string>
 </resources>
 

@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.cyberark.identity.activity
+
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+
+/**
+ * CyberArkAuthWidgetRedirectActivity is used to handle chrome custom tab browser callback
+ * once the authentication done successfully from authentication widget
+ *
+ */
+class CyberArkAuthWidgetRedirectActivity : AppCompatActivity() {
+
+    companion object {
+        val CYBERARK_AUTH_WIDGET_REDIRECT_ACTION =
+            "com.cyberark.identity.activity.CyberArkAuthWidgetRedirectActivity" + ".CYBERARK_AUTH_WIDGET_REDIRECT_ACTION"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        Log.i("CyberArkAuthWidgetRedirectActivity", "inside activity")
+
+//        if (intent == null || intent.data == null) {
+//            finish()
+//            return
+//        }
+//        val cyberArkAuthActivityIntent = Intent(this, CyberArkAuthActivity::class.java)
+//        cyberArkAuthActivityIntent.action = CYBERARK_REDIRECT_ACTION
+//        cyberArkAuthActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+//        if (intent != null) {
+//            cyberArkAuthActivityIntent.data = intent.data
+//        }
+//        // Get the flags
+//        val flags: Int = intent.flags
+//        // Check that the nested intent does not grant URI permissions
+//        if (flags and Intent.FLAG_GRANT_READ_URI_PERMISSION == 0 &&
+//            flags and Intent.FLAG_GRANT_WRITE_URI_PERMISSION == 0
+//        ) {
+//            startActivity(cyberArkAuthActivityIntent)
+//        }
+//        finish()
+    }
+}

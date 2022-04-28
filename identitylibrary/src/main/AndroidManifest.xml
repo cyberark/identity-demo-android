@@ -48,13 +48,22 @@
                 android:autoVerify="true"
                 tools:targetApi="M">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="${cyberarkIdentityHost}"
-                    android:pathPrefix="/android/${applicationId}/callback"
+                    android:pathPrefix="/android/${applicationId}/redirectURICallback"
+                    android:scheme="${cyberarkIdentityScheme}" />
+            </intent-filter>
+            <intent-filter
+                android:autoVerify="true"
+                tools:targetApi="M">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="${cyberarkIdentityHost}"
+                    android:pathPrefix="/android/${applicationId}/resourceURLCallback"
                     android:scheme="${cyberarkIdentityScheme}" />
             </intent-filter>
         </activity>

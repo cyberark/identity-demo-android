@@ -52,6 +52,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var authWidgetHostUrl: EditText
     private lateinit var authWidgetId: EditText
+    private lateinit var resourceUrl: EditText
 
     // Device biometrics checkbox variables
     private lateinit var biometricsOnAppLaunchCheckbox: CheckBox
@@ -131,6 +132,7 @@ class SettingsActivity : AppCompatActivity() {
 
         authWidgetHostUrl = findViewById(R.id.editTextAuthWidgetHostURL)
         authWidgetId = findViewById(R.id.editTextAuthWidgetId)
+        resourceUrl = findViewById(R.id.editTextResourceURL)
     }
 
     private fun updateUI() {
@@ -151,6 +153,7 @@ class SettingsActivity : AppCompatActivity() {
 
         authWidgetHostUrl.setText(getString(R.string.cyberark_auth_widget_host_url))
         authWidgetId.setText(getString(R.string.cyberark_auth_widget_id))
+        resourceUrl.setText(getString(R.string.cyberark_auth_resource_url))
 
         // Get the shared preference status and handle device biometrics on app launch
         biometricsOnAppLaunchCheckbox.isChecked =
@@ -211,6 +214,10 @@ class SettingsActivity : AppCompatActivity() {
 
         CyberArkPreferenceUtil.putString(PreferenceConstants.AUTH_WIDGET_URL, authWidgetHostUrl.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.AUTH_WIDGET_ID, authWidgetId.text.toString())
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.RESOURCE_URL,
+            resourceUrl.text.toString()
+        )
 
         CyberArkPreferenceUtil.putBoolean(
             PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH,
@@ -282,6 +289,10 @@ class SettingsActivity : AppCompatActivity() {
         val authWidgetIdSP = CyberArkPreferenceUtil.getString(PreferenceConstants.AUTH_WIDGET_ID, null)
         if (!authWidgetIdSP.equals(authWidgetId.text.toString())) {
             authWidgetId.setText(authWidgetIdSP)
+        }
+        val resourceUrlSP = CyberArkPreferenceUtil.getString(PreferenceConstants.RESOURCE_URL, null)
+        if (!resourceUrlSP.equals(resourceUrl.text.toString())) {
+            resourceUrl.setText(resourceUrlSP)
         }
     }
 

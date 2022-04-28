@@ -33,6 +33,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.cyberark.identity.builder.CyberArkAccountBuilder
+import com.cyberark.identity.builder.CyberArkAuthWidgetBuilder
 import com.cyberark.identity.data.model.AuthCodeFlowModel
 import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.ResponseHandler
@@ -118,6 +119,49 @@ open class BaseActivity : AppCompatActivity() {
                                 Toast.LENGTH_LONG
                             ).show()
                         }
+                    }
+                    ResponseStatus.LOADING -> {
+                        // Show progress indicator
+                        progressBar.visibility = View.VISIBLE
+                    }
+                }
+            })
+        }
+    }
+
+    /**
+     * Launch URL in browser, set-up view model, start authentication widget flow
+     * and handle response using active observer
+     *
+     * @param cyberArkAccountBuilder: CyberArkAccountBuilder instance
+     * @param cyberArkAuthWidgetBuilder: CyberArkAuthWidgetBuilder instance
+     * @param progressBar: ProgressBar instance
+     */
+    protected fun performAuthenticationWidgetLogin(
+        cyberArkAccountBuilder: CyberArkAccountBuilder,
+        cyberArkAuthWidgetBuilder: CyberArkAuthWidgetBuilder,
+        progressBar: ProgressBar
+    ) {
+        val authResponseHandler: LiveData<ResponseHandler<String>> =
+            CyberArkAuthProvider.authWidgetLogin(cyberArkAccountBuilder)
+                .start(this, cyberArkAuthWidgetBuilder)
+
+        // Verify if there is any active observer, if not then add observer to get response
+        if (!authResponseHandler.hasActiveObservers()) {
+            authResponseHandler.observe(this, {
+                when (it.status) {
+                    ResponseStatus.SUCCESS -> {
+                        // Hide progress indicator
+                        progressBar.visibility = View.GONE
+                        Log.i("LoginOptionActivity", it.data.toString())
+                        // Initiate authorize URL using CyberArk hosted login
+                        performCyberArkHostedLogin(cyberArkAccountBuilder, progressBar)
+                    }
+                    ResponseStatus.ERROR -> {
+                        // Hide progress indicator
+                        progressBar.visibility = View.GONE
+                        // Show authentication generic error message using Toast
+                        Toast.makeText(this, it.data.toString(), Toast.LENGTH_LONG).show()
                     }
                     ResponseStatus.LOADING -> {
                         // Show progress indicator

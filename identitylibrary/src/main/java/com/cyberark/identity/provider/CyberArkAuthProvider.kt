@@ -21,7 +21,10 @@ import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.cyberark.identity.builder.CyberArkAccountBuilder
+import com.cyberark.identity.builder.CyberArkAuthWidgetBuilder
 import com.cyberark.identity.data.model.*
+import com.cyberark.identity.provider.callback.CyberArkAuthInterface
+import com.cyberark.identity.provider.callback.CyberArkAuthWidgetInterface
 import com.cyberark.identity.provider.manager.*
 import com.cyberark.identity.util.ResponseHandler
 import org.json.JSONObject
@@ -33,7 +36,8 @@ import org.json.JSONObject
 object CyberArkAuthProvider {
 
     private val TAG: String? = CyberArkAuthProvider::class.simpleName
-    internal var cyberArkAuthInterface: CyberArkAuthInterface? = null
+    private var cyberArkAuthInterface: CyberArkAuthInterface? = null
+    private var cyberArkAuthWidgetInterface: CyberArkAuthWidgetInterface? = null
 
     fun signupWithCaptcha(account: CyberArkAccountBuilder): SignupWithCaptchaBuilder {
         return SignupWithCaptchaBuilder(account)
@@ -71,6 +75,10 @@ object CyberArkAuthProvider {
         return SubmitOTPBuilder(account)
     }
 
+    fun authWidgetLogin(account: CyberArkAccountBuilder): AuthWidgetLoginBuilder {
+        return AuthWidgetLoginBuilder(account)
+    }
+
     /**
      * Get authorize token
      *
@@ -90,11 +98,37 @@ object CyberArkAuthProvider {
     }
 
     /**
+     * Handle resource URL
+     *
+     * @param intent: Intent object
+     * @return Boolean
+     */
+    @JvmStatic
+    fun handleResourceUrl(intent: Intent?): Boolean {
+        if (cyberArkAuthWidgetInterface == null) {
+            Log.i(TAG, "no previous instance present for authentication widget interface.")
+            return false
+        }
+        if (cyberArkAuthWidgetInterface!!.callAuthorizeEndpoint(intent)) {
+            cleanUpAuthWidget()
+        }
+        return true
+    }
+
+    /**
      * Clean up CyberArk auth instance
      *
      */
     internal fun cleanUp() {
         cyberArkAuthInterface = null
+    }
+
+    /**
+     * Clean up CyberArk auth widget instance
+     *
+     */
+    internal fun cleanUpAuthWidget() {
+        cyberArkAuthWidgetInterface = null
     }
 
     /**
@@ -332,6 +366,36 @@ object CyberArkAuthProvider {
             )
 
             return cyberArkOTPEnrollManager.submitOTP()
+        }
+    }
+
+    /**
+     * Authentication Widget Login builder class
+     *
+     * @property account: CyberArkAccountBuilder instance
+     */
+    class AuthWidgetLoginBuilder internal constructor(
+        private val account: CyberArkAccountBuilder
+    ) {
+        /**
+         * Login user using authentication widget
+         *
+         * @param context: Activity Context
+         * @param cyberArkAuthWidgetBuilder: CyberArkAuthWidgetBuilder instance
+         * @return LiveData<ResponseHandler<String>>: LiveData response handler for resource url
+         */
+        fun start(
+            context: Context,
+            cyberArkAuthWidgetBuilder: CyberArkAuthWidgetBuilder
+        ): LiveData<ResponseHandler<String>> {
+            Log.i(TAG, "Invoke browser login flow for Authentication Widget")
+            cleanUpAuthWidget()
+            val cyberArkAuthWidgetManager =
+                CyberArkAuthWidgetManager(context, account, cyberArkAuthWidgetBuilder)
+            cyberArkAuthWidgetInterface = cyberArkAuthWidgetManager
+            cyberArkAuthWidgetManager.startAuthentication()
+
+            return cyberArkAuthWidgetManager.getViewModelInstance.getResourceUrl()
         }
     }
 }
