@@ -41,6 +41,7 @@ object AppConfig {
             .appId(context.getString(R.string.cyberark_auth_app_id))
             .responseType(context.getString(R.string.cyberark_auth_response_type))
             .scope(context.getString(R.string.cyberark_auth_scope))
+            .state(context.getString(R.string.cyberark_auth_state))
             .redirectUri(context.getString(R.string.cyberark_auth_redirect_uri))
             .build()
     }
@@ -65,6 +66,7 @@ object AppConfig {
         val hostUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.HOST_URL, null)
         val clientId = CyberArkPreferenceUtil.getString(PreferenceConstants.CLIENT_ID, null)
         val appId = CyberArkPreferenceUtil.getString(PreferenceConstants.APP_ID, null)
+        val state = CyberArkPreferenceUtil.getString(PreferenceConstants.STATE, null)
         val redirectUri = CyberArkPreferenceUtil.getString(PreferenceConstants.REDIRECT_URI, null)
 
         return CyberArkAccountBuilder.Builder()
@@ -72,6 +74,7 @@ object AppConfig {
             .hostURL(hostUrl.toString())
             .clientId(clientId.toString())
             .appId(appId.toString())
+            .state(state.toString())
             .responseType(context.getString(R.string.cyberark_auth_response_type))
             .scope(context.getString(R.string.cyberark_auth_scope))
             .redirectUri(redirectUri.toString())
@@ -99,6 +102,10 @@ object AppConfig {
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.APP_ID,
             context.getString(R.string.cyberark_auth_app_id)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.STATE,
+            context.getString(R.string.cyberark_auth_state)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.REDIRECT_URI,
@@ -139,6 +146,10 @@ object AppConfig {
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.APP_ID,
             context.getString(R.string.config_auth_app_id)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.STATE,
+            context.getString(R.string.config_auth_state)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.REDIRECT_URI,

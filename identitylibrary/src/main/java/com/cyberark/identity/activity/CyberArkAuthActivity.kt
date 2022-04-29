@@ -73,9 +73,9 @@ class CyberArkAuthActivity : AppCompatActivity() {
             launchUri(this, authorizeUri!!)
             return
         }
+        // Verify redirection url from intent data and initiate respective flows
         if (authData.data.toString().contains("/resourceURLCallback")) {
             Log.i(tag, "Handle resource URL")
-//            finish()
             handleResourceUrl(authData)
         } else {
             Log.i(tag, "Get authorize token")

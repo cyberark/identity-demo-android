@@ -67,6 +67,7 @@ internal class CyberArkAuthManager(
                 params[CyberArkAccountBuilder.KEY_REDIRECT_URI] = account.getRedirectURL
                 params[CyberArkAccountBuilder.KEY_CLIENT_ID] = account.getClientId
                 params[CyberArkAccountBuilder.KEY_CODE_VERIFIER] = account.getCodeVerifier
+                params[CyberArkAccountBuilder.KEY_STATE] = account.getState
 
                 Log.i(tag, "Code exchange for access token")
                 viewModel.handleAuthorizationCode(params, account.getOAuthTokenURL)

@@ -64,6 +64,7 @@ android {
             resValue("string", "config_auth_host_url", localProperties['config_auth_host_url'])
             resValue("string", "config_auth_client_id", localProperties['config_auth_client_id'])
             resValue("string", "config_auth_app_id", localProperties['config_auth_app_id'])
+            resValue("string", "config_auth_state", localProperties['config_auth_state'])
             resValue("string", "config_auth_response_type", localProperties['config_auth_response_type'])
             resValue("string", "config_auth_scope", localProperties['config_auth_scope'])
             resValue("string", "config_auth_redirect_uri", localProperties['config_auth_redirect_uri'])
