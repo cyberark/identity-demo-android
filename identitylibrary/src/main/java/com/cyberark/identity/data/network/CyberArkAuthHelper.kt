@@ -52,8 +52,8 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
      * @return AuthCodeFlowModel
      */
     suspend fun getAccessToken(
-        params: HashMap<String?,
-                String?>, url: String
+        params: HashMap<String?, String?>,
+        url: String
     ): AuthCodeFlowModel = cyberArkAuthService.getAccessToken(
         params,
         url
@@ -67,9 +67,27 @@ class CyberArkAuthHelper(private val cyberArkAuthService: CyberArkAuthService) {
      * @return RefreshTokenModel
      */
     suspend fun refreshToken(
-        params: HashMap<String?,
-                String?>, url: String
+        params: HashMap<String?, String?>,
+        url: String
     ): RefreshTokenModel = cyberArkAuthService.refreshToken(params, url)
+
+    /**
+     * Get user information
+     *
+     * @param idapNativeClient: idaptive native client
+     * @param bearerToken: authorization bearer token
+     * @param url: token Url
+     * @return UserInfoModel
+     */
+    suspend fun getUserInfo(
+        idapNativeClient: Boolean,
+        bearerToken: String,
+        url: String
+    ): UserInfoModel = cyberArkAuthService.getUserInfo(
+        idapNativeClient,
+        bearerToken,
+        url
+    )
 
     /**
      * Enroll device

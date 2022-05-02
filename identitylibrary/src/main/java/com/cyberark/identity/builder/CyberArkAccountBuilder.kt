@@ -205,6 +205,17 @@ class CyberArkAccountBuilder(
             .toString()
 
     /**
+     * Get user info URL
+     */
+    val getUserInfoURL: String
+        get() = baseURL!!.newBuilder()
+            .addPathSegment("oauth2")
+            .addPathSegment("UserInfo")
+            .addPathSegment(appId.toString())
+            .build()
+            .toString()
+
+    /**
      * Get application callback URL
      */
     val getRedirectURL: String

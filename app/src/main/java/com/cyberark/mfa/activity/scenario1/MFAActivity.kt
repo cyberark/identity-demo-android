@@ -32,14 +32,12 @@ import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import com.cyberark.identity.activity.CyberArkQRCodeLoginActivity
 import com.cyberark.identity.builder.CyberArkAccountBuilder
-import com.cyberark.identity.data.model.EnrollmentModel
-import com.cyberark.identity.data.model.OTPEnrollModel
-import com.cyberark.identity.data.model.RefreshTokenModel
-import com.cyberark.identity.data.model.SendFCMTokenModel
+import com.cyberark.identity.data.model.*
 import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.*
 import com.cyberark.identity.util.biometric.CyberArkBiometricCallback
@@ -148,6 +146,10 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
             CyberArkPreferenceUtil.remove(Constants.ACCESS_TOKEN_IV)
             CyberArkPreferenceUtil.remove(Constants.REFRESH_TOKEN)
             CyberArkPreferenceUtil.remove(Constants.REFRESH_TOKEN_IV)
+
+            // Remove Id token from device storage
+            CyberArkPreferenceUtil.remove(Constants.ID_TOKEN)
+            CyberArkPreferenceUtil.remove(Constants.ID_TOKEN_IV)
 
             // Remove ENROLLMENT_STATUS flag from device storage
             CyberArkPreferenceUtil.remove(PreferenceConstants.ENROLLMENT_STATUS)
@@ -756,11 +758,43 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
     // **************** Handle menu settings click action Start *********************** //
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.logout_menu, menu)
+        menuInflater.inflate(R.menu.logout_claims_menu, menu)
+        MenuCompat.setGroupDividerEnabled(menu, true)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_claims -> {
+            val account =  AppConfig.setupAccountFromSharedPreference(this)
+            val authResponseHandler: LiveData<ResponseHandler<UserInfoModel>> =
+                CyberArkAuthProvider.userInfo(account)
+                    .start(this, accessTokenData)
+
+            // Verify if there is any active observer, if not then add observer to get response
+            if (!authResponseHandler.hasActiveObservers()) {
+                authResponseHandler.observe(this, {
+                    when (it.status) {
+                        ResponseStatus.SUCCESS -> {
+                            // Hide progress indicator
+                            progressBar.visibility = View.GONE
+                            Log.i("LoginOptionActivity", it.data.toString())
+                            Toast.makeText(this, it.data.toString(), Toast.LENGTH_LONG).show()
+                        }
+                        ResponseStatus.ERROR -> {
+                            // Hide progress indicator
+                            progressBar.visibility = View.GONE
+                            // Show authentication generic error message using Toast
+                            Toast.makeText(this, it.data.toString(), Toast.LENGTH_LONG).show()
+                        }
+                        ResponseStatus.LOADING -> {
+                            // Show progress indicator
+                            progressBar.visibility = View.VISIBLE
+                        }
+                    }
+                })
+            }
+            true
+        }
         R.id.action_settings -> {
             //Start Settings activity
             val intent = Intent(this, SettingsActivity::class.java)

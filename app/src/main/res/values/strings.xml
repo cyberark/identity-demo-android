@@ -64,6 +64,7 @@
     <string name="scheme">Scheme</string>
     <string name="site_key">ReCaptcha V2 Site Key</string>
     <string name="save">Save</string>
+    <string name="user_info">User Info</string>
     <string name="logout">Logout</string>
     <string name="app_configs">App Configs:</string>
     <string name="invoke_biometrics">Invoke Biometrics:</string>

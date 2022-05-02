@@ -29,8 +29,10 @@ import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.data.network.CyberArkAuthService
 import com.cyberark.identity.provider.callback.CyberArkAuthInterface
+import com.cyberark.identity.util.endpoint.EndpointUrls
 import com.cyberark.identity.viewmodel.AuthenticationViewModel
 import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
+import org.json.JSONObject
 
 /**
  * CyberArk auth manager class
@@ -97,10 +99,23 @@ internal class CyberArkAuthManager(
         params[CyberArkAccountBuilder.KEY_REFRESH_TOKEN] = refreshTokenData
 
         if (refreshTokenData != null) {
-            Log.i(tag, "Get new access token using refresh token")
             viewModel.handleRefreshToken(params, account.getOAuthTokenURL)
         } else {
             Log.i(tag, "Unable to fetch access token using refresh token")
+            // TODO.. handle error, throw exception
+        }
+    }
+
+    /**
+     * Handle user information
+     *
+     * @param accessTokenData: access token string
+     */
+    internal fun handleUserInfo(accessTokenData: String?) {
+        if (accessTokenData != null) {
+            viewModel.handleUserInfo(getUserInfoHeaderPayload(accessTokenData), account.getUserInfoURL)
+        } else {
+            Log.i(tag, "Unable to fetch user information")
             // TODO.. handle error, throw exception
         }
     }
@@ -145,4 +160,15 @@ internal class CyberArkAuthManager(
         )[AuthenticationViewModel::class.java]
     }
 
+    /**
+     * Get user info header payload
+     *
+     * @return JSONObject
+     */
+    private fun getUserInfoHeaderPayload(accessTokenData: String): JSONObject {
+        val payload = JSONObject()
+        payload.put(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT, true)
+        payload.put(EndpointUrls.HEADER_AUTHORIZATION, "Bearer $accessTokenData")
+        return payload
+    }
 }

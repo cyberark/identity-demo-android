@@ -22,7 +22,7 @@
     <string name="cyberark_auth_app_id">{auth_app_id}</string>
     <string name="cyberark_auth_state">{auth_state}</string>
     <string name="cyberark_auth_response_type">code</string>
-    <string name="cyberark_auth_scope">openid</string>
+    <string name="cyberark_auth_scope">openid email profile</string>
     <string name="cyberark_auth_redirect_uri">demo://acme/android/com.cyberark.mfa/redirectURICallback</string>
     <string name="cyberark_auth_host">acme</string>
     <string name="cyberark_auth_scheme">demo</string>

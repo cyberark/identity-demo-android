@@ -22,15 +22,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cyberark.identity.data.model.AuthCodeFlowModel
+import com.cyberark.identity.data.model.UserInfoModel
 import com.cyberark.identity.data.model.RefreshTokenModel
 import com.cyberark.identity.data.network.CyberArkAuthHelper
 import com.cyberark.identity.util.ResponseHandler
+import com.cyberark.identity.util.endpoint.EndpointUrls
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 /**
  * Authentication view model
  * 1. handle authorization code exchange for access token
  * 2. Get new access token using refresh token
+ * 3. Get user information
  *
  * @property cyberArkAuthHelper: CyberArkAuthHelper instance
  */
@@ -40,6 +44,7 @@ internal class AuthenticationViewModel(private val cyberArkAuthHelper: CyberArkA
     private val tag: String? = AuthenticationViewModel::class.simpleName
     private val authResponse = MutableLiveData<ResponseHandler<AuthCodeFlowModel>>()
     private val refreshTokenResponse = MutableLiveData<ResponseHandler<RefreshTokenModel>>()
+    private val userInfoResponse = MutableLiveData<ResponseHandler<UserInfoModel>>()
 
     init {
         Log.i(tag, "initialize AuthenticationViewModel")
@@ -49,6 +54,7 @@ internal class AuthenticationViewModel(private val cyberArkAuthHelper: CyberArkA
      * Handle authorization code exchange for access token
      *
      * @param params: HashMap<String?, String?>, request body
+     * @param url: Authorization code exchange URL
      */
     internal fun handleAuthorizationCode(params: HashMap<String?, String?>, url: String) {
         viewModelScope.launch {
@@ -79,6 +85,7 @@ internal class AuthenticationViewModel(private val cyberArkAuthHelper: CyberArkA
      * Handle refresh token API call to get new access token
      *
      * @param params: HashMap<String?, String?>, request body
+     * @param url: refresh token URL
      */
     internal fun handleRefreshToken(params: HashMap<String?, String?>, url: String) {
         viewModelScope.launch {
@@ -88,6 +95,32 @@ internal class AuthenticationViewModel(private val cyberArkAuthHelper: CyberArkA
                 refreshTokenResponse.postValue(ResponseHandler.success(refreshTokenCreds))
             } catch (e: Exception) {
                 refreshTokenResponse.postValue(ResponseHandler.error(e.toString(), null))
+            }
+        }
+    }
+
+    /**
+     * Handle user information
+     *
+     * @param headerPayload: header payload
+     * @param url: user info endpoint URL
+     */
+    internal fun handleUserInfo(headerPayload: JSONObject, url: String) {
+        viewModelScope.launch {
+            userInfoResponse.postValue(ResponseHandler.loading(null))
+            try {
+                val idapNativeClient: Boolean =
+                    headerPayload.getBoolean(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT)
+                val bearerToken: String = headerPayload.getString(EndpointUrls.HEADER_AUTHORIZATION)
+
+                val userInfoData = cyberArkAuthHelper.getUserInfo(
+                    idapNativeClient,
+                    bearerToken,
+                    url
+                )
+                userInfoResponse.postValue(ResponseHandler.success(userInfoData))
+            } catch (e: Exception) {
+                userInfoResponse.postValue(ResponseHandler.error(e.toString(), null))
             }
         }
     }
@@ -108,5 +141,14 @@ internal class AuthenticationViewModel(private val cyberArkAuthHelper: CyberArkA
      */
     internal fun getRefreshToken(): LiveData<ResponseHandler<RefreshTokenModel>> {
         return refreshTokenResponse
+    }
+
+    /**
+     * Get User Information
+     *
+     * @return LiveData<ResponseHandler<UserInfoModel>>: LiveData ResponseHandler for UserInfoModel
+     */
+    internal fun getUserInfo(): LiveData<ResponseHandler<UserInfoModel>> {
+        return userInfoResponse
     }
 }

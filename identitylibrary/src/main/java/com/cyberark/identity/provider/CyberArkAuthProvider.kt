@@ -55,6 +55,10 @@ object CyberArkAuthProvider {
         return RefreshTokenBuilder(account)
     }
 
+    fun userInfo(account: CyberArkAccountBuilder): UserInfoBuilder {
+        return UserInfoBuilder(account)
+    }
+
     fun enroll(account: CyberArkAccountBuilder): EnrollmentBuilder {
         return EnrollmentBuilder(account)
     }
@@ -231,6 +235,34 @@ object CyberArkAuthProvider {
             return cyberarkAuthManager.getViewModelInstance.getRefreshToken()
         }
     }
+
+    /**
+     * User Info builder class
+     *
+     * @property account: CyberArkAccountBuilder instance
+     */
+    class UserInfoBuilder internal constructor(
+        private val account: CyberArkAccountBuilder
+    ) {
+        /**
+         * Get user info
+         *
+         * @param context: Activity Context
+         * @param accessTokenData: access token data
+         * @return LiveData<ResponseHandler<UserInfoModel>>: LiveData response handler for UserInfoModel
+         */
+        fun start(
+            context: Context,
+            accessTokenData: String
+        ): LiveData<ResponseHandler<UserInfoModel>> {
+            Log.i(TAG, "Get user info using access token")
+            val cyberarkAuthManager = CyberArkAuthManager(context, account)
+            cyberarkAuthManager.handleUserInfo(accessTokenData)
+
+            return cyberarkAuthManager.getViewModelInstance.getUserInfo()
+        }
+    }
+
 
     /**
      * Enrollment builder class

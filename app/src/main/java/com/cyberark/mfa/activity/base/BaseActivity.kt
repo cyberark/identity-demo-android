@@ -91,6 +91,7 @@ open class BaseActivity : AppCompatActivity() {
                         // Save access token and refresh token in SharedPref using keystore encryption
                         KeyStoreProvider.get().saveAuthToken(it.data!!.access_token)
                         KeyStoreProvider.get().saveRefreshToken(it.data!!.refresh_token)
+                        KeyStoreProvider.get().saveRefreshToken(it.data!!.id_token)
                         // Hide progress indicator
                         progressBar.visibility = View.GONE
                         // Start MFAActivity

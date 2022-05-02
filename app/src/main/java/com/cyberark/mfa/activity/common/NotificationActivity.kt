@@ -108,6 +108,10 @@ class NotificationActivity : AppCompatActivity() {
             CyberArkPreferenceUtil.remove(Constants.REFRESH_TOKEN)
             CyberArkPreferenceUtil.remove(Constants.REFRESH_TOKEN_IV)
 
+            // Remove Id token from device storage
+            CyberArkPreferenceUtil.remove(Constants.ID_TOKEN)
+            CyberArkPreferenceUtil.remove(Constants.ID_TOKEN_IV)
+
             // Remove ENROLLMENT_STATUS flag from device storage
             CyberArkPreferenceUtil.remove(PreferenceConstants.ENROLLMENT_STATUS)
             CyberArkPreferenceUtil.apply()

@@ -91,6 +91,28 @@ private class KeyStoreManagerImpl : KeyStoreManager {
     }
 
     /**
+     * Save Id token in shared preference
+     *
+     * @param idToken: id token data
+     * @return Boolean: true if the id token is encrypted successfully, else false
+     */
+    override fun saveIdToken(idToken: String): Boolean {
+        val returnValues = encryptText(Constants.ID_ALIAS, idToken)
+        if (returnValues != null) {
+            CyberArkPreferenceUtil.putString(
+                Constants.ID_TOKEN_IV,
+                Base64.encodeToString(returnValues.first, Base64.DEFAULT)
+            )
+            CyberArkPreferenceUtil.putString(
+                Constants.ID_TOKEN,
+                Base64.encodeToString(returnValues.second, Base64.DEFAULT)
+            )
+            return true
+        }
+        return false
+    }
+
+    /**
      * Save session token in shared preference
      *
      * @param sessionToken: session token data
@@ -173,6 +195,25 @@ private class KeyStoreManagerImpl : KeyStoreManager {
     }
 
     /**
+     * Get Id token from Android keystore
+     *
+     * @return String: decrypted id token
+     */
+    private fun getIdTokenKeyStore(): String? {
+        var decryptedToken: String? = null
+        val idTokenIV = CyberArkPreferenceUtil.getString(Constants.ID_TOKEN_IV, null)
+        val idToken = CyberArkPreferenceUtil.getString(Constants.ID_TOKEN, null)
+        if (idTokenIV != null || idToken != null) {
+            decryptedToken = decryptText(
+                Constants.REFRESH_ALIAS,
+                Base64.decode(idToken!!, Base64.DEFAULT),
+                Base64.decode(idTokenIV!!, Base64.DEFAULT)
+            )
+        }
+        return decryptedToken
+    }
+
+    /**
      * Get session token from Android keystore
      *
      * @return String: decrypted session token
@@ -226,6 +267,15 @@ private class KeyStoreManagerImpl : KeyStoreManager {
      */
     override fun getRefreshToken(): String? {
         return getRefreshTokenKeyStore()
+    }
+
+    /**
+     * Get Id token from Android keystore
+     *
+     * @return String: decrypted id token
+     */
+    override fun getIdToken(): String? {
+        return getIdTokenKeyStore()
     }
 
     /**

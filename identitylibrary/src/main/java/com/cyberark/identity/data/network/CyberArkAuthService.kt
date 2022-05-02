@@ -75,6 +75,21 @@ interface CyberArkAuthService {
     ): RefreshTokenModel
 
     /**
+     * Get user information
+     *
+     * @param idapNativeClient: idaptive native client
+     * @param bearerToken: authorization bearer token
+     * @param url: token Url
+     * @return UserInfoModel
+     */
+    @POST
+    suspend fun getUserInfo(
+        @Header(EndpointUrls.HEADER_X_IDAP_NATIVE_CLIENT) idapNativeClient: Boolean,
+        @Header(EndpointUrls.HEADER_AUTHORIZATION) bearerToken: String,
+        @Url url: String
+    ): UserInfoModel
+
+    /**
      * Enroll device
      *
      * @param idapNativeClient: idaptive native client
