@@ -31,7 +31,6 @@ import android.view.View
 import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
@@ -53,8 +52,9 @@ import com.cyberark.identity.util.notification.NotificationConstants
 import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
-import com.cyberark.mfa.activity.common.SettingsActivity
 import com.cyberark.mfa.activity.WelcomeActivity
+import com.cyberark.mfa.activity.base.BaseActivity
+import com.cyberark.mfa.activity.common.SettingsActivity
 import com.cyberark.mfa.fcm.FCMTokenInterface
 import com.cyberark.mfa.fcm.FCMTokenUtil
 import com.cyberark.mfa.utils.AppConfig
@@ -73,7 +73,7 @@ import java.util.*
  * 5. Invoke biometrics when access token expires
  *
  */
-class MFAActivity : AppCompatActivity(), FCMTokenInterface {
+class MFAActivity : BaseActivity(), FCMTokenInterface {
 
     companion object {
         private val TAG = MFAActivity::class.simpleName
@@ -766,33 +766,7 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_claims -> {
             val account =  AppConfig.setupAccountFromSharedPreference(this)
-            val authResponseHandler: LiveData<ResponseHandler<UserInfoModel>> =
-                CyberArkAuthProvider.userInfo(account)
-                    .start(this, accessTokenData)
-
-            // Verify if there is any active observer, if not then add observer to get response
-            if (!authResponseHandler.hasActiveObservers()) {
-                authResponseHandler.observe(this, {
-                    when (it.status) {
-                        ResponseStatus.SUCCESS -> {
-                            // Hide progress indicator
-                            progressBar.visibility = View.GONE
-                            Log.i("LoginOptionActivity", it.data.toString())
-                            Toast.makeText(this, it.data.toString(), Toast.LENGTH_LONG).show()
-                        }
-                        ResponseStatus.ERROR -> {
-                            // Hide progress indicator
-                            progressBar.visibility = View.GONE
-                            // Show authentication generic error message using Toast
-                            Toast.makeText(this, it.data.toString(), Toast.LENGTH_LONG).show()
-                        }
-                        ResponseStatus.LOADING -> {
-                            // Show progress indicator
-                            progressBar.visibility = View.VISIBLE
-                        }
-                    }
-                })
-            }
+            retrieveUserInfo(account, accessTokenData, progressBar)
             true
         }
         R.id.action_settings -> {

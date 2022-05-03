@@ -68,6 +68,7 @@
     <string name="logout">Logout</string>
     <string name="app_configs">App Configs:</string>
     <string name="invoke_biometrics">Invoke Biometrics:</string>
+    <string name="user_info_label">User Info:</string>
 
     <!-- Welcome Screen -->
     <string name="for_developer_guides_and_api_documentation">For developer guides and API documentation, please visit <a href="https://identity-developer.cyberark.com"><b>CyberArk Identity Developer Program</b></a> website</string>
@@ -157,4 +158,12 @@
     <string name="authentication_widget_url">Auth Widget host URL</string>
     <string name="authentication_widget_id">Auth Widget ID</string>
     <string name="authentication_widget_resource_url">Resource URL</string>
+    <string name="user_info_auth_time">Auth time:</string>
+    <string name="user_info_given_name">Given name:</string>
+    <string name="user_info_name">Name:</string>
+    <string name="user_info_email">Email:</string>
+    <string name="user_info_family_name">Family name:</string>
+    <string name="user_info_preferred_username">Preferred \nusername:</string>
+    <string name="user_info_unique_name">Unique name:</string>
+    <string name="user_info_email_verified">Email verified:</string>
 </resources>

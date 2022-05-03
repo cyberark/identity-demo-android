@@ -35,6 +35,7 @@ import com.android.volley.toolbox.Volley
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.builder.CyberArkAuthWidgetBuilder
 import com.cyberark.identity.data.model.AuthCodeFlowModel
+import com.cyberark.identity.data.model.UserInfoModel
 import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.ResponseHandler
 import com.cyberark.identity.util.ResponseStatus
@@ -48,10 +49,12 @@ import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
 import com.cyberark.mfa.activity.WelcomeActivity
 import com.cyberark.mfa.activity.scenario1.MFAActivity
+import com.cyberark.mfa.activity.scenario1.UserInfoActivity
 import com.cyberark.mfa.activity.scenario2.NativeLoginActivity
 import com.cyberark.mfa.activity.scenario2.TransferFundActivity
 import com.cyberark.mfa.utils.AppConfig
 import com.cyberark.mfa.utils.PreferenceConstants
+import com.google.gson.Gson
 import org.json.JSONObject
 
 open class BaseActivity : AppCompatActivity() {
@@ -157,6 +160,44 @@ open class BaseActivity : AppCompatActivity() {
                         Log.i("LoginOptionActivity", it.data.toString())
                         // Initiate authorize URL using CyberArk hosted login
                         performCyberArkHostedLogin(cyberArkAccountBuilder, progressBar)
+                    }
+                    ResponseStatus.ERROR -> {
+                        // Hide progress indicator
+                        progressBar.visibility = View.GONE
+                        // Show authentication generic error message using Toast
+                        Toast.makeText(this, it.data.toString(), Toast.LENGTH_LONG).show()
+                    }
+                    ResponseStatus.LOADING -> {
+                        // Show progress indicator
+                        progressBar.visibility = View.VISIBLE
+                    }
+                }
+            })
+        }
+    }
+
+    protected fun retrieveUserInfo(
+        cyberArkAccountBuilder: CyberArkAccountBuilder,
+        accessTokenData: String,
+        progressBar: ProgressBar
+    ) {
+        val authResponseHandler: LiveData<ResponseHandler<UserInfoModel>> =
+            CyberArkAuthProvider.userInfo(cyberArkAccountBuilder)
+                .start(this, accessTokenData)
+
+        // Verify if there is any active observer, if not then add observer to get response
+        if (!authResponseHandler.hasActiveObservers()) {
+            authResponseHandler.observe(this, {
+                when (it.status) {
+                    ResponseStatus.SUCCESS -> {
+                        // Hide progress indicator
+                        progressBar.visibility = View.GONE
+
+                        // Start UserInfoActivity
+                        val userInfo = Gson().toJson(it.data)
+                        val intent = Intent(this, UserInfoActivity::class.java)
+                        intent.putExtra("USER_INFO", userInfo)
+                        startActivity(intent)
                     }
                     ResponseStatus.ERROR -> {
                         // Hide progress indicator
