@@ -27,6 +27,7 @@ object PreferenceConstants {
     const val CLIENT_ID = "client_id"
     const val APP_ID = "app_id"
     const val STATE = "state"
+    const val SCOPE = "scope"
     const val REDIRECT_URI = "redirect_uri"
     const val HOST = "host"
     const val SCHEME = "scheme"

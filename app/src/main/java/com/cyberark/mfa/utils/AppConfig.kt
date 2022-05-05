@@ -67,6 +67,7 @@ object AppConfig {
         val clientId = CyberArkPreferenceUtil.getString(PreferenceConstants.CLIENT_ID, null)
         val appId = CyberArkPreferenceUtil.getString(PreferenceConstants.APP_ID, null)
         val state = CyberArkPreferenceUtil.getString(PreferenceConstants.STATE, null)
+        val scope = CyberArkPreferenceUtil.getString(PreferenceConstants.SCOPE, null)
         val redirectUri = CyberArkPreferenceUtil.getString(PreferenceConstants.REDIRECT_URI, null)
 
         return CyberArkAccountBuilder.Builder()
@@ -76,7 +77,7 @@ object AppConfig {
             .appId(appId.toString())
             .state(state.toString())
             .responseType(context.getString(R.string.cyberark_auth_response_type))
-            .scope(context.getString(R.string.cyberark_auth_scope))
+            .scope(scope.toString())
             .redirectUri(redirectUri.toString())
             .build()
     }
@@ -106,6 +107,10 @@ object AppConfig {
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.STATE,
             context.getString(R.string.cyberark_auth_state)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.SCOPE,
+            context.getString(R.string.cyberark_auth_scope)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.REDIRECT_URI,
@@ -150,6 +155,10 @@ object AppConfig {
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.STATE,
             context.getString(R.string.config_auth_state)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.SCOPE,
+            context.getString(R.string.config_auth_scope)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.REDIRECT_URI,
