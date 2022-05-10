@@ -29,12 +29,12 @@ package com.cyberark.identity.data.model
  * @property email_verified: email verified status - true/false
  */
 data class UserInfoModel(
-    val auth_time: String,
-    val given_name: String,
-    val name: String,
-    val email: String,
-    val family_name: String,
-    val preferred_username: String,
-    val unique_name: String,
-    val email_verified: String
+    val auth_time: String?,
+    val given_name: String?,
+    val name: String?,
+    val email: String?,
+    val family_name: String?,
+    val preferred_username: String?,
+    val unique_name: String?,
+    val email_verified: Boolean?
 )

@@ -5,6 +5,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.powermock.core.classloader.annotations.PowerMockIgnore
+import org.powermock.modules.junit4.PowerMockRunnerDelegate
 import org.powermock.modules.junit4.rule.PowerMockRule
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -20,7 +21,7 @@ open class RobolectricBase {
     var rule = PowerMockRule()
 
     @Test
-    public fun testMethod(){
+    fun testMethod(){
 
     }
 }

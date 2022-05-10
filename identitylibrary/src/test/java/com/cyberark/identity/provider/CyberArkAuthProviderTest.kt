@@ -48,18 +48,16 @@ class CyberArkAuthProviderTest {
         val application = mock(Application::class.java)
         val viewModelStore = mock(ViewModelStore::class.java)
         val viewModelProvider = mock(ViewModelProvider::class.java)
-        PowerMockito.whenNew(ViewModelProvider::class.java).withAnyArguments()
+        whenNew(ViewModelProvider::class.java).withAnyArguments()
             .thenReturn(viewModelProvider)
         PowerMockito.`when`(viewModelProvider.get(AuthenticationViewModel::class.java))
             .thenReturn(authenticationViewModel)
         PowerMockito.`when`(appCompactActivty.application).thenReturn(application)
         PowerMockito.`when`(appCompactActivty.viewModelStore).thenReturn(viewModelStore)
-
-
     }
 
     @Test
-    public fun login() {
+    fun login() {
         val accountBuilder = mock(CyberArkAccountBuilder::class.java)
         val loginBuilder = CyberArkAuthProvider.login(accountBuilder)
         PowerMockito.`when`(accountBuilder.getBaseUrl).thenReturn("https://tenant.com/endsession/")
@@ -72,31 +70,30 @@ class CyberArkAuthProviderTest {
     }
 
     @Test
-    public fun endSession() {
+    fun endSession() {
         val accountBuilder = mock(CyberArkAccountBuilder::class.java)
         val endSessionBuilder = CyberArkAuthProvider.endSession(accountBuilder)
         val authManager = mock(CyberArkAuthManager::class.java)
-        PowerMockito.whenNew(CyberArkAuthManager::class.java).withArguments(appCompactActivty,accountBuilder).thenReturn(authManager)
+        whenNew(CyberArkAuthManager::class.java).withArguments(appCompactActivty,accountBuilder).thenReturn(authManager)
 
         endSessionBuilder.start(appCompactActivty)
         verify(authManager).endSession()
     }
 
     @Test
-    public fun refreshToken() {
+    fun refreshToken() {
         val refreshToken = "sampleRefreshToken"
         val accountBuilder = mock(CyberArkAccountBuilder::class.java)
         val refreshBuilder = CyberArkAuthProvider.refreshToken(accountBuilder)
         val authManager = mock(CyberArkAuthManager::class.java)
-        PowerMockito.whenNew(CyberArkAuthManager::class.java).withArguments(appCompactActivty,accountBuilder).thenReturn(authManager)
+        whenNew(CyberArkAuthManager::class.java).withArguments(appCompactActivty,accountBuilder).thenReturn(authManager)
         PowerMockito.`when`(authManager.getViewModelInstance).thenReturn(authenticationViewModel)
         refreshBuilder.start(appCompactActivty,refreshToken)
         verify(authenticationViewModel).getRefreshToken()
     }
 
     @Test
-    public fun enroll() {
-
+    fun enroll() {
         val accessToken = "sampleAccessToken"
         val enrollmentManager = mock(CyberArkEnrollmentManager::class.java)
         val enrollmentViewModel = mock(EnrollmentViewModel::class.java)

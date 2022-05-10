@@ -16,8 +16,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.cyberark.identity"
-    android:versionCode="1"
-    android:versionName="1.0.0">
+    android:versionCode="22"
+    android:versionName="3.1.0">
 
     <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 
@@ -28,21 +28,20 @@
     </queries>
 
     <application android:theme="@style/Theme.AppCompat">
+        <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing"
+            android:value="true" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
             tools:replace="screenOrientation" />
-
         <activity
-            android:name="com.cyberark.identity.activity.CyberArkAuthActivity"
+            android:name=".activity.CyberArkAuthActivity"
             android:autoRemoveFromRecents="true"
             android:exported="false"
             android:launchMode="singleTask" />
-
-        <activity android:name="com.cyberark.identity.activity.CyberArkQRCodeLoginActivity" />
-
+        <activity android:name=".activity.CyberArkQRCodeLoginActivity" />
         <activity
-            android:name="com.cyberark.identity.activity.CyberArkRedirectActivity"
+            android:name=".activity.CyberArkRedirectActivity"
             android:autoRemoveFromRecents="true"
             android:exported="true"
             tools:node="replace">
@@ -50,16 +49,24 @@
                 android:autoVerify="true"
                 tools:targetApi="M">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="aaj7617.my.dev.idaptive.app"
-                    android:pathPrefix="/android/com.cyberark.mfa/callback"
+                    android:pathPrefix="/android/com.cyberark.mfa/redirectURICallback"
+                    android:scheme="demo" />
+            </intent-filter>
+            <intent-filter
+                android:autoVerify="true"
+                tools:targetApi="M">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="aaj7617.my.dev.idaptive.app"
+                    android:pathPrefix="/android/com.cyberark.mfa/resourceURLCallback"
                     android:scheme="demo" />
             </intent-filter>
         </activity>
-
     </application>
 </manifest>

@@ -11,7 +11,6 @@ import org.robolectric.Robolectric
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.android.controller.ActivityController
 
-
 class CyberArkRedirectActivityTest : RobolectricBase() {
 
     @Test
@@ -20,7 +19,7 @@ class CyberArkRedirectActivityTest : RobolectricBase() {
         activityController.create()
         ApplicationProvider.getApplicationContext<Context>()
         val startedActivity =
-            shadowOf(activityController.get()).getNextStartedActivity().component?.className
+            shadowOf(activityController.get()).nextStartedActivity.component?.className
         assertEquals(startedActivity,CyberArkAuthActivity::class.java.name)
     }
 

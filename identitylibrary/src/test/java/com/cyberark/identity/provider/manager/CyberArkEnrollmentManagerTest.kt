@@ -1,4 +1,4 @@
-package com.cyberark.identity.provider
+package com.cyberark.identity.provider.manager
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
@@ -8,7 +8,6 @@ import com.cyberark.identity.testUtility.Constants
 import com.cyberark.identity.builder.CyberArkAccountBuilder
 import com.cyberark.identity.data.network.CyberArkAuthBuilder
 import com.cyberark.identity.data.network.CyberArkAuthHelper
-import com.cyberark.identity.provider.manager.CyberArkEnrollmentManager
 import com.cyberark.identity.util.device.DeviceInfoHelper
 import com.cyberark.identity.viewmodel.EnrollmentViewModel
 import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
@@ -68,7 +67,7 @@ class CyberArkEnrollmentManagerTest  {
     }
 
     @Test
-    public fun enroll() {
+    fun enroll() {
 //        PowerMockito.mockStatic(Build::class.java)
 //        PowerMockito.`when`(Build.MODEL).thenReturn(deviceName)
         val deviceInfoHelper = PowerMockito.mock(DeviceInfoHelper::class.java)

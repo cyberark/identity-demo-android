@@ -71,7 +71,7 @@ class UserInfoActivity : AppCompatActivity() {
         uniqueName?.text = userInfoModel.unique_name
 
         val emailVerified: TextView? = findViewById(R.id.email_verified)
-        emailVerified?.text = userInfoModel.email_verified
+        emailVerified?.text = userInfoModel.email_verified.toString()
     }
 
     // **************** Handle menu settings click action Start *********************** //
