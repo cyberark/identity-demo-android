@@ -91,10 +91,10 @@ open class BaseActivity : AppCompatActivity() {
                             getString(R.string.access_token_and_refresh_token_received),
                             Toast.LENGTH_SHORT
                         ).show()
-                        // Save access token and refresh token in SharedPref using keystore encryption
+                        // Save access token, refresh token and Id token in SharedPref using keystore encryption
                         KeyStoreProvider.get().saveAuthToken(it.data!!.access_token)
                         KeyStoreProvider.get().saveRefreshToken(it.data!!.refresh_token)
-                        KeyStoreProvider.get().saveRefreshToken(it.data!!.id_token)
+                        KeyStoreProvider.get().saveIdToken(it.data!!.id_token)
                         // Hide progress indicator
                         progressBar.visibility = View.GONE
                         // Start MFAActivity
@@ -176,6 +176,13 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Retrieve user info using access token
+     *
+     * @param cyberArkAccountBuilder: CyberArkAccountBuilder instance
+     * @param accessTokenData: access token data
+     * @param progressBar: ProgressBar instance
+     */
     protected fun retrieveUserInfo(
         cyberArkAccountBuilder: CyberArkAccountBuilder,
         accessTokenData: String,
