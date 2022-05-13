@@ -158,6 +158,8 @@
     <string name="authentication_widget_url">Auth Widget host URL</string>
     <string name="authentication_widget_id">Auth Widget ID</string>
     <string name="authentication_widget_resource_url">Resource URL</string>
+
+    <!-- User Info -->
     <string name="user_info_auth_time">Auth time:</string>
     <string name="user_info_given_name">Given name:</string>
     <string name="user_info_name">Name:</string>

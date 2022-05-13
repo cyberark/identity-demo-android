@@ -27,7 +27,7 @@
         </intent>
     </queries>
 
-    <application>
+    <application android:usesCleartextTraffic="false">
         <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing"
             android:value="true" />
         <activity
