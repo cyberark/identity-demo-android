@@ -266,7 +266,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/step_up_authentication"
+                    android:text="@string/step_up_authentication_configs"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -316,6 +316,76 @@
 
                 <EditText
                     android:id="@+id/editTextMFAWidgetId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:importantForAutofill="no"
+                    android:inputType="textUri"
+                    tools:ignore="LabelFor" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/authenticationWidgetLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/authentication_widget_configs"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="15dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1.5dp"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginEnd="50dp"
+                    android:layout_marginBottom="15dp"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/authentication_widget_url" />
+
+                <EditText
+                    android:id="@+id/editTextAuthWidgetHostURL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:ems="10"
+                    android:importantForAutofill="no"
+                    android:inputType="textUri"
+                    tools:ignore="LabelFor" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/authentication_widget_id" />
+
+                <EditText
+                    android:id="@+id/editTextAuthWidgetId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:ems="10"
+                    android:importantForAutofill="no"
+                    android:inputType="textUri"
+                    tools:ignore="LabelFor" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/authentication_widget_resource_url" />
+
+                <EditText
+                    android:id="@+id/editTextResourceURL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"

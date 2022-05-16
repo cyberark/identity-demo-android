@@ -72,7 +72,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/step_up_authentication"
+                    android:text="@string/step_up_authentication_configs"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold"

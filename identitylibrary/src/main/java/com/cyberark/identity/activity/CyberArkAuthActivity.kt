@@ -25,6 +25,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import com.cyberark.identity.provider.CyberArkAuthProvider.getAuthorizeToken
+import com.cyberark.identity.provider.CyberArkAuthProvider.handleResourceUrl
 import com.cyberark.identity.util.browser.CustomTabHelper
 
 /**
@@ -72,8 +73,14 @@ class CyberArkAuthActivity : AppCompatActivity() {
             launchUri(this, authorizeUri!!)
             return
         }
-        Log.i(tag, "Get authorize token")
-        getAuthorizeToken(authData)
+        // Verify redirection url from intent data and initiate respective flows
+        if (authData.data.toString().contains("/resourceURLCallback")) {
+            Log.i(tag, "Handle resource URL")
+            handleResourceUrl(authData)
+        } else {
+            Log.i(tag, "Get authorize token")
+            getAuthorizeToken(authData)
+        }
         finish()
     }
 

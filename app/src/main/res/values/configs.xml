@@ -18,11 +18,12 @@
     // CyberArk hosted login
     <string name="cyberark_auth_system_url">{auth_system_url}</string>
     <string name="cyberark_auth_host_url">{auth_host_url}</string>
-    <string name="cyberark_auth_client_id">{auth_host_url}</string>
+    <string name="cyberark_auth_client_id">{auth_client_id}</string>
     <string name="cyberark_auth_app_id">{auth_app_id}</string>
+    <string name="cyberark_auth_state">{auth_state}</string>
     <string name="cyberark_auth_response_type">code</string>
-    <string name="cyberark_auth_scope">All</string>
-    <string name="cyberark_auth_redirect_uri">demo://acme/android/com.cyberark.mfa/callback</string>
+    <string name="cyberark_auth_scope">{auth_scope}</string>
+    <string name="cyberark_auth_redirect_uri">demo://acme/android/com.cyberark.mfa/redirectURICallback</string>
     <string name="cyberark_auth_host">acme</string>
     <string name="cyberark_auth_scheme">demo</string>
 
@@ -31,7 +32,12 @@
 
     // Step-up authentication using MFA widget
     <string name="acme_native_login_url">{native_login_url}</string>
-    <string name="cyberark_widget_host_url">{widget_host_url}</string>
-    <string name="cyberark_widget_id" translatable="false">{widget_id}</string>
+    <string name="cyberark_mfa_widget_host_url">{mfa_widget_host_url}</string>
+    <string name="cyberark_mfa_widget_id" translatable="false">{mfa_widget_id}</string>
+
+    // Authentication widget
+    <string name="cyberark_auth_widget_host_url">{auth_widget_host_url}</string>
+    <string name="cyberark_auth_widget_id" translatable="false">{auth_widget_id}</string>
+    <string name="cyberark_auth_resource_url">demo://acme/android/com.cyberark.mfa/resourceURLCallback</string>
 </resources>
 

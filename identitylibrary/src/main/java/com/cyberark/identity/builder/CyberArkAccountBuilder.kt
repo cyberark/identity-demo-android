@@ -56,6 +56,7 @@ class CyberArkAccountBuilder(
         const val KEY_POST_LOGOUT_REDIRECT_URI = "post_logout_redirect_uri"
         const val KEY_CLIENT_ID = "client_id"
         const val KEY_SCOPE = "scope"
+        const val KEY_STATE = "state"
         const val KEY_NO_ZSO = "nozso"
         const val KEY_REFRESH_TOKEN = "refresh_token"
         const val KEY_CODE_VERIFIER = "code_verifier"
@@ -173,6 +174,7 @@ class CyberArkAccountBuilder(
             .addQueryParameter(KEY_RESPONSE_TYPE, responseType.toString())
             .addQueryParameter(KEY_CLIENT_ID, clientId.toString())
             .addQueryParameter(KEY_SCOPE, scope.toString())
+            .addQueryParameter(KEY_STATE, state.toString())
             .addQueryParameter(KEY_NO_ZSO, "true")
             .addQueryParameter(KEY_CODE_CHALLENGE, getCodeChallenge)
             .addQueryParameter(KEY_CODE_CHALLENGE_METHOD, CODE_CHALLENGE_METHOD_VALUE)
@@ -203,6 +205,17 @@ class CyberArkAccountBuilder(
             .toString()
 
     /**
+     * Get user info URL
+     */
+    val getUserInfoURL: String
+        get() = baseURL!!.newBuilder()
+            .addPathSegment("oauth2")
+            .addPathSegment("UserInfo")
+            .addPathSegment(appId.toString())
+            .build()
+            .toString()
+
+    /**
      * Get application callback URL
      */
     val getRedirectURL: String
@@ -213,6 +226,12 @@ class CyberArkAccountBuilder(
      */
     val getClientId: String
         get() = clientId.toString()
+
+    /**
+     * Get state string
+     */
+    val getState: String
+        get() = state.toString()
 
     /**
      * Get Base URL

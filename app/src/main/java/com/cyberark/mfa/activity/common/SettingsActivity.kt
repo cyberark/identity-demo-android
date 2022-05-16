@@ -50,6 +50,10 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var mfaWidgetHostUrl: EditText
     private lateinit var mfaWidgetId: EditText
 
+    private lateinit var authWidgetHostUrl: EditText
+    private lateinit var authWidgetId: EditText
+    private lateinit var resourceUrl: EditText
+
     // Device biometrics checkbox variables
     private lateinit var biometricsOnAppLaunchCheckbox: CheckBox
     private lateinit var biometricsOnQRCodeLaunchCheckbox: CheckBox
@@ -81,27 +85,32 @@ class SettingsActivity : AppCompatActivity() {
         val beforeLoginLayout: LinearLayout = findViewById(R.id.before_login_layout)
         val afterLoginLayout: LinearLayout = findViewById(R.id.after_login_layout)
         val basicLoginLayout: LinearLayout = findViewById(R.id.basicLoginLayout)
+        val authWidgetLayout: LinearLayout = findViewById(R.id.authenticationWidgetLayout)
         val activityIntent = intent
         when {
             activityIntent.getStringExtra("from_activity").equals("LoginOptionsActivity") -> {
                 beforeLoginLayout.visibility = View.VISIBLE
                 afterLoginLayout.visibility = View.GONE
                 basicLoginLayout.visibility = View.VISIBLE
+                authWidgetLayout.visibility = View.VISIBLE
             }
             activityIntent.getStringExtra("from_activity").equals("MFAActivity") -> {
                 beforeLoginLayout.visibility = View.GONE
                 afterLoginLayout.visibility = View.VISIBLE
                 basicLoginLayout.visibility = View.GONE
+                authWidgetLayout.visibility = View.GONE
             }
             activityIntent.getStringExtra("from_activity").equals("NativeSignupActivity") -> {
                 beforeLoginLayout.visibility = View.VISIBLE
                 afterLoginLayout.visibility = View.GONE
                 basicLoginLayout.visibility = View.VISIBLE
+                authWidgetLayout.visibility = View.GONE
             }
             else -> {
                 beforeLoginLayout.visibility = View.GONE
                 afterLoginLayout.visibility = View.GONE
                 basicLoginLayout.visibility = View.GONE
+                authWidgetLayout.visibility = View.GONE
             }
         }
 
@@ -120,6 +129,10 @@ class SettingsActivity : AppCompatActivity() {
         nativeLoginURL = findViewById(R.id.editTextBasicLoginURL)
         mfaWidgetHostUrl = findViewById(R.id.editTextMFAWidgetHostURL)
         mfaWidgetId = findViewById(R.id.editTextMFAWidgetId)
+
+        authWidgetHostUrl = findViewById(R.id.editTextAuthWidgetHostURL)
+        authWidgetId = findViewById(R.id.editTextAuthWidgetId)
+        resourceUrl = findViewById(R.id.editTextResourceURL)
     }
 
     private fun updateUI() {
@@ -135,8 +148,12 @@ class SettingsActivity : AppCompatActivity() {
         siteKey.setText(getString(R.string.recaptcha_v2_site_key))
 
         nativeLoginURL.setText(getString(R.string.acme_native_login_url))
-        mfaWidgetHostUrl.setText(getString(R.string.cyberark_widget_host_url))
-        mfaWidgetId.setText(getString(R.string.cyberark_widget_id))
+        mfaWidgetHostUrl.setText(getString(R.string.cyberark_mfa_widget_host_url))
+        mfaWidgetId.setText(getString(R.string.cyberark_mfa_widget_id))
+
+        authWidgetHostUrl.setText(getString(R.string.cyberark_auth_widget_host_url))
+        authWidgetId.setText(getString(R.string.cyberark_auth_widget_id))
+        resourceUrl.setText(getString(R.string.cyberark_auth_resource_url))
 
         // Get the shared preference status and handle device biometrics on app launch
         biometricsOnAppLaunchCheckbox.isChecked =
@@ -194,6 +211,13 @@ class SettingsActivity : AppCompatActivity() {
         CyberArkPreferenceUtil.putString(PreferenceConstants.NATIVE_LOGIN_URL, nativeLoginURL.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.MFA_WIDGET_URL, mfaWidgetHostUrl.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.MFA_WIDGET_ID, mfaWidgetId.text.toString())
+
+        CyberArkPreferenceUtil.putString(PreferenceConstants.AUTH_WIDGET_URL, authWidgetHostUrl.text.toString())
+        CyberArkPreferenceUtil.putString(PreferenceConstants.AUTH_WIDGET_ID, authWidgetId.text.toString())
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.RESOURCE_URL,
+            resourceUrl.text.toString()
+        )
 
         CyberArkPreferenceUtil.putBoolean(
             PreferenceConstants.INVOKE_BIOMETRICS_ON_APP_LAUNCH,
@@ -253,9 +277,22 @@ class SettingsActivity : AppCompatActivity() {
         if (!mfaWidgetURLSP.equals(mfaWidgetHostUrl.text.toString())) {
             mfaWidgetHostUrl.setText(mfaWidgetURLSP)
         }
-        val mfaWidgetID = CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_ID, null)
-        if (!mfaWidgetID.equals(mfaWidgetId.text.toString())) {
-            mfaWidgetId.setText(mfaWidgetID)
+        val mfaWidgetIdSP = CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_ID, null)
+        if (!mfaWidgetIdSP.equals(mfaWidgetId.text.toString())) {
+            mfaWidgetId.setText(mfaWidgetIdSP)
+        }
+
+        val authWidgetURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.AUTH_WIDGET_URL, null)
+        if (!authWidgetURLSP.equals(authWidgetHostUrl.text.toString())) {
+            authWidgetHostUrl.setText(authWidgetURLSP)
+        }
+        val authWidgetIdSP = CyberArkPreferenceUtil.getString(PreferenceConstants.AUTH_WIDGET_ID, null)
+        if (!authWidgetIdSP.equals(authWidgetId.text.toString())) {
+            authWidgetId.setText(authWidgetIdSP)
+        }
+        val resourceUrlSP = CyberArkPreferenceUtil.getString(PreferenceConstants.RESOURCE_URL, null)
+        if (!resourceUrlSP.equals(resourceUrl.text.toString())) {
+            resourceUrl.setText(resourceUrlSP)
         }
     }
 

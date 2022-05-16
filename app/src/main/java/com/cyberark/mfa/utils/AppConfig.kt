@@ -18,7 +18,8 @@ package com.cyberark.mfa.utils
 
 import android.content.Context
 import com.cyberark.identity.builder.CyberArkAccountBuilder
-import com.cyberark.identity.builder.CyberArkWidgetBuilder
+import com.cyberark.identity.builder.CyberArkAuthWidgetBuilder
+import com.cyberark.identity.builder.CyberArkMFAWidgetBuilder
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.BuildConfig
 import com.cyberark.mfa.R
@@ -40,6 +41,7 @@ object AppConfig {
             .appId(context.getString(R.string.cyberark_auth_app_id))
             .responseType(context.getString(R.string.cyberark_auth_response_type))
             .scope(context.getString(R.string.cyberark_auth_scope))
+            .state(context.getString(R.string.cyberark_auth_state))
             .redirectUri(context.getString(R.string.cyberark_auth_redirect_uri))
             .build()
     }
@@ -64,6 +66,8 @@ object AppConfig {
         val hostUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.HOST_URL, null)
         val clientId = CyberArkPreferenceUtil.getString(PreferenceConstants.CLIENT_ID, null)
         val appId = CyberArkPreferenceUtil.getString(PreferenceConstants.APP_ID, null)
+        val state = CyberArkPreferenceUtil.getString(PreferenceConstants.STATE, null)
+        val scope = CyberArkPreferenceUtil.getString(PreferenceConstants.SCOPE, null)
         val redirectUri = CyberArkPreferenceUtil.getString(PreferenceConstants.REDIRECT_URI, null)
 
         return CyberArkAccountBuilder.Builder()
@@ -71,8 +75,9 @@ object AppConfig {
             .hostURL(hostUrl.toString())
             .clientId(clientId.toString())
             .appId(appId.toString())
+            .state(state.toString())
             .responseType(context.getString(R.string.cyberark_auth_response_type))
-            .scope(context.getString(R.string.cyberark_auth_scope))
+            .scope(scope.toString())
             .redirectUri(redirectUri.toString())
             .build()
     }
@@ -98,6 +103,14 @@ object AppConfig {
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.APP_ID,
             context.getString(R.string.cyberark_auth_app_id)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.STATE,
+            context.getString(R.string.cyberark_auth_state)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.SCOPE,
+            context.getString(R.string.cyberark_auth_scope)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.REDIRECT_URI,
@@ -138,6 +151,14 @@ object AppConfig {
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.APP_ID,
             context.getString(R.string.config_auth_app_id)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.STATE,
+            context.getString(R.string.config_auth_state)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.SCOPE,
+            context.getString(R.string.config_auth_scope)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.REDIRECT_URI,
@@ -182,7 +203,7 @@ object AppConfig {
      * @param context: Activity/Application context
      * @return CyberArkWidgetBuilder instance
      */
-    fun setupNativeLoginFromSharedPreference(context: Context): CyberArkWidgetBuilder{
+    fun setupNativeLoginFromSharedPreference(context: Context): CyberArkMFAWidgetBuilder{
         val nativeLoginURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.NATIVE_LOGIN_URL, null)
         if (nativeLoginURLSP == null) {
             if(BuildConfig.DEBUG) {
@@ -195,7 +216,7 @@ object AppConfig {
         val widgetHostUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_URL, null)
         val widgetId = CyberArkPreferenceUtil.getString(PreferenceConstants.MFA_WIDGET_ID, null)
 
-        return CyberArkWidgetBuilder.Builder()
+        return CyberArkMFAWidgetBuilder.Builder()
             .systemURL(systemUrl.toString())
             .hostURL(widgetHostUrl.toString())
             .widgetId(widgetId.toString())
@@ -232,11 +253,11 @@ object AppConfig {
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.MFA_WIDGET_URL,
-            context.getString(R.string.cyberark_widget_host_url)
+            context.getString(R.string.cyberark_mfa_widget_host_url)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.MFA_WIDGET_ID,
-            context.getString(R.string.cyberark_widget_id)
+            context.getString(R.string.cyberark_mfa_widget_id)
         )
     }
 
@@ -252,11 +273,80 @@ object AppConfig {
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.MFA_WIDGET_URL,
-            context.getString(R.string.config_widget_host_url)
+            context.getString(R.string.config_mfa_widget_host_url)
         )
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.MFA_WIDGET_ID,
-            context.getString(R.string.config_widget_id)
+            context.getString(R.string.config_mfa_widget_id)
+        )
+    }
+
+    /**
+     * Set-up account for Authentication Widget
+     * update configuration from SharedPreference
+     *
+     * @param context: Activity/Application context
+     * @return CyberArkAuthWidgetBuilder instance
+     */
+    fun setupAuthWidgetFromSharedPreference(context: Context): CyberArkAuthWidgetBuilder{
+        val authWidgetURLSP = CyberArkPreferenceUtil.getString(PreferenceConstants.AUTH_WIDGET_URL, null)
+        if (authWidgetURLSP == null) {
+            if(BuildConfig.DEBUG) {
+                saveLocalAuthWidgetURLInSharedPreference(context)
+            } else {
+                saveAuthWidgetURLInSharedPreference(context)
+            }
+        }
+        val systemUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.SYSTEM_URL, null)
+        val widgetHostUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.AUTH_WIDGET_URL, null)
+        val widgetId = CyberArkPreferenceUtil.getString(PreferenceConstants.AUTH_WIDGET_ID, null)
+        val resourceUrl = CyberArkPreferenceUtil.getString(PreferenceConstants.RESOURCE_URL, null)
+
+        return CyberArkAuthWidgetBuilder.Builder()
+            .systemURL(systemUrl.toString())
+            .hostURL(widgetHostUrl.toString())
+            .widgetId(widgetId.toString())
+            .resourceURL(resourceUrl.toString())
+            .build()
+    }
+
+    /**
+     * Save Authentication Widget host url and widget id in shared preference
+     *
+     * @param context: Activity/Application context
+     */
+    private fun saveAuthWidgetURLInSharedPreference(context: Context) {
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.AUTH_WIDGET_URL,
+            context.getString(R.string.cyberark_auth_widget_host_url)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.AUTH_WIDGET_ID,
+            context.getString(R.string.cyberark_auth_widget_id)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.RESOURCE_URL,
+            context.getString(R.string.cyberark_auth_resource_url)
+        )
+    }
+
+    /**
+     * Save local.properties host url and widget id in shared preference
+     *
+     * @param context: Activity/Application context
+     */
+    private fun saveLocalAuthWidgetURLInSharedPreference(context: Context) {
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.AUTH_WIDGET_URL,
+            context.getString(R.string.config_auth_widget_host_url)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.AUTH_WIDGET_ID,
+            context.getString(R.string.config_auth_widget_id)
+        )
+        CyberArkPreferenceUtil.putString(
+            PreferenceConstants.RESOURCE_URL,
+            context.getString(R.string.config_auth_resource_url)
         )
     }
 }

@@ -22,23 +22,24 @@ import java.net.URLDecoder
 import java.util.*
 
 /**
- * CyberArk widget builder
+ * CyberArk authentication widget builder
  *
  * @property systemURL: system URL
  * @property hostURL: host URL
  * @property widgetId: widget ID
+ * @property resourceURL: resource URL
  */
-class CyberArkWidgetBuilder(
+class CyberArkAuthWidgetBuilder(
     private val systemURL: String?,
     private val hostURL: String?,
-    private val widgetId: String?
+    private val widgetId: String?,
+    private val resourceURL: String?
 ) {
     private val baseSystemURL: HttpUrl?
     private val baseURL: HttpUrl?
 
     companion object {
         const val KEY_WIDGET_ID = "id"
-        const val KEY_USER_NAME = "username"
     }
 
     /**
@@ -47,11 +48,13 @@ class CyberArkWidgetBuilder(
      * @property systemURL: system URL
      * @property hostURL: host URL
      * @property widgetId: widget ID
+     * @property resourceURL: resource URL
      */
     data class Builder(
         var systemURL: String? = null,
         var hostURL: String? = null,
-        var widgetId: String? = null
+        var widgetId: String? = null,
+        var resourceURL: String? = null
     ) {
 
         /**
@@ -76,29 +79,42 @@ class CyberArkWidgetBuilder(
         fun widgetId(widgetId: String) = apply { this.widgetId = widgetId }
 
         /**
+         * Set Resource URL
+         *
+         * @param resourceURL
+         */
+        fun resourceURL(resourceURL: String) = apply { this.resourceURL = resourceURL }
+
+        /**
          * Create CyberArk widget Builder
          *
          */
-        fun build() = CyberArkWidgetBuilder(
+        fun build() = CyberArkAuthWidgetBuilder(
             systemURL,
             hostURL,
-            widgetId
+            widgetId,
+            resourceURL
         )
     }
 
     /**
-     * Get MFA Widget base URL
+     * Get Authentication Widget base URL
      */
-    fun getMFAWidgetBaseURL(username: String): String {
+    fun getAuthWidgetBaseURL(): String {
         val widgetURL = baseURL!!.newBuilder()
             .addPathSegment("Authenticationwidgets")
             .addPathSegment("WidgetPage")
             .addQueryParameter(KEY_WIDGET_ID, widgetId)
-            .addQueryParameter(KEY_USER_NAME, username)
             .build()
             .toString()
         return URLDecoder.decode(widgetURL, "UTF-8")
     }
+
+    /**
+     * Get resource application callback URL
+     */
+    val getResourceURL: String
+        get() = resourceURL.toString()
 
     /**
      * Check valid and secure url

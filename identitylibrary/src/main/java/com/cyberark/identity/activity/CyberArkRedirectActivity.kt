@@ -29,7 +29,7 @@ class CyberArkRedirectActivity : AppCompatActivity() {
 
     companion object {
         val CYBERARK_REDIRECT_ACTION =
-            "com.cyberark.identity.CyberArkRedirectActivity" + ".CYBERARK_REDIRECT_ACTION"
+            "com.cyberark.identity.activity.CyberArkRedirectActivity" + ".CYBERARK_REDIRECT_ACTION"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

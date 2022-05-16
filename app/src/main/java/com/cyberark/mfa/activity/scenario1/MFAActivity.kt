@@ -31,15 +31,12 @@ import android.view.View
 import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import com.cyberark.identity.activity.CyberArkQRCodeLoginActivity
 import com.cyberark.identity.builder.CyberArkAccountBuilder
-import com.cyberark.identity.data.model.EnrollmentModel
-import com.cyberark.identity.data.model.OTPEnrollModel
-import com.cyberark.identity.data.model.RefreshTokenModel
-import com.cyberark.identity.data.model.SendFCMTokenModel
+import com.cyberark.identity.data.model.*
 import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.*
 import com.cyberark.identity.util.biometric.CyberArkBiometricCallback
@@ -55,8 +52,9 @@ import com.cyberark.identity.util.notification.NotificationConstants
 import com.cyberark.identity.util.preferences.Constants
 import com.cyberark.identity.util.preferences.CyberArkPreferenceUtil
 import com.cyberark.mfa.R
-import com.cyberark.mfa.activity.common.SettingsActivity
 import com.cyberark.mfa.activity.WelcomeActivity
+import com.cyberark.mfa.activity.base.BaseActivity
+import com.cyberark.mfa.activity.common.SettingsActivity
 import com.cyberark.mfa.fcm.FCMTokenInterface
 import com.cyberark.mfa.fcm.FCMTokenUtil
 import com.cyberark.mfa.utils.AppConfig
@@ -75,7 +73,7 @@ import java.util.*
  * 5. Invoke biometrics when access token expires
  *
  */
-class MFAActivity : AppCompatActivity(), FCMTokenInterface {
+class MFAActivity : BaseActivity(), FCMTokenInterface {
 
     companion object {
         private val TAG = MFAActivity::class.simpleName
@@ -148,6 +146,10 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
             CyberArkPreferenceUtil.remove(Constants.ACCESS_TOKEN_IV)
             CyberArkPreferenceUtil.remove(Constants.REFRESH_TOKEN)
             CyberArkPreferenceUtil.remove(Constants.REFRESH_TOKEN_IV)
+
+            // Remove Id token from device storage
+            CyberArkPreferenceUtil.remove(Constants.ID_TOKEN)
+            CyberArkPreferenceUtil.remove(Constants.ID_TOKEN_IV)
 
             // Remove ENROLLMENT_STATUS flag from device storage
             CyberArkPreferenceUtil.remove(PreferenceConstants.ENROLLMENT_STATUS)
@@ -756,11 +758,17 @@ class MFAActivity : AppCompatActivity(), FCMTokenInterface {
     // **************** Handle menu settings click action Start *********************** //
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.logout_menu, menu)
+        menuInflater.inflate(R.menu.logout_claims_menu, menu)
+        MenuCompat.setGroupDividerEnabled(menu, true)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_claims -> {
+            val account =  AppConfig.setupAccountFromSharedPreference(this)
+            retrieveUserInfo(account, accessTokenData, progressBar)
+            true
+        }
         R.id.action_settings -> {
             //Start Settings activity
             val intent = Intent(this, SettingsActivity::class.java)

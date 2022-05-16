@@ -64,9 +64,11 @@
     <string name="scheme">Scheme</string>
     <string name="site_key">ReCaptcha V2 Site Key</string>
     <string name="save">Save</string>
+    <string name="user_info">User Info</string>
     <string name="logout">Logout</string>
     <string name="app_configs">App Configs:</string>
     <string name="invoke_biometrics">Invoke Biometrics:</string>
+    <string name="user_info_label">User Info:</string>
 
     <!-- Welcome Screen -->
     <string name="for_developer_guides_and_api_documentation">For developer guides and API documentation, please visit <a href="https://identity-developer.cyberark.com"><b>CyberArk Identity Developer Program</b></a> website</string>
@@ -95,12 +97,6 @@
     <string name="access_token_received">Access token received</string>
     <string name="authentication_is_successful">Authentication is successful</string>
 
-    <!-- MFA widget Login options -->
-    <string name="mfa_widget_login">Step-up authentication \nusing MFA widget</string>
-    <string name="mfa_widget_login_title">Step-up authentication using MFA widget</string>
-    <string name="mfa_widget_login_description">In this scenario Acme Inc wants to provide step-up authentication to end user when the user tries to do funds transfer. \n
-\nTo satisfy this scenario Acme Inc uses the CyberArk Identity MFA widget and embeds the widget into the Acme mobile app using the CyberArk Identity mobile SDK.</string>
-
     <!-- Native Screen -->
     <string name="login_to_acme_inc">Login to Acme Inc !!</string>
     <string name="signup_to_acme_inc">Signup to Acme Inc !!</string>
@@ -127,11 +123,9 @@
     <string name="dialog_logout_error_desc">Unable to perform logout.</string>
     <string name="dialog_signup_error_desc">Invalid data, please try again.</string>
     <string name="dialog_session_timeout_error_desc">User Session Ended. Please login again to proceed.</string>
-    <string name="step_up_authentication">Step-up authentication config:</string>
     <string name="cyberark_hosted_login_configs">CyberArk hosted login config:</string>
+    <string name="step_up_authentication_configs">Step-up authentication config:</string>
     <string name="native_login_url">Native Login URL</string>
-    <string name="mfa_widget_url">Widget host URL</string>
-    <string name="mfa_widget_id">Widget ID</string>
     <string name="on_transfer_funds">On transfer funds</string>
     <string name="button_done">Done</string>
     <string name="button_retry">Retry</string>
@@ -144,4 +138,34 @@
     <string name="your_signup_is_successful">Your signup is successful</string>
     <string name="do_you_want_to_login">Do you want to login?</string>
     <string name="your_signup_has_failed">Your signup has failed</string>
+
+    <!-- MFA widget Login options -->
+    <string name="mfa_widget_login">Step-up authentication \nusing MFA widget</string>
+    <string name="mfa_widget_login_title">Step-up authentication using MFA widget</string>
+    <string name="mfa_widget_login_description">In this scenario Acme Inc wants to provide step-up authentication to end user when the user tries to do funds transfer. \n
+\nTo satisfy this scenario Acme Inc uses the CyberArk Identity MFA widget and embeds the widget into the Acme mobile app using the CyberArk Identity mobile SDK.</string>
+    <string name="mfa_widget_url">MFA Widget host URL</string>
+    <string name="mfa_widget_id">MFA Widget ID</string>
+
+    <!-- Authentication Widgets -->
+    <string name="authentication_widgets">Authentication Widgets</string>
+    <string name="authentication_widgets_title">Authentication Widgets</string>
+    <string name="authentication_widgets_description">The admin of Acme Inc. creates the authentication widget on the CyberArk Identity portal and uses the page URL to embed the widget into the mobile app. The widget adds sign up and sign in capabilities to your website or mobile app.
+        \n\nEnd-users who sign up are added to the CyberArk Cloud Directory. You can leverage CyberArk Identity\'s authentication and authorization features to secure their accounts. Once the end-user signs up, they are re-directed to the sign in form in the widget to securely sign in using multi-factor authentication.
+        \n\nThe same widget prompts end-users to authenticate to your website with MFA. The widget can be integrated with sign in protocols such as OIDC/SAML to authorize a user.</string>
+    <string name="authentication_widgets_proceed">Proceed</string>
+    <string name="authentication_widget_configs">Authentication widget config:</string>
+    <string name="authentication_widget_url">Auth Widget host URL</string>
+    <string name="authentication_widget_id">Auth Widget ID</string>
+    <string name="authentication_widget_resource_url">Resource URL</string>
+
+    <!-- User Info -->
+    <string name="user_info_auth_time">Auth time:</string>
+    <string name="user_info_given_name">Given name:</string>
+    <string name="user_info_name">Name:</string>
+    <string name="user_info_email">Email:</string>
+    <string name="user_info_family_name">Family name:</string>
+    <string name="user_info_preferred_username">Preferred \nusername:</string>
+    <string name="user_info_unique_name">Unique name:</string>
+    <string name="user_info_email_verified">Email verified:</string>
 </resources>

@@ -1,4 +1,20 @@
-package com.cyberark.identity.provider
+/*
+ * Copyright (c) 2021 CyberArk Software Ltd. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.cyberark.identity.provider.manager
 
 import android.app.Application
 import android.content.Intent
@@ -9,7 +25,6 @@ import androidx.lifecycle.ViewModelStore
 import com.cyberark.identity.testUtility.Constants
 import com.cyberark.identity.activity.CyberArkAuthActivity
 import com.cyberark.identity.builder.CyberArkAccountBuilder
-import com.cyberark.identity.provider.manager.CyberArkAuthManager
 import com.cyberark.identity.viewmodel.AuthenticationViewModel
 import com.cyberark.identity.viewmodel.base.CyberArkViewModelFactory
 import org.junit.Before
@@ -61,7 +76,7 @@ class CyberArkAuthManagerTest {
     }
 
     @Test
-    public fun endSession() {
+    fun endSession() {
         val mockUri = PowerMockito.mock(Uri::class.java)
         PowerMockito.mockStatic(CyberArkAuthActivity::class.java)
         PowerMockito.`when`(cyberArkBuilder.getOAuthEndSessionURL).thenReturn("https://tenant.com/endsession")
@@ -72,7 +87,7 @@ class CyberArkAuthManagerTest {
     }
 
     @Test
-    public fun startAuthentication() {
+    fun startAuthentication() {
         val mockUri = PowerMockito.mock(Uri::class.java)
         PowerMockito.mockStatic(CyberArkAuthActivity::class.java)
         PowerMockito.`when`(cyberArkBuilder.getOAuthBaseURL).thenReturn("https://tenant.com/endsession")
@@ -83,7 +98,7 @@ class CyberArkAuthManagerTest {
     }
 
     @Test
-    public fun updateResult() {
+    fun updateResult() {
         val intent = PowerMockito.mock(Intent::class.java)
         val mockUri = PowerMockito.mock(Uri::class.java)
         PowerMockito.`when`(mockUri.getQueryParameter(CyberArkAccountBuilder.KEY_CODE)).thenReturn("code")
@@ -105,7 +120,7 @@ class CyberArkAuthManagerTest {
     }
 
     @Test
-    public fun refreshToken() {
+    fun refreshToken() {
         val refreshToken = "refreshToken"
         authManager.refreshToken(refreshToken)
         verify(authenticationViewModel).handleRefreshToken(anyOrNull(), anyOrNull())

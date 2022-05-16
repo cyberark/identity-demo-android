@@ -83,8 +83,8 @@ class NativeLoginSettingsActivity : AppCompatActivity() {
 
     private fun updateUI() {
         nativeLoginURL.setText(getString(R.string.acme_native_login_url))
-        mfaWidgetHostUrl.setText(getString(R.string.cyberark_widget_host_url))
-        mfaWidgetId.setText(getString(R.string.cyberark_widget_id))
+        mfaWidgetHostUrl.setText(getString(R.string.cyberark_mfa_widget_host_url))
+        mfaWidgetId.setText(getString(R.string.cyberark_mfa_widget_id))
 
         // Get the shared preference status and handle device biometrics on app launch
         biometricsOnAppLaunchCheckbox.isChecked =
