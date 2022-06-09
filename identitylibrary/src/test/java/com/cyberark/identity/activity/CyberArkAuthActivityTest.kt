@@ -26,6 +26,7 @@ import com.cyberark.identity.provider.manager.CyberArkAuthManager
 import com.cyberark.identity.provider.CyberArkAuthProvider
 import com.cyberark.identity.util.browser.CustomTabHelper
 import org.junit.Assert
+import org.junit.Ignore
 import org.junit.Test
 import org.mockito.kotlin.anyOrNull
 import org.powermock.api.mockito.PowerMockito
@@ -38,6 +39,7 @@ import org.robolectric.android.controller.ActivityController
     CustomTabHelper::class, CyberArkAuthProvider::class,
     CyberArkAuthProvider.LoginBuilder::class, CyberArkAuthManager::class
 )
+@Ignore
 class CyberArkAuthActivityTest: RobolectricBase() {
 
     private val ACTIVITY_LAUNCHED = "ACTIVITY_LAUNCHED"

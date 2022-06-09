@@ -28,7 +28,10 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.MenuCompat
@@ -36,9 +39,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import com.cyberark.identity.activity.CyberArkQRCodeLoginActivity
 import com.cyberark.identity.builder.CyberArkAccountBuilder
-import com.cyberark.identity.data.model.*
+import com.cyberark.identity.data.model.EnrollmentModel
+import com.cyberark.identity.data.model.OTPEnrollModel
+import com.cyberark.identity.data.model.RefreshTokenModel
+import com.cyberark.identity.data.model.SendFCMTokenModel
 import com.cyberark.identity.provider.CyberArkAuthProvider
-import com.cyberark.identity.util.*
+import com.cyberark.identity.util.ResponseHandler
+import com.cyberark.identity.util.ResponseStatus
 import com.cyberark.identity.util.biometric.CyberArkBiometricCallback
 import com.cyberark.identity.util.biometric.CyberArkBiometricManager
 import com.cyberark.identity.util.biometric.CyberArkBiometricPromptUtility
@@ -62,7 +69,6 @@ import com.cyberark.mfa.utils.PreferenceConstants
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 
 /**
  * Implementing SDK features in MFAActivity
@@ -320,7 +326,7 @@ class MFAActivity : BaseActivity(), FCMTokenInterface {
 
         // Verify if there is any active observer, if not then add observer to get API response
         if (!authResponseHandler.hasActiveObservers()) {
-            authResponseHandler.observe(this, {
+            authResponseHandler.observe(this) {
                 when (it.status) {
                     ResponseStatus.SUCCESS -> {
                         // Obtain FCM token and upload to server
@@ -358,7 +364,7 @@ class MFAActivity : BaseActivity(), FCMTokenInterface {
                         progressBar.visibility = View.VISIBLE
                     }
                 }
-            })
+            }
         }
     }
     // ******************** Handle enrollment flow End ************************* //
@@ -406,7 +412,7 @@ class MFAActivity : BaseActivity(), FCMTokenInterface {
             CyberArkAuthProvider.refreshToken(cyberArkAccountBuilder).start(this, refreshTokenData)
 
         if (!refreshTokenResponseHandler.hasActiveObservers()) {
-            refreshTokenResponseHandler.observe(this, {
+            refreshTokenResponseHandler.observe(this) {
                 when (it.status) {
                     ResponseStatus.SUCCESS -> {
                         // Save access token in local variable
@@ -438,7 +444,7 @@ class MFAActivity : BaseActivity(), FCMTokenInterface {
                         progressBar.visibility = View.VISIBLE
                     }
                 }
-            })
+            }
         }
     }
     // ****************** Handle refresh token flow End *********************** //
@@ -759,7 +765,7 @@ class MFAActivity : BaseActivity(), FCMTokenInterface {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.logout_claims_menu, menu)
-        MenuCompat.setGroupDividerEnabled(menu, true)
+        MenuCompat.setGroupDividerEnabled(menu!!, true)
         return true
     }
 

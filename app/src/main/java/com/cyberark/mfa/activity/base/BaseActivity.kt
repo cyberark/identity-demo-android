@@ -82,7 +82,7 @@ open class BaseActivity : AppCompatActivity() {
 
         // Verify if there is any active observer, if not then add observer to get API response
         if (!authResponseHandler.hasActiveObservers()) {
-            authResponseHandler.observe(this, {
+            authResponseHandler.observe(this) {
                 when (it.status) {
                     ResponseStatus.SUCCESS -> {
                         // Show authentication success message using Toast
@@ -129,7 +129,7 @@ open class BaseActivity : AppCompatActivity() {
                         progressBar.visibility = View.VISIBLE
                     }
                 }
-            })
+            }
         }
     }
 
@@ -152,7 +152,7 @@ open class BaseActivity : AppCompatActivity() {
 
         // Verify if there is any active observer, if not then add observer to get response
         if (!authResponseHandler.hasActiveObservers()) {
-            authResponseHandler.observe(this, {
+            authResponseHandler.observe(this) {
                 when (it.status) {
                     ResponseStatus.SUCCESS -> {
                         // Hide progress indicator
@@ -172,7 +172,7 @@ open class BaseActivity : AppCompatActivity() {
                         progressBar.visibility = View.VISIBLE
                     }
                 }
-            })
+            }
         }
     }
 
@@ -194,7 +194,7 @@ open class BaseActivity : AppCompatActivity() {
 
         // Verify if there is any active observer, if not then add observer to get response
         if (!authResponseHandler.hasActiveObservers()) {
-            authResponseHandler.observe(this, {
+            authResponseHandler.observe(this) {
                 when (it.status) {
                     ResponseStatus.SUCCESS -> {
                         // Hide progress indicator
@@ -217,7 +217,7 @@ open class BaseActivity : AppCompatActivity() {
                         progressBar.visibility = View.VISIBLE
                     }
                 }
-            })
+            }
         }
     }
 

@@ -17,6 +17,7 @@
 package com.cyberark.identity.testUtility
 
 import android.os.Build
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,7 +32,7 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 //@PowerMockRunnerDelegate(RobolectricTestRunner::class)
 @PowerMockIgnore("org.mockito.*", "org.robolectric.*", "android.*", "androidx.*","javax.net.ssl.*")
-
+@Ignore
 open class RobolectricBase {
     @get:Rule
     var rule = PowerMockRule()
