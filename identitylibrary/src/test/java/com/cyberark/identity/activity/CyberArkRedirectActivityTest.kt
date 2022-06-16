@@ -22,11 +22,12 @@ import android.net.Uri
 import androidx.test.core.app.ApplicationProvider
 import com.cyberark.identity.testUtility.RobolectricBase
 import org.junit.Assert.assertEquals
+import org.junit.Ignore
 import org.junit.Test
 import org.robolectric.Robolectric
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.android.controller.ActivityController
-
+@Ignore
 class CyberArkRedirectActivityTest : RobolectricBase() {
 
     @Test

@@ -52,9 +52,6 @@ class NativeSignupActivity : AppCompatActivity() {
 
     companion object {
         const val TAG = "NativeSignupActivity"
-
-        // Google reCaptcha V2 Site Key
-        const val SITE_KEY = "6Lf9noAeAAAAAHDfOkMTljFc3uDC1HNu0zy1iPcP"
         const val PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}\$"
     }
 
@@ -234,7 +231,7 @@ class NativeSignupActivity : AppCompatActivity() {
 
         // Verify if there is any active observer, if not then add observer to get API response
         if (!signupResponseHandler.hasActiveObservers()) {
-            signupResponseHandler.observe(this, {
+            signupResponseHandler.observe(this) {
                 when (it.status) {
                     ResponseStatus.SUCCESS -> {
                         // Hide progress indicator
@@ -255,7 +252,7 @@ class NativeSignupActivity : AppCompatActivity() {
                         progressBar.visibility = View.VISIBLE
                     }
                 }
-            })
+            }
         }
     }
 

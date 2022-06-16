@@ -370,7 +370,7 @@ class NotificationActivity : AppCompatActivity() {
             CyberArkAuthProvider.refreshToken(cyberArkAccountBuilder).start(this, refreshTokenData)
 
         if (!refreshTokenResponseHandler.hasActiveObservers()) {
-            refreshTokenResponseHandler.observe(this, {
+            refreshTokenResponseHandler.observe(this) {
                 when (it.status) {
                     ResponseStatus.SUCCESS -> {
                         // Save access token in local variable
@@ -403,7 +403,7 @@ class NotificationActivity : AppCompatActivity() {
                         progressBar.visibility = View.VISIBLE
                     }
                 }
-            })
+            }
         }
     }
     // ****************** Handle refresh token flow End *********************** //
