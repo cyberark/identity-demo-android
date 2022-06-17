@@ -200,6 +200,7 @@ class SettingsActivity : AppCompatActivity() {
         CyberArkPreferenceUtil.putString(PreferenceConstants.HOST_URL, hostURL.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.CLIENT_ID, clientId.text.toString())
         CyberArkPreferenceUtil.putString(PreferenceConstants.APP_ID, appId.text.toString())
+        CyberArkPreferenceUtil.putString(PreferenceConstants.SCOPE, scope.text.toString())
         CyberArkPreferenceUtil.putString(
             PreferenceConstants.REDIRECT_URI,
             redirectUri.text.toString()
@@ -251,6 +252,10 @@ class SettingsActivity : AppCompatActivity() {
         val appIdSP = CyberArkPreferenceUtil.getString(PreferenceConstants.APP_ID, null)
         if (!appIdSP.equals(appId.text.toString())) {
             appId.setText(appIdSP)
+        }
+        val scopeSP = CyberArkPreferenceUtil.getString(PreferenceConstants.SCOPE, null)
+        if (!scopeSP.equals(scope.text.toString())) {
+            scope.setText(scopeSP)
         }
         val redirectUriSP = CyberArkPreferenceUtil.getString(PreferenceConstants.REDIRECT_URI, null)
         if (!redirectUriSP.equals(redirectUri.text.toString())) {
