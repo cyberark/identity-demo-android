@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "249992111165",
-    "project_id": "sdk-demo-f1444",
-    "storage_bucket": "sdk-demo-f1444.appspot.com"
+    "project_number": "{project_number}",
+    "project_id": "{project_id}",
+    "storage_bucket": "{storage_bucket}"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:249992111165:android:ecb5a2d615899a289b3654",
+        "mobilesdk_app_id": "{mobile_sdk_app_id}",
         "android_client_info": {
           "package_name": "com.cyberark.mfa"
         }
       },
       "oauth_client": [
         {
-          "client_id": "249992111165-kiq1unpf5lr7psgipf2jvkvakt93gr2h.apps.googleusercontent.com",
+          "client_id": "{client_id}",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": ""
+          "current_key": "{current_key}"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "249992111165-kiq1unpf5lr7psgipf2jvkvakt93gr2h.apps.googleusercontent.com",
+              "client_id": "{client_id}",
               "client_type": 3
             }
           ]
